@@ -159,18 +159,18 @@ public class MeetingGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonMouseReleased
 
     private void createButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createButtonMouseReleased
-        if(Validator.isValidTime(mep.getStartTime(), true, mep.is24Hour())&&Validator.isValidTime(mep.getEndTime(), false, mep.is24Hour())){
+        if(Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&Validator.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
             String[] values=FrameController.getMep().getValues();
             FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).addMeeting(new Meeting(values));
             FrameController.getSmgp().setState("meeting");
             dispose();
-            Start.d.addMeeting(FrameController.getSmgp().getCurrentGroup()+"Meetings", values);
+            Start.d.addMeeting(FrameController.getSmgp().getCurrentGroup(), values);
         }else if(!mep.isStartTimeGiven()){
-            javax.swing.JOptionPane.showMessageDialog(this, "There was no start time provided!\nTime must be given in one of the following formats:\n6:30am/pm\n24-hour", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-        }else if(!Validator.isValidTime(mep.getStartTime(), true, mep.is24Hour())){
-            javax.swing.JOptionPane.showMessageDialog(this, "The start time given is invalid, as indicated by the red box.\nPlease provide a valid start time in one of the following formats:\n6:30am/pm\n24-hour", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-        }else if(!Validator.isValidTime(mep.getEndTime(), false, mep.is24Hour())){
-            javax.swing.JOptionPane.showMessageDialog(this, "The end time given is invalid, as indicated by the red box.\nPlease provide a valid end time in one of the following formats:\n6:30am/pm\n24-hour", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "There was no start time provided!", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+        }else if(!Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())){
+            javax.swing.JOptionPane.showMessageDialog(this, "The start time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+        }else if(!Validator.isValidTime(mep.getEndHour(),mep.getEndMinute(), false, mep.is24Hour())){
+            javax.swing.JOptionPane.showMessageDialog(this, "The end time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_createButtonMouseReleased
 

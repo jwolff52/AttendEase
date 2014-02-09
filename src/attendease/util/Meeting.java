@@ -5,42 +5,45 @@ public class Meeting {
     private String date;
     private String startTime;
     private String endTime;
+    private int reocurringDays;
     private int gPoints;
     private int rPoints;
     private int lPoints;
     
-    public Meeting(String d, String sTime, String eTime, int g, int r, int l){
+    public Meeting(String d, String sTime, String eTime, String rD, int g, int r, int l){
         name=d+" @ "+sTime;
         date=d;
         startTime=sTime;
         endTime=eTime;
+        reocurringDays=new Integer(rD);
         gPoints=g;
         rPoints=r;
         lPoints=l;
     }
     
-    public Meeting(String n, String d, String sTime, String eTime, int g, int r, int l){
+    public Meeting(String n, String d, String sTime, String eTime, String rD, int g, int r, int l){
         name=n;
         date=d;
         startTime=sTime;
         endTime=eTime;
+        reocurringDays=new Integer(rD);
         gPoints=g;
         rPoints=r;
         lPoints=l;
     }
     
     public Meeting(String[] v){
-        if(v[0].equals("")||v[0]==null){
-            name=v[1]+" @ "+v[2];
-        }else{
-            name=v[0];
+        for(String s:v){
+            System.out.println(s);
         }
+        name=v[0];
         date=v[1];
         startTime=v[2];
         endTime=v[3];
-        gPoints=new Integer(v[4]);
-        rPoints=new Integer(v[5]);
-        lPoints=new Integer(v[6]);
+        reocurringDays=new Integer(v[4]);
+        gPoints=new Integer(v[5]);
+        rPoints=new Integer(v[6]);
+        lPoints=new Integer(v[7]);
     }
 
     public String getName() {

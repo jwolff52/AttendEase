@@ -403,11 +403,6 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         basicTab.add(sDMonth, gridBagConstraints);
 
         sDDay.setModel(days);
-        sDDay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sDDayActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -529,8 +524,10 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 14);
         advancedTab.add(thursdayLabel, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         advancedTab.add(saturdayButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -545,21 +542,19 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 2;
         advancedTab.add(wednesdayButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        advancedTab.add(sundayButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 13);
-        advancedTab.add(sundayButton, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 58, 0, 0);
         advancedTab.add(thursdayButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 37, 0, 0);
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.insets = new java.awt.Insets(0, 26, 0, 0);
         advancedTab.add(fridayButton, gridBagConstraints);
 
         fridayLabel.setText("F");
@@ -717,7 +712,7 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 47, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 39, 0, 0);
         advancedTab.add(sT24RadioButtonAdv, gridBagConstraints);
 
         eTimeAdvGroup.add(eTAMRadioButtonAdv);
@@ -843,10 +838,6 @@ public class MeetingEditPanel extends javax.swing.JPanel {
     private void sDMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sDMonthActionPerformed
         refreshDays();
     }//GEN-LAST:event_sDMonthActionPerformed
-
-    private void sDDayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sDDayActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_sDDayActionPerformed
 
     private void givenTextBoxBasicKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_givenTextBoxBasicKeyReleased
         areValidPoints("given");
@@ -980,27 +971,57 @@ public class MeetingEditPanel extends javax.swing.JPanel {
      * @return false if time is not given(text box is empty)
      */
     public boolean isStartTimeGiven(){
-        return (sHTextBoxBasic.getText()+":"+sMTextBoxBasic.getText()).equals(":");
+        return getStartTime(false).equals(":");
     }
     
-    public String getStartTime(){
+    public String getStartTime(boolean ampm){
+        if(ampm){
+            if(sTAMRadioButtonBasic.isSelected()){
+                return sHTextBoxBasic.getText()+":"+sMTextBoxBasic.getText()+" AM";
+            }else if(sTPMRadioButtonBasic.isSelected()){
+                return sHTextBoxBasic.getText()+":"+sMTextBoxBasic.getText()+" PM";
+            }
+        }
         return sHTextBoxBasic.getText()+":"+sMTextBoxBasic.getText();
     }
     
-    public String getEndTime(){
+    public String getEndTime(boolean ampm){
+        if(ampm){
+            if(eTAMRadioButtonAdv.isSelected()){
+                return eHTextBoxAdv.getText()+":"+eMTextBoxAdv.getText()+" AM";
+            }else if(eTPMRadioButtonAdv.isSelected()){
+                return eHTextBoxAdv.getText()+":"+eMTextBoxAdv.getText()+" PM";
+            }
+        }
         return eHTextBoxAdv.getText()+":"+eMTextBoxAdv.getText();
     }
     
+    public String getStartHour(){
+        return sHTextBoxBasic.getText();
+    }
+    
+    public String getStartMinute(){
+        return sMTextBoxBasic.getText();
+    }
+    
+    public String getEndHour(){
+        return eHTextBoxAdv.getText();
+    }
+    
+    public String getEndMinute(){
+        return eMTextBoxAdv.getText();
+    }
+    
     public String[] getValues() {
-        String[] values=new String[6];
+        String[] values=new String[8];
         if(Validator.isValidName(titleTextBox.getText())){
             values[0]=titleTextBox.getText();
         }else{
-            values[0]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem()+"\t"+sHTextBoxBasic.getText()+":"+sMTextBoxBasic.getText();
+            values[0]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem()+"\t"+getStartTime(true);
         }
         values[1]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem();
-        values[2]=sHTextBoxBasic.getText()+":"+sMTextBoxBasic.getText();
-        values[3]=eHTextBoxAdv.getText()+":"+eMTextBoxAdv.getText();
+        values[2]=getStartTime(true);
+        values[3]=getEndTime(true);
         values[4]=getReocurring();
         if(areValidPoints("all")){ 
             values[5]=givenTextBoxBasic.getText();
@@ -1014,20 +1035,27 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         String temp="";
         if(sundayButton.isSelected()){
             temp+=1;
-        }else if(mondayButton.isSelected()){
+        }
+        if(mondayButton.isSelected()){
             temp+=2;
-        }else if(tuesdayButton.isSelected()){
+        }
+        if(tuesdayButton.isSelected()){
             temp+=3;
-        }else if(wednesdayButton.isSelected()){
+        }
+        if(wednesdayButton.isSelected()){
             temp+=4;
-        }else if(thursdayButton.isSelected()){
+        }
+        if(thursdayButton.isSelected()){
             temp+=5;
-        }else if(fridayButton.isSelected()){
+        }
+        if(fridayButton.isSelected()){
             temp+=6;
-        }else if(saturdayButton.isSelected()){
+        }
+        if(saturdayButton.isSelected()){
             temp+=7;
-        }else{
-            temp+=0;
+        }
+        if(temp.equals("")){
+            return 0+"";
         }
         return temp;
     }
@@ -1076,8 +1104,8 @@ public class MeetingEditPanel extends javax.swing.JPanel {
     }
     
     private void tFormatChange(){
-        if(!(Validator.isValidTime(getStartTime(), true, is24Hour())&&Validator.isValidTime(getEndTime(), false, is24Hour()))){
-            if(!(Validator.isValidTime(getStartTime(), true, !is24Hour())&&Validator.isValidTime(getEndTime(), false, !is24Hour()))){
+        if(!(Validator.isValidTime(sHTextBoxBasic.getText(), sMTextBoxBasic.getText(), true, is24Hour())&&Validator.isValidTime(eHTextBoxAdv.getText(), eMTextBoxAdv.getText(), false, is24Hour()))){
+            if(!(Validator.isValidTime(sHTextBoxBasic.getText(), sMTextBoxBasic.getText(), true, !is24Hour())&&Validator.isValidTime(eHTextBoxAdv.getText(), eMTextBoxAdv.getText(), false, !is24Hour()))){
                 return;
             }
         }
@@ -1131,8 +1159,9 @@ public class MeetingEditPanel extends javax.swing.JPanel {
     private void colorTimes(String timePeriod){
         switch(timePeriod.toLowerCase()){
             case "startbasic":
+                sHTextBoxAdv.setText(sHTextBoxBasic.getText());
                 sMTextBoxAdv.setText(sMTextBoxBasic.getText());
-                if(Validator.isValidTime(sHTextBoxBasic.getText()+":"+sMTextBoxBasic.getText(), true, is24Hour())){
+                if(Validator.isValidTime(sHTextBoxBasic.getText(), sMTextBoxBasic.getText(), true, is24Hour())){
                     sMTextBoxBasic.setBackground(Color.GREEN);
                     sMTextBoxAdv.setBackground(Color.GREEN);
                     sHTextBoxBasic.setBackground(Color.GREEN);
@@ -1145,8 +1174,9 @@ public class MeetingEditPanel extends javax.swing.JPanel {
                 }
                 break;
             case "startadvanced":
+                sHTextBoxBasic.setText(sHTextBoxAdv.getText());
                 sMTextBoxBasic.setText(sMTextBoxAdv.getText());
-                if(Validator.isValidTime(sHTextBoxBasic.getText()+":"+sMTextBoxBasic.getText(), true, is24Hour())){
+                if(Validator.isValidTime(sHTextBoxBasic.getText(), sMTextBoxBasic.getText(), true, is24Hour())){
                     sMTextBoxBasic.setBackground(Color.GREEN);
                     sMTextBoxAdv.setBackground(Color.GREEN);
                     sHTextBoxBasic.setBackground(Color.GREEN);
@@ -1159,8 +1189,7 @@ public class MeetingEditPanel extends javax.swing.JPanel {
                 }
                 break;
             case "end":
-                eMTextBoxAdv.setText(eMTextBoxAdv.getText());
-                if(Validator.isValidTime(eHTextBoxAdv.getText()+":"+eMTextBoxAdv.getText(), true, is24Hour())){
+                if(Validator.isValidTime(eHTextBoxAdv.getText(), eMTextBoxAdv.getText(), true, is24Hour())){
                     eMTextBoxAdv.setBackground(Color.GREEN);
                     eHTextBoxAdv.setBackground(Color.GREEN);
                 }else{

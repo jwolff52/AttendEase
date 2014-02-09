@@ -10,6 +10,13 @@ package attendease.util;
  */
 public class Validator {
     public static boolean isValidName(String name) {
+        char[] c=name.toCharArray();
+        name="";
+        for (int i=0;i<c.length;i++) {
+            if(c[i]!=' '){
+                name+=c[i];
+            }
+        }
         for(int x=0;x<name.length();x++){
             if(name.substring(x, x+1).toUpperCase().equals(name.substring(x, x+1).toLowerCase())){
                 try{
@@ -34,87 +41,42 @@ public class Validator {
         return true;
     }
     
-    public static boolean isValidTime(String time, boolean isStart, boolean is24Hour){
-        if(time==null||time.equals("")){
-            if(isStart){
-                return false;
-            }else{
-                return true;
-            }
-        }else if(time.length()!=0&&(time.length()<3||time.length()>7)){
+    public static boolean isValidTime(String h, String m, boolean isStart, boolean is24Hour){
+        if(h+m==null||(h+m).equals("")){
+            return !isStart;
+        }else if(h.length()<1||m.length()<2){
             return false;
         }
-        try{
-            int i=time.indexOf(":");
-            String h=time.substring(0, i);
-            String m=time.substring(i+1, i+3);
-            String p=time.substring(time.length()-2, time.length());
-            int x=new Integer(h);
-            if(p.equalsIgnoreCase("am")||p.equalsIgnoreCase("pm")){
-                if(x>12||x<0){
-                    return false;
-                }else{
-                    x=new Integer(m);
-                    if(x>=60||x<0){
-                        return false;
-                    }
-                }
-            }else{
-                if(x>=24||x<0){
-                    return false;
-                }else{
-                    x=new Integer(m);
-                    if(x>=60||x<0){
-                        return false;
-                    }
-                }
-            }
-        }catch(StringIndexOutOfBoundsException e){
-            int i=0;
-            if(time.length()==3){
-                i=2;
-            }else if(time.length()==4){
-                i=3;
-            }else{
+        int x=new Integer(h);
+        if(!is24Hour){
+            if(x>12||x<0){
                 return false;
-            }
-            String h=time.substring(0, i);
-            String m=time.substring(i);
-            String p=time.substring(time.length()-2, time.length());
-            int x=-1;
-            try{
-                x=new Integer(h);
-            }catch(NumberFormatException f){
-                if(h.substring(h.length()-1).equals(":")){
-                    h=h.substring(0,h.length()-1);
-                    x=new Integer(h);
-                }else{
-                    Start.createLog(e, h);
-                }
-            }
-            if(!is24Hour){
-                if(x>12||x<=0){
-                    return false;
-                }else{
-                    x=new Integer(m);
-                    if(x>=60||x<0){
-                        return false;
-                    }
-                }
             }else{
-                if(x>=24||x<0){
+                x=new Integer(m);
+                if(x>=60||x<0){
                     return false;
-                }else{
-                    x=new Integer(m);
-                    if(x>=60||x<0){
-                        return false;
-                    }
+                }
+            }
+        }else{
+            if(x>=24||x<0){
+                return false;
+            }else{
+                x=new Integer(m);
+                if(x>=60||x<0){
+                    return false;
                 }
             }
         }
         return true;
     }
-    private String colonRemover(String time){
+    private static String removeColons(String time){
+        char[] c=time.toCharArray();
+        time="";
+        for (int i=0;i<c.length;i++){
+            if(c[i]!=':'){
+                time+=c[i];
+            }
+        }
         return null;
     }
 }

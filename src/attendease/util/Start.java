@@ -22,76 +22,74 @@ public class Start {
     private static File[] logs;
     private static Splash s;
     private static String nextString;
-    private static Thread splash;
     
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public static void main(String[]args){
         errors=new ArrayList[2];
         errors[0]=new ArrayList<>();
         errors[1]=new ArrayList<>();
-        s=new Splash("Starting up");
-        splash=new Thread(new Runnable(){
-            @Override
-            public void run() {
-                s.startSplash();
-            }
-        });
-        splash.start();
+//        s=new Splash("Starting up");
+//        new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                s.startSplash();
+//            }
+//        }).start();
         try {
             Thread.sleep(1800);
         } catch (InterruptedException ex) {
             preLogError(ex, "Error in Loading");
         }
         initVariables();
-        s.setDoneLoading(true);
+//        s.setDoneLoading(true);
         try {
             Thread.sleep(20);
         } catch (InterruptedException ex) {
             createLog(ex, "Error in Loading");
         }
-        s.dispose();
+//        removeSplash();
         FrameController.changeFrameState("mf");
     }
-
+    
     public static void removeSplash(){
-        s.dispose();
+//        s.dispose();
     }
     
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private static void initVariables() {
         new InputOutput();
-        s.updateString("Locating log files");
+//        s.updateString("Locating log files");
         logs=new File[2];
         logs[0]=new File("Developer.log");
         logs[1]=new File("User.log");
-        for(int x=0;x<logs.length;x++){
-            if(!logs[x].exists()){
+        for (File log : logs) {
+            if (!log.exists()) {
                 try {
-                    logs[x].createNewFile();
+                    log.createNewFile();
                 } catch (IOException ex) {
-                    System.out.println(logs[x].getAbsolutePath());
-                    preLogError(ex, "Unable to create file: "+logs[x].getPath());
+                    System.out.println(log.getAbsolutePath());
+                    preLogError(ex, "Unable to create file: " + log.getPath());
                 }
             }
         }
-        s.updateString("Log files located");
+//        s.updateString("Log files located");
         logErrors();
-        s.updateString("Connecting to Database");
+//        s.updateString("Connecting to Database");
         initDatabase();
-        s.updateString("Connected to database");
-        try {
-            Thread.sleep(90);
-        } catch (InterruptedException ex) {
-            createLog(ex, "Error in Loading");
-        }
-        s.updateString("Loading Interface");
+//        s.updateString("Connected to database");
+//        try {
+//            Thread.sleep(90);
+//        } catch (InterruptedException ex) {
+//            createLog(ex, "Error in Loading");
+//        }
+//        s.updateString("Loading Interface");
         new FrameController();
-        s.updateString("Finishing up");
-        try {
-            Thread.sleep(180);
-        } catch (InterruptedException ex) {
-            createLog(ex, "Error in Loading");
-        }
+//        s.updateString("Finishing up");
+//        try {
+//            Thread.sleep(180);
+//        } catch (InterruptedException ex) {
+//            createLog(ex, "Error in Loading");
+//        }
     }
 
     private static void initDatabase() {
@@ -104,9 +102,9 @@ public class Start {
     }
     
     public static void log(String value, String logFile){
-        for(int x=0;x<logs.length;x++){
-            if(logs[x].getName().equals(logFile)){
-                InputOutput.writeFile(logs[x], value, false);
+        for (File log : logs) {
+            if (log.getName().equals(logFile)) {
+                InputOutput.writeFile(log, value, false);
             }
         }
     }

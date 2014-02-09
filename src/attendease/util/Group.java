@@ -31,7 +31,11 @@ public class Group {
         name=n;
         meats=m;
         stews=s;
-        excel=new EFile(path);
+        if(!(path==null||path.equals(""))){
+            excel=new EFile(path);
+        }else{
+            excel=new EFile("");
+        }
         usePoints=p;
     }
     

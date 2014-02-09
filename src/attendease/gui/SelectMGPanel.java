@@ -361,7 +361,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
             ResultSet mrs=Start.d.readMeetingsTable(tblName);
             try {
                 while(mrs.next()){
-                    meetingList.addElement(mrs.getString("name"));
+                    meetingList.addElement(mrs.getString("ID"));
                 }
             } catch (SQLException ex) {
                 Start.createLog(ex, "A Database Error Occurred");

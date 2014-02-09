@@ -42,7 +42,7 @@ public class Database {
         studentColumns.add("NAME");
         studentColumns.add("POINTS");
         meetingColumns=new ArrayList<>();
-        meetingColumns.add("NAME");
+        meetingColumns.add("ID");
         meetingColumns.add("DATE");
         meetingColumns.add("STARTTIME");
         meetingColumns.add("ENDTIME");
@@ -99,7 +99,7 @@ public class Database {
             return false;
         }catch(SQLException e){
             String ss="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Students(ID varchar(10), name varchar(50), meetings varchar(22), points INTEGER, PRIMARY KEY(ID))";
-            String ms="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Meetings(ID varchar(50), date varchar(25), startTime varchar(5), endTime varchar(5), reocurringDays INTEGER, pointsGiven INTEGER, pointsRequired INTEGER, latePoints INTEGER, PRIMARY KEY(ID))";
+            String ms="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Meetings(ID varchar(255), date varchar(25), startTime varchar(10), endTime varchar(10), reocurringDays INTEGER, pointsGiven INTEGER, pointsRequired INTEGER, latePoints INTEGER, PRIMARY KEY(ID))";
             try {
                 stmt.close();
                 stmt=conn.createStatement();

@@ -117,11 +117,7 @@ public class FrameController {
                 ResultSet mrs=Start.d.readMeetingsTable(club);
                 ArrayList<Meeting> meats=new ArrayList<>();
                 while(mrs.next()){
-                    if(mrs.getString(1)==null){
-                        meats.add(new Meeting(mrs.getString(2), mrs.getString(3), mrs.getString(4), (Integer)mrs.getObject(5), (Integer)mrs.getObject(6), (Integer)mrs.getObject(7)));
-                    }else{
-                        meats.add(new Meeting(mrs.getString(1), mrs.getString(2), mrs.getString(3), mrs.getString(4), (Integer)mrs.getObject(5), (Integer)mrs.getObject(6), (Integer)mrs.getObject(7)));
-                    }
+                    meats.add(new Meeting(mrs.getString(1), mrs.getString(2), mrs.getString(3), mrs.getString(4), mrs.getString(5), (Integer)mrs.getObject(6), (Integer)mrs.getObject(7), (Integer)mrs.getObject(8)));
                 }
                 ResultSet srs=Start.d.readStudentsTable(club);
                 ArrayList<Student> stews=new ArrayList<>();

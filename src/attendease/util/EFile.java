@@ -11,15 +11,15 @@ import java.io.File;
  * @author timothy.chandler
  */
 public class EFile extends File{
-//    private boolean isXLS;
     private String type;
     public EFile(String path){
         super(path);
-//        isXLS=path.endWith(".XLS"||path.endsWith(".xls"));
-        if(path.endsWith("s")){
-            type=path.substring(path.length()-3);
-        }else{
-            type=path.substring(path.length()-4);
+        if(!path.equals("")){
+            if(path.endsWith("s")){
+                type=path.substring(path.length()-3);
+            }else{
+                type=path.substring(path.length()-4);
+            }
         }
     }
 
