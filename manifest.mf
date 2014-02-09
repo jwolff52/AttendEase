@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: attendease/util/Start
+SplashScreen-Image: attendease/gui/splash.png
+X-COMMENT: Main-Class will be added automatically by build
+
