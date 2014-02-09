@@ -11,25 +11,27 @@ import java.util.ArrayList;
  * @author timothy.chandler
  */
 public class Group {
-    private ArrayList<Meeting> meats;
-    private ArrayList<Student> stews;
+    private final ArrayList<Meeting> meats;
+    private final ArrayList<Student> stews;
     
-    private String name;
+    private final String name;
     private EFile excel;
     
-    private boolean usePoints;
+    private final boolean usePoints;
     
     public Group(String n){
         name=n;
         meats=new ArrayList<>();
         stews=new ArrayList<>();
+        excel=new EFile("");
         usePoints=false;
     }
     
-    public Group(String n, ArrayList<Meeting> m, ArrayList<Student>s, boolean p){
+    public Group(String n, ArrayList<Meeting> m, ArrayList<Student>s, String path, boolean p){
         name=n;
         meats=m;
         stews=s;
+        excel=new EFile(path);
         usePoints=p;
     }
     
@@ -49,7 +51,15 @@ public class Group {
         return stews.get(s);
     }
 
-    public boolean isUsePoints() {
+    public String getEPath(){
+        return excel.getPath();
+    }
+    
+    public void setEPath(String ePath){
+        excel=new EFile(ePath);
+    }
+    
+    public boolean usesPoints() {
         return usePoints;
     }
 }

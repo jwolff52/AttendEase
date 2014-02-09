@@ -207,14 +207,11 @@ public class SelectMGPanel extends javax.swing.JPanel {
                     int[] nums=gmList.getSelectedIndices();
                     List vals=gmList.getSelectedValuesList();
                     for(int i=vals.size()-1;i>=0;i--){
-                        Start.d.deleteTableValue("Clubs", "clubName", (String)vals.get(i));
-                        Start.d.deleteTable((String)vals.get(i));
+                        Start.d.deleteClub((String)vals.get(i));
                         groupList.remove(nums[i]);
                     }
                 }else{
-                    Start.d.deleteTableValue("Clubs", "clubName", (String)gmList.getSelectedValue());
-                    Start.d.deleteTable(gmList.getSelectedValue()+"Students");
-                    Start.d.deleteTable(gmList.getSelectedValue()+"Meetings");
+                    Start.d.deleteClub((String)gmList.getSelectedValue());
                     groupList.remove(gmList.getSelectedIndex());
                 }
                 gmList.repaint();
@@ -228,7 +225,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
     private void gmListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_gmListValueChanged
         if(gmList.getSelectedIndex()>-1){
             if(isGroup){
-                ResultSet mrs=Start.d.readTable(gmList.getSelectedValue()+"Meetings");
+                ResultSet mrs=Start.d.readMeetingsTable((String)gmList.getSelectedValue());
                 setCurrentGroup(gmList.getSelectedValue().toString());
                 try {
                     while(mrs.next()){
@@ -260,7 +257,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
                 selectButton.setText("Select Group");
                 isGroup=true;
                 fillList("Clubs");
-                reInitGMList();
+                reInitGList();
                 gmList.repaint();
                 break;
             case "meeting":
@@ -271,9 +268,9 @@ public class SelectMGPanel extends javax.swing.JPanel {
                 deleteButton.setText("Delete Meeting");
                 selectButton.setText("Start Meeting");
                 isGroup=false;
-                fillList(getCurrentGroup()+"Meetings");
+                fillList(getCurrentGroup());
+                reInitMList();
                 gmList.repaint();
-                break;
         }
     }
     
@@ -281,10 +278,24 @@ public class SelectMGPanel extends javax.swing.JPanel {
         selectAddLabel.setText(title);
     }
     
-    private void reInitGMList(){
+    private void reInitGList(){
         Font f=gmList.getFont();
         gmList=new javax.swing.JList();
         gmList.setModel(groupList);
+        gmList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            @Override
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                gmListValueChanged(evt);
+            }
+        });
+        gmListScrollPane.setViewportView(gmList);
+        gmList.setFont(f);
+    }
+    
+    private void reInitMList(){
+        Font f=gmList.getFont();
+        gmList=new javax.swing.JList();
+        gmList.setModel(meetingList);
         gmList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             @Override
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -337,7 +348,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
     private void fillList(String tblName){
         if(isGroup){
             groupList.clear();
-            ResultSet grs=Start.d.readTable(tblName);
+            ResultSet grs=Start.d.readClubsTable();
             try {
                 while(grs.next()){
                     String s=grs.getString("clubName");
@@ -347,7 +358,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
                 Start.createLog(ex, "A Database Error Occurred");
             }
         }else{
-            ResultSet mrs=Start.d.readTable(tblName);
+            ResultSet mrs=Start.d.readMeetingsTable(tblName);
             try {
                 while(mrs.next()){
                     meetingList.addElement(mrs.getString("name"));

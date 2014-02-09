@@ -998,14 +998,38 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         }else{
             values[0]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem()+"\t"+sHTextBoxBasic.getText()+":"+sMTextBoxBasic.getText();
         }
-        values[1]=sHTextBoxBasic.getText()+":"+sMTextBoxBasic.getText();
-        values[2]=eHTextBoxAdv.getText()+":"+eMTextBoxAdv.getText();
+        values[1]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem();
+        values[2]=sHTextBoxBasic.getText()+":"+sMTextBoxBasic.getText();
+        values[3]=eHTextBoxAdv.getText()+":"+eMTextBoxAdv.getText();
+        values[4]=getReocurring();
         if(areValidPoints("all")){ 
-            values[3]=givenTextBoxBasic.getText();
-            values[4]=requiredTextBoxBasic.getText();
-            values[5]=lateTextBoxPoints.getText();
+            values[5]=givenTextBoxBasic.getText();
+            values[6]=requiredTextBoxBasic.getText();
+            values[7]=lateTextBoxPoints.getText();
         }
         return values;
+    }
+    
+    public String getReocurring(){
+        String temp="";
+        if(sundayButton.isSelected()){
+            temp+=1;
+        }else if(mondayButton.isSelected()){
+            temp+=2;
+        }else if(tuesdayButton.isSelected()){
+            temp+=3;
+        }else if(wednesdayButton.isSelected()){
+            temp+=4;
+        }else if(thursdayButton.isSelected()){
+            temp+=5;
+        }else if(fridayButton.isSelected()){
+            temp+=6;
+        }else if(saturdayButton.isSelected()){
+            temp+=7;
+        }else{
+            temp+=0;
+        }
+        return temp;
     }
     
     public boolean is24Hour(){

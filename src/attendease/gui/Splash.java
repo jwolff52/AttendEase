@@ -5,6 +5,7 @@ package attendease.gui;
  *
  */
 
+import attendease.util.Start;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -15,7 +16,7 @@ public class Splash extends Frame implements ActionListener {
     private static SplashScreen splash;
     private static Graphics2D g;
     
-    static void renderSplashFrame(Graphics2D g) {
+    private static void renderSplashFrame(Graphics2D g) {
         g.setComposite(AlphaComposite.Clear);
         g.fillRect(112,360,500,100);
         g.setPaintMode();
@@ -50,6 +51,7 @@ public class Splash extends Frame implements ActionListener {
                 Thread.sleep(90);
             }
             catch(InterruptedException e) {
+                Start.preLogError(e, "Error sleeping");
             }
         }
         splash.close();

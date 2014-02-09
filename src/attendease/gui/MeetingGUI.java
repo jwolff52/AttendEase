@@ -164,7 +164,7 @@ public class MeetingGUI extends javax.swing.JFrame {
             FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).addMeeting(new Meeting(values));
             FrameController.getSmgp().setState("meeting");
             dispose();
-            Start.d.writeTable(FrameController.getSmgp().getCurrentGroup()+"Meetings", values);
+            Start.d.addMeeting(FrameController.getSmgp().getCurrentGroup()+"Meetings", values);
         }else if(!mep.isStartTimeGiven()){
             javax.swing.JOptionPane.showMessageDialog(this, "There was no start time provided!\nTime must be given in one of the following formats:\n6:30am/pm\n24-hour", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
         }else if(!Validator.isValidTime(mep.getStartTime(), true, mep.is24Hour())){

@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author James
@@ -23,7 +21,6 @@ public class Database {
         Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
         try{
             conn=DriverManager.getConnection("jdbc:derby:AttendEase");
-            conn.setAutoCommit(false);
         }catch(SQLException e){
             SQLException f=e;
             while(f.getNextException()!=null){
@@ -46,7 +43,14 @@ public class Database {
         studentColumns.add("POINTS");
         meetingColumns=new ArrayList<>();
         meetingColumns.add("NAME");
-        meetingColumns.add("POINTS");
+        meetingColumns.add("DATE");
+        meetingColumns.add("STARTTIME");
+        meetingColumns.add("ENDTIME");
+        meetingColumns.add("REOCURRINGDAYS");
+        meetingColumns.add("POINTSNEEDED");
+        meetingColumns.add("POINTSREQUIRED");
+        meetingColumns.add("LATEPOINTS");
+        
     }
     
     public void getDb(){
@@ -65,7 +69,7 @@ public class Database {
         }catch(SQLException e){
             try{
                 stmt=conn.createStatement();
-                stmt.executeUpdate("CREATE TABLE "+DEFAULT_SCHEMA+".Clubs(clubName varchar(25), points BOOLEAN, PRIMARY KEY (clubName))");
+                stmt.executeUpdate("CREATE TABLE "+DEFAULT_SCHEMA+".Clubs(clubName varchar(25), ePath varchar(255), points BOOLEAN, PRIMARY KEY (clubName))");
                 stmt.close();
             }catch(SQLException ex){
                 Start.createLog(ex, "Unable to create table Clubs!");
@@ -79,30 +83,36 @@ public class Database {
     }
     
     /*
-     * returns true if table exsists, false otherwise
+     * returns false if club exsists, true otherwise
      */
-    public boolean createTables(String tblName){
-        reconnect();
+    public boolean addClub(String clubName, String ePath, boolean points){
+        try {
+            stmt=conn.createStatement();
+            stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+".CLUBS VALUES (\'"+clubName+"\',\'"+ePath+"\',"+points+")");
+            stmt.close();
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Error creating Club!");
+        }
         try{
             stmt=conn.createStatement();
-            stmt.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+tblName+"Meetings");
-            return true;
+            stmt.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+clubName+"Meetings");
+            return false;
         }catch(SQLException e){
-            String ss="CREATE TABLE "+DEFAULT_SCHEMA+"."+tblName+"Students(ID varchar(10), name varchar(50), meetings varchar(22), points INTEGER, PRIMARY KEY(ID))";
-            String ms="CREATE TABLE "+DEFAULT_SCHEMA+"."+tblName+"Meetings(ID varchar(50), startTime varchar(5), endTime varchar(5), pointsGiven INTEGER, pointsRequired INTEGER, latePoints INTEGER, PRIMARY KEY(ID))";
+            String ss="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Students(ID varchar(10), name varchar(50), meetings varchar(22), points INTEGER, PRIMARY KEY(ID))";
+            String ms="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Meetings(ID varchar(50), date varchar(25), startTime varchar(5), endTime varchar(5), reocurringDays INTEGER, pointsGiven INTEGER, pointsRequired INTEGER, latePoints INTEGER, PRIMARY KEY(ID))";
             try {
                 stmt.close();
                 stmt=conn.createStatement();
                 stmt.executeUpdate(ms);
             } catch (SQLException ex) {
-                Start.createLog(ex, "Failed to create table "+tblName+"Meetings");
+                Start.createLog(ex, "Failed to create table "+clubName+"Meetings");
             }
             try {
                 stmt.close();
                 stmt=conn.createStatement();
                 stmt.executeUpdate(ss);
             } catch (SQLException ex) {
-                Start.createLog(ex, "Failed to create table "+tblName+"Students");
+                Start.createLog(ex, "Failed to create table "+clubName+"Students");
             }
         }
         try {
@@ -110,11 +120,41 @@ public class Database {
         } catch (SQLException ex) {
             Start.createLog(ex, "An Internal Communication Error Occurred With the Database");
         }
-        return false;
+        return true;
+    }
+    
+    public void addMeeting(String clubName, String[] values){
+        clubName+="Meetings";
+        try {
+            for(int i=0;i<values.length;i++){
+                writeTable(clubName, values[i], meetingColumns.get(i%meetingColumns.size()));
+            }
+        } catch (SQLException | ArrayIndexOutOfBoundsException ex) {
+            if(ex.getClass().getName().equals("java.sql.SQLException")){
+                Start.createLog(ex, "A Database Error Occurred");
+            }else{
+                Start.createLog(ex, "A Logic Error Occurred");
+            }
+        }
+    }
+    
+    public void deleteClub(String clubName){
+        try {
+            stmt=conn.createStatement();
+            stmt.executeUpdate("DELETE FROM "+DEFAULT_SCHEMA+".CLUBS WHERE clubName=\'"+clubName+"\'");
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Unable to delete \""+clubName+"\"");
+        }
+        try {
+            stmt.close();
+        } catch (SQLException ex) {
+            Start.createLog(ex, "An Internal Communication Error Occurred With the Database");
+        }
+        deleteTable(clubName+"Meetings");
+        deleteTable(clubName+"Students");
     }
     
     public void deleteTable(String tblName){
-        reconnect();
         try {
             stmt=conn.createStatement();
             stmt.executeUpdate("DROP TABLE "+DEFAULT_SCHEMA+"."+tblName);
@@ -128,13 +168,12 @@ public class Database {
         }
     }
     
-    public ResultSet readTable(String tblName){
-        reconnect();
+    public ResultSet readClubsTable(){
         try {
             stmt=conn.createStatement();
-            return stmt.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+tblName);
+            return stmt.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+".CLUBS");
         } catch (SQLException ex) {
-            Start.createLog(ex, "Unable to read from table: "+tblName);
+            Start.createLog(ex, "Unable to read from table: CLUBS");
         }
         try {
             stmt.close();
@@ -144,18 +183,13 @@ public class Database {
         return null;
     }
     
-    public ResultSet readTable(String tblName, String[] cols){
-        reconnect();
-        String columns="";
-        for(String s:cols){
-            columns+=s+",";
-        }
-        columns=columns.substring(0, columns.length()-1);
+    public ResultSet readMeetingsTable(String clubName){
+        clubName+="Meetings";
         try {
             stmt=conn.createStatement();
-            return stmt.executeQuery("SELECT "+columns+" FROM "+DEFAULT_SCHEMA+"."+tblName);
+            return stmt.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+clubName);
         } catch (SQLException ex) {
-            Start.createLog(ex, "Unable to read from table: "+tblName);
+            Start.createLog(ex, "Unable to read from table: "+clubName);
         }
         try {
             stmt.close();
@@ -165,13 +199,13 @@ public class Database {
         return null;
     }
     
-    public ResultSet readTable(String tblName, String constraints){
-        reconnect();
+    public ResultSet readStudentsTable(String clubName){
+        clubName+="Students";
         try {
             stmt=conn.createStatement();
-            return stmt.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+tblName+" WHERE "+constraints);
+            return stmt.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+clubName);
         } catch (SQLException ex) {
-            Start.createLog(ex, "Unable to read from table: "+tblName);
+            Start.createLog(ex, "Unable to read from table: "+clubName);
         }
         try {
             stmt.close();
@@ -180,172 +214,10 @@ public class Database {
         }
         return null;
     }
-    
-    public ResultSet readTable(String tblName, String[] cols, String constraints){
-        reconnect();
-        String columns="";
-        for(String s:cols){
-            columns+=s+",";
-        }
-        columns=columns.substring(0, columns.length()-1);
-        try {
-            stmt=conn.createStatement();
-            return stmt.executeQuery("SELECT "+columns+" FROM "+DEFAULT_SCHEMA+"."+tblName+" WHERE "+constraints);
-        } catch (SQLException ex) {
-            Start.createLog(ex, "Unable to read from table: "+tblName);
-        }
-        try {
-            stmt.close();
-        } catch (SQLException ex) {
-            Start.createLog(ex, "An Internal Communication Error Occurred With the Database");
-        }
-        return null;
-    }
-    
-    
-    
+   
     private void writeTable(String tblName, String value, String col) throws SQLException{
-        reconnect();
-        conn.setAutoCommit(true);
         stmt=conn.createStatement();
         stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+"."+tblName+" ("+col+") VALUES (\'"+value+"\')");
-        conn.setAutoCommit(false);
         stmt.close();
-    }
-    
-    public void writeTable(String tblName, String value, boolean bValue, String[] cols){
-        try {
-            reconnect();
-            conn.setAutoCommit(true);
-            stmt=conn.createStatement();
-            stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+"."+tblName+" ("+cols[0]+", "+cols[1]+") VALUES (\'"+value+"\', \'"+bValue+"\')");
-            conn.setAutoCommit(false);
-            stmt.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    
-    public void writeTable(String tblName, String[] values){
-        try {
-            for(int i=0;i<values.length;i++){
-                writeTable(tblName, values[i], studentColumns.get(i%studentColumns.size()));
-            }
-        } catch (SQLException | ArrayIndexOutOfBoundsException ex) {
-            if(ex.getClass().getName().equals("java.sql.SQLException")){
-                Start.createLog(ex, "A Database Error Occurred");
-            }else{
-                Start.createLog(ex, "A Logic Error Occurred");
-            }
-        }
-    }
-    
-    public void writeTable(String tblName, String[] values, ArrayList<String> cols){
-        try {
-            if(values.length==cols.size()){
-                for(int i=0;i<values.length;i++){
-                    writeTable(tblName, values[i], cols.get(i));
-                }
-            }else{
-                for(int i=0;i<values.length;i++){
-                    writeTable(tblName, values[i], cols.get(i%cols.size()));
-                }
-            }
-        } catch (SQLException | ArrayIndexOutOfBoundsException ex) {
-            if(ex.getClass().getName().equals("java.sql.SQLException")){
-                Start.createLog(ex, "A Database Error Occurred");
-            }else{
-                Start.createLog(ex, "A Logic Error Occurred");
-            }
-        }
-    }
-    
-    public void writeTable(String tblName, String[] values, String col){
-        try {
-            for(int i=0;i<values.length;i++){
-                writeTable(tblName, values[i], col);
-            }
-        } catch (SQLException | ArrayIndexOutOfBoundsException ex) {
-            Start.createLog(ex, "A Database Error Occurred");
-        }
-    }
-    
-    public void writeTable(String tblName, String[] values, String[] cols){
-        try {
-            for(int i=0;i<values.length;i++){
-                writeTable(tblName, values[i], cols[i]);
-            }
-        } catch (SQLException | ArrayIndexOutOfBoundsException ex) {
-            Start.createLog(ex, "A Database Error Occurred");
-        }
-    }
-    
-    public void writeTable(String tblName, ArrayList<String> values){
-        try {
-            for(int i=0;i<values.size();i++){
-                writeTable(tblName, values.get(i), studentColumns.get(i%studentColumns.size()));
-            }
-        } catch (SQLException | ArrayIndexOutOfBoundsException ex) {
-            if(ex.getClass().getName().equals("java.sql.SQLException")){
-                Start.createLog(ex, "A Database Error Occurred");
-            }else{
-                Start.createLog(ex, "A Logic Error Occurred");
-            }
-        }
-    }
-    
-    public void writeTable(String tblName, ArrayList<String> values, ArrayList<String> cols){
-        try {
-            if(values.size()==cols.size()){
-                for(int x=0;x<values.size();x++){
-                    writeTable(tblName, values.get(x), cols.get(x));
-                }
-            }else{
-                for(int x=0;x<values.size();x++){
-                    writeTable(tblName, values.get(x), cols.get(x%cols.size()));
-                }
-            }
-        } catch (SQLException | ArrayIndexOutOfBoundsException ex) {
-            if(ex.getClass().getName().equals("java.sql.SQLException")){
-                Start.createLog(ex, "A Database Error Occurred");
-            }else{
-                Start.createLog(ex, "A Logic Error Occurred");
-            }
-        }
-    }
-    
-    public void writeTable(String tblName, ArrayList<String> values, String col){
-        try {
-            for(int x=0;x<values.size();x++){
-                writeTable(tblName, values.get(x), col);
-            }
-        } catch (SQLException ex) {
-            Start.createLog(ex, "A Database Error Occurred");
-        }
-    }
-    
-    public void deleteTableValue(String tblName, String colName, String value){
-        reconnect();
-        try {
-            stmt=conn.createStatement();
-            stmt.executeUpdate("DELETE FROM "+DEFAULT_SCHEMA+"."+tblName+" WHERE "+colName+"=\'"+value+"\'");
-        } catch (SQLException ex) {
-            Start.createLog(ex, "Unable to delete \""+value+"\" from table: "+tblName);
-        }
-        try {
-            stmt.close();
-        } catch (SQLException ex) {
-            Start.createLog(ex, "An Internal Communication Error Occurred With the Database");
-        }
-    }
-    
-    private void reconnect(){
-        try {
-            conn.close();
-            conn=DriverManager.getConnection("jdbc:derby:AttendEase");
-        } catch (SQLException ex) {
-            Start.createLog(ex, "An Internal Communication Error Occurred With the Database");
-        }
     }
 }

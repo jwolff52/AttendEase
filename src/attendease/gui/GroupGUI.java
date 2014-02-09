@@ -6,7 +6,10 @@ package attendease.gui;
 
 import attendease.util.FrameController;
 import attendease.util.Group;
+import attendease.util.Meeting;
 import attendease.util.Start;
+import attendease.util.Student;
+import java.util.ArrayList;
 import javax.swing.JTabbedPane;
 
 /**
@@ -246,11 +249,10 @@ public class GroupGUI extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "The first character must be a letter. (A-Z, a-z)");
                 return;
             }
-            if(!Start.d.createTables(groupNameTextField.getText())){
-                Start.d.writeTable("Clubs", groupNameTextField.getText(), pointsCheckBox.isSelected(), new String[] {"clubName", "points"});
+            if(Start.d.addClub(groupNameTextField.getText(), locationTextField.getText(), pointsCheckBox.isSelected())){
                 FrameController.changeFrameState("gg");
                 FrameController.getSmgp().setState("Group");
-                FrameController.addGroup(new Group(groupNameTextField.getText(),null,null, pointsCheckBox.isSelected()));
+                FrameController.addGroup(new Group(groupNameTextField.getText(),new ArrayList<Meeting>(),new ArrayList<Student>(), locationTextField.getText(), pointsCheckBox.isSelected()));
                 clearData();
             }else{
                 javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), groupNameTextField.getText()+" already exists!");
@@ -280,7 +282,7 @@ public class GroupGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemMouseReleased
 
     private void browseButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_browseButtonMouseReleased
-        FrameController.chooseFile();
+        locationTextField.setText(FrameController.chooseFile());
     }//GEN-LAST:event_browseButtonMouseReleased
 
     public void clearData(){
@@ -293,7 +295,8 @@ public class GroupGUI extends javax.swing.JFrame {
     
     public void putData(Group g){
         groupNameTextField.setText(g.getName());
-        pointsCheckBox.setSelected(g.isUsePoints());
+        locationTextField.setText(g.getEPath());
+        pointsCheckBox.setSelected(g.usesPoints());
     }
     
 //    public static void main(String args[]) {

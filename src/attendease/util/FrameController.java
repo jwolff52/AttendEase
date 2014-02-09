@@ -6,8 +6,6 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.GroupLayout;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -41,7 +39,6 @@ public class FrameController {
         initPanelsAndFrames();
         initArrayLists();
         initFileChooser();
-//        Start.incrementProgressBar();
         initInventory();
         setCurrentPanel("smgp");
     }
@@ -112,12 +109,12 @@ public class FrameController {
     
     private static void initInventory(){
         inv=new Inventory();
-        ResultSet crs=Start.d.readTable("Clubs");
+        ResultSet crs=Start.d.readClubsTable();
         String club="InvalidClub";
         try {
             while(crs.next()){
                 club=crs.getString("clubName");
-                ResultSet mrs=Start.d.readTable(club+"Meetings");
+                ResultSet mrs=Start.d.readMeetingsTable(club);
                 ArrayList<Meeting> meats=new ArrayList<>();
                 while(mrs.next()){
                     if(mrs.getString(1)==null){
@@ -126,21 +123,22 @@ public class FrameController {
                         meats.add(new Meeting(mrs.getString(1), mrs.getString(2), mrs.getString(3), mrs.getString(4), (Integer)mrs.getObject(5), (Integer)mrs.getObject(6), (Integer)mrs.getObject(7)));
                     }
                 }
-                ResultSet srs=Start.d.readTable(club+"students");
+                ResultSet srs=Start.d.readStudentsTable(club);
                 ArrayList<Student> stews=new ArrayList<>();
                 while(srs.next()){
                     stews.add(new Student(srs.getString(1), (Integer)srs.getObject(2), (Integer)srs.getObject(3)));
                 }
-                boolean usePoints=crs.getBoolean(2);
+                String eFile=crs.getString(2);
+                boolean usePoints=crs.getBoolean(3);
                 if(usePoints){
-                    inv.add(new Group(club, meats, stews, true));
+                    inv.add(new Group(club, meats, stews, eFile, true));
                 }else{
-                    inv.add(new Group(club, meats, stews, false));
+                    inv.add(new Group(club, meats, stews, eFile, false));
                 }
                 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(FrameController.class.getName()).log(Level.SEVERE, null, ex);
+            Start.createLog(ex, "Error retreiving existing Groups!");
         }
     }
     
@@ -251,9 +249,9 @@ public class FrameController {
         returnVal = fc.showOpenDialog(mf);
         if(returnVal==JFileChooser.APPROVE_OPTION){
             InputOutput.readFile(fc.getSelectedFile());
-        }else{
+            return fc.getSelectedFile().getPath();
         }
-        return new String();
+        return null;
     }
     
     public static void addGroup(Group g){
