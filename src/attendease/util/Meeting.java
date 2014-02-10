@@ -33,9 +33,6 @@ public class Meeting {
     }
     
     public Meeting(String[] v){
-        for(String s:v){
-            System.out.println(s);
-        }
         name=v[0];
         date=v[1];
         startTime=v[2];

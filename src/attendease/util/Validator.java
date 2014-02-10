@@ -69,14 +69,37 @@ public class Validator {
         }
         return true;
     }
-    private static String removeColons(String time){
+    public static String replaceColons(String time){
+        System.out.println(time);
         char[] c=time.toCharArray();
         time="";
         for (int i=0;i<c.length;i++){
-            if(c[i]!=':'){
+            if(c[i]==':'){
+                time+=' ';
+            }else{
                 time+=c[i];
             }
         }
-        return null;
+        return time;
+    }
+    public static String replaceSpaces(String time){
+        char[] c=time.toCharArray();
+        time="";
+        int x=0;
+        while(x<c.length){
+            if(c[x]==' '){
+                time+=':';
+                x++;
+                break;
+            }else{
+                time+=c[x];
+            }
+            System.out.println(time);
+        }
+        for (;x<c.length;x++){
+            time+=c[x];
+            System.out.println(time);
+        }
+        return time;
     }
 }

@@ -110,14 +110,14 @@ public class FrameController {
     private static void initInventory(){
         inv=new Inventory();
         ResultSet crs=Start.d.readClubsTable();
-        String club="InvalidClub";
+        String club;
         try {
             while(crs.next()){
                 club=crs.getString("clubName");
                 ResultSet mrs=Start.d.readMeetingsTable(club);
                 ArrayList<Meeting> meats=new ArrayList<>();
                 while(mrs.next()){
-                    meats.add(new Meeting(mrs.getString(1), mrs.getString(2), mrs.getString(3), mrs.getString(4), mrs.getString(5), (Integer)mrs.getObject(6), (Integer)mrs.getObject(7), (Integer)mrs.getObject(8)));
+                    meats.add(new Meeting(mrs.getString("ID"), mrs.getString("DATE"), mrs.getString("STARTTIME"), mrs.getString("ENDTIME"), mrs.getString("REOCURRINGDAYS"), (Integer)mrs.getObject("POINTSGIVEN"), (Integer)mrs.getObject("POINTSREQUIRED"), (Integer)mrs.getObject("LATEPOINTS")));
                 }
                 ResultSet srs=Start.d.readStudentsTable(club);
                 ArrayList<Student> stews=new ArrayList<>();

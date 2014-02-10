@@ -68,6 +68,7 @@ public class MeetingGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edit/Add Meeting");
+        setResizable(false);
 
         cancelButton.setText("Cancel");
         cancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -113,12 +114,12 @@ public class MeetingGUI extends javax.swing.JFrame {
             }
         });
         homeMenuItem.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
+            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
+                homeMenuItemMenuKeyTyped(evt);
+            }
             public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
             }
             public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
-            }
-            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
-                homeMenuItemMenuKeyTyped(evt);
             }
         });
         fileMenu.add(homeMenuItem);
@@ -164,6 +165,8 @@ public class MeetingGUI extends javax.swing.JFrame {
             FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).addMeeting(new Meeting(values));
             FrameController.getSmgp().setState("meeting");
             dispose();
+            System.out.println(values[0]);
+            FrameController.getSmgp().addMeeting(Validator.replaceSpaces(values[0]));
             Start.d.addMeeting(FrameController.getSmgp().getCurrentGroup(), values);
         }else if(!mep.isStartTimeGiven()){
             javax.swing.JOptionPane.showMessageDialog(this, "There was no start time provided!", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);

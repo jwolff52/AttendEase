@@ -345,7 +345,15 @@ public class SelectMGPanel extends javax.swing.JPanel {
         groupList.addElement(group);
     }
     
-    private void fillList(String tblName){
+    public Object getMeeting(int i){
+        return meetingList.getElementAt(i);
+    }
+    
+    public void addMeeting(String string) {
+        meetingList.addElement(string);
+    }
+    
+    private void fillList(String clubName){
         if(isGroup){
             groupList.clear();
             ResultSet grs=Start.d.readClubsTable();
@@ -358,10 +366,12 @@ public class SelectMGPanel extends javax.swing.JPanel {
                 Start.createLog(ex, "A Database Error Occurred");
             }
         }else{
-            ResultSet mrs=Start.d.readMeetingsTable(tblName);
+            meetingList.clear();
+            ResultSet mrs=Start.d.readMeetingsTable(clubName);
             try {
                 while(mrs.next()){
-                    meetingList.addElement(mrs.getString("ID"));
+                    String s=mrs.getString(1);
+                    meetingList.addElement(s);
                 }
             } catch (SQLException ex) {
                 Start.createLog(ex, "A Database Error Occurred");

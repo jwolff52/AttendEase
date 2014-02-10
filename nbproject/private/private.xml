@@ -6,9 +6,15 @@
             <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/src/attendease/database/Database.java</file>
             <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/src/attendease/util/FrameController.java</file>
             <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/Developer.log</file>
+            <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/src/attendease/util/Group.java</file>
+            <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/src/attendease/util/Start.java</file>
+            <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/src/attendease/util/Validator.java</file>
             <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/src/attendease/gui/MeetingEditPanel.java</file>
+            <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/src/attendease/util/Meeting.java</file>
+            <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/src/attendease/gui/MeetingGUI.java</file>
             <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/src/attendease/gui/GroupGUI.java</file>
             <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/src/attendease/gui/SelectMGPanel.java</file>
+            <file>file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/src/attendease/util/EFile.java</file>
         </group>
     </open-files>
 </project-private>

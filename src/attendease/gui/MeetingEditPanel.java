@@ -1017,11 +1017,12 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         if(Validator.isValidName(titleTextBox.getText())){
             values[0]=titleTextBox.getText();
         }else{
-            values[0]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem()+"\t"+getStartTime(true);
+            values[0]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem()+"\t"+Validator.replaceColons(getStartTime(true));
         }
+        System.out.println(values[0]);
         values[1]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem();
-        values[2]=getStartTime(true);
-        values[3]=getEndTime(true);
+        values[2]=Validator.replaceColons(getStartTime(true));
+        values[3]=Validator.replaceColons(getEndTime(true));
         values[4]=getReocurring();
         if(areValidPoints("all")){ 
             values[5]=givenTextBoxBasic.getText();
