@@ -29,14 +29,7 @@ public class Splash extends Frame implements ActionListener {
         loading=l;
         doneLoading=false;
         splash = SplashScreen.getSplashScreen();
-        if (splash == null) {
-            System.out.println("SplashScreen.getSplashScreen() returned null");
-            return;
-        }
         g = splash.createGraphics();
-        if (g == null) {
-            System.out.println("g is null");
-        }
     }
     @Override
     public void actionPerformed(ActionEvent ae) {

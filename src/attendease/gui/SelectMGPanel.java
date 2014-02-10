@@ -200,40 +200,52 @@ public class SelectMGPanel extends javax.swing.JPanel {
     private void deleteButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteButtonMouseReleased
         if(optionSelected()){
             if(!isGroup){
-                FrameController.changeFrameState("dmwg");
-                
-            }else{
-                if(multipleSelected()){
-                    int[] nums=gmList.getSelectedIndices();
-                    List vals=gmList.getSelectedValuesList();
-                    for(int i=vals.size()-1;i>=0;i--){
-                        Start.d.deleteClub((String)vals.get(i));
-                        groupList.remove(nums[i]);
-                    }
-                }else{
-                    Start.d.deleteClub((String)gmList.getSelectedValue());
-                    groupList.remove(gmList.getSelectedIndex());
+                List m=gmList.getSelectedValuesList();
+                String meetings="";
+                for(int i=0;i<m.size();i++){
+                    meetings+=m.get(i)+"\n";
                 }
-                gmList.repaint();
-                gmList.clearSelection();
-                toggleButtons(false);
+                if(javax.swing.JOptionPane.showConfirmDialog(FrameController.getMf(), "Are you sure you wish to delete the following Meeting(s) and all repeated events?\n"+meetings, "Delete Group(s)?", javax.swing.JOptionPane.YES_NO_OPTION)==javax.swing.JOptionPane.YES_OPTION){
+                    if(multipleSelected()){
+                        int[] nums=gmList.getSelectedIndices();
+                        for(int i=m.size();i>=0;i--){
+                            Start.d.deleteMeeting(getCurrentGroup(),(String)m.get(i));
+                            meetingList.remove(nums[i]);
+                        }
+                    }else{
+                        Start.d.deleteMeeting(getCurrentGroup(),(String)gmList.getSelectedValue());
+                        meetingList.remove(gmList.getSelectedIndex());
+                    }
+                }
+            }else{
+                List g=gmList.getSelectedValuesList();
+                String groups="";
+                for(int i=0;i<gmList.getSelectedIndices().length;i++) {
+                    groups+=g.get(i)+"\n";
+                }
+                if(javax.swing.JOptionPane.showConfirmDialog(FrameController.getMf(), "Are you sure you wish to delete the following Group(s)?\n"+groups, "Delete Group(s)?", javax.swing.JOptionPane.YES_NO_OPTION)==javax.swing.JOptionPane.YES_OPTION){
+                    if(multipleSelected()){
+                        int[] nums=gmList.getSelectedIndices();
+                        for(int i=g.size()-1;i>=0;i--){
+                            Start.d.deleteClub((String)g.get(i));
+                            groupList.remove(nums[i]);
+                        }
+                    }else{
+                        Start.d.deleteClub((String)gmList.getSelectedValue());
+                        groupList.remove(gmList.getSelectedIndex());
+                    }
+                    gmList.repaint();
+                    gmList.clearSelection();
+                    toggleButtons(false);
+                }
             }
-            
         }
     }//GEN-LAST:event_deleteButtonMouseReleased
 
     private void gmListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_gmListValueChanged
         if(gmList.getSelectedIndex()>-1){
             if(isGroup){
-                ResultSet mrs=Start.d.readMeetingsTable((String)gmList.getSelectedValue());
                 setCurrentGroup(gmList.getSelectedValue().toString());
-                try {
-                    while(mrs.next()){
-                        meetingList.addElement(mrs.getString(1));
-                    }
-                } catch (SQLException ex) {
-                    Start.createLog(ex, "A Database Error Occurred");
-                }
             }
             if(multipleSelected()){
                 changeButtons(true);

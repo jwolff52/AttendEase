@@ -1021,7 +1021,6 @@ public class MeetingEditPanel extends javax.swing.JPanel {
             values[0]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem()+"    "+Validator.replaceColons(getStartTime(true));
             values[8]="true";
         }
-        System.out.println(values[0]);
         values[1]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem();
         values[2]=Validator.replaceColons(getStartTime(true));
         values[3]=Validator.replaceColons(getEndTime(true));

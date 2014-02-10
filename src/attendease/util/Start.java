@@ -67,7 +67,6 @@ public class Start {
                 try {
                     log.createNewFile();
                 } catch (IOException ex) {
-                    System.out.println(log.getAbsolutePath());
                     preLogError(ex, "Unable to create file: " + log.getPath());
                 }
             }

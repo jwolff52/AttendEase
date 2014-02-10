@@ -121,14 +121,12 @@ public class FrameController {
                 while(mrs.next()){
                     String name=mrs.getString("ID");
                     String date=mrs.getString("DATE");
-                    System.out.println(name);
                     try{
                         if(name.substring(0, date.length()).equals(date)){
                             name=name.substring(0, name.length()-6)+":"+name.substring(name.length()-5);
                         }
                     }catch(StringIndexOutOfBoundsException e){
                     }
-                    System.out.println(name);
                     meats.add(new Meeting(name, date, mrs.getString("STARTTIME"), mrs.getString("ENDTIME"), mrs.getString("REOCURRINGDAYS"), (Integer)mrs.getObject("POINTSGIVEN"), (Integer)mrs.getObject("POINTSREQUIRED"), (Integer)mrs.getObject("LATEPOINTS")));
                     Thread.sleep(1000);
                 }

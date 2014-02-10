@@ -194,6 +194,18 @@ public class Database {
         return rs;
     }
     
+    public void deleteMeeting(String clubName, String meetingName) {
+        Statement stmt;
+        clubName+="Meetings";
+        try {
+            stmt=conn.createStatement();
+            stmt.closeOnCompletion();
+            stmt.executeUpdate("DELETE FROM "+DEFAULT_SCHEMA+"."+clubName+" WHERE ID=\'"+meetingName+"\'");
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Unable to delete \""+meetingName+"\"");
+        }
+    }
+    
     public void closeConnection(){
         try {
             conn.close();

@@ -74,7 +74,6 @@ public class Validator {
         return true;
     }
     public static String replaceColons(String time){
-        System.out.println(time);
         char[] c=time.toCharArray();
         time="";
         for (int i=0;i<c.length;i++){
@@ -83,9 +82,7 @@ public class Validator {
             }else{
                 time+=c[i];
             }
-            System.out.println(time);
         }
-        System.out.println(time);
         return time;
     }
     public static String replaceSpaces(String time){
@@ -100,11 +97,9 @@ public class Validator {
             }else{
                 time+=c[x];
             }
-            System.out.println(time);
         }
         for (;x<c.length;x++){
             time+=c[x];
-            System.out.println(time);
         }
         return time;
     }

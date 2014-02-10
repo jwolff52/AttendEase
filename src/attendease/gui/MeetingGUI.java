@@ -165,7 +165,6 @@ public class MeetingGUI extends javax.swing.JFrame {
             FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).addMeeting(new Meeting(values));
             FrameController.getSmgp().setState("meeting");
             dispose();
-            System.out.println(values[0]);
             if(values[8].equals("true")){
                 FrameController.getSmgp().addMeeting(values[0].substring(0, values[0].length()-6)+":"+values[0].substring(values[0].length()-5));
             }else{

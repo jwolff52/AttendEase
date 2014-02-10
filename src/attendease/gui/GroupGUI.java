@@ -246,13 +246,13 @@ public class GroupGUI extends javax.swing.JFrame {
     private void createButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createButtonMouseReleased
         if(groupNameTextField.getText()!=null&&!groupNameTextField.getText().equals("")){
             if(groupNameTextField.getText().toUpperCase().charAt(0)==groupNameTextField.getText().toLowerCase().charAt(0)){
-                javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "The first character must be a letter. (A-Z, a-z)");
+                javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "The first character of the Group Name must be a letter. (A-Z, a-z)");
                 return;
             }
             if(Start.d.addClub(groupNameTextField.getText(), locationTextField.getText(), pointsCheckBox.isSelected())){
                 FrameController.changeFrameState("gg");
-                FrameController.getSmgp().setState("Group");
                 FrameController.addGroup(new Group(groupNameTextField.getText(),new ArrayList<Meeting>(),new ArrayList<Student>(), locationTextField.getText(), pointsCheckBox.isSelected()));
+                FrameController.getSmgp().setState("Group");
                 clearData();
             }else{
                 javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), groupNameTextField.getText()+" already exists!");
