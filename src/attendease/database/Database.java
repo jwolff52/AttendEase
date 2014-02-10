@@ -7,19 +7,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author James
  */
 public class Database {
     private static Connection conn;
-    private static ArrayList<String> studentColumns, meetingColumns;
+    private static ArrayList<String> studentColumns;
     private static final String DEFAULT_SCHEMA="ATTENDEASE";
     
     public Database() throws InstantiationException, ClassNotFoundException, IllegalAccessException{
         Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
         try{
-            conn=DriverManager.getConnection("jdbc:derby:AttendEase;autocommit=false;");
+            conn=DriverManager.getConnection("jdbc:derby:AttendEase;");
         }catch(SQLException e){
             SQLException f=e;
             while(f.getNextException()!=null){
@@ -31,7 +33,7 @@ public class Database {
                 System.exit(0);
             }
             try {
-                conn=DriverManager.getConnection("jdbc:derby:AttendEase;create=true;autocommit=false;");
+                conn=DriverManager.getConnection("jdbc:derby:AttendEase;create=true;");
             } catch (SQLException ex) {
             Start.createLog(ex, "An Internal Communication Error Occurred With the Database");
             }
@@ -40,16 +42,6 @@ public class Database {
         studentColumns.add("ID");
         studentColumns.add("NAME");
         studentColumns.add("POINTS");
-        meetingColumns=new ArrayList<>();
-        meetingColumns.add("ID");
-        meetingColumns.add("DATE");
-        meetingColumns.add("STARTTIME");
-        meetingColumns.add("ENDTIME");
-        meetingColumns.add("REOCURRINGDAYS");
-        meetingColumns.add("POINTSNEEDED");
-        meetingColumns.add("POINTSREQUIRED");
-        meetingColumns.add("LATEPOINTS");
-        
     }
     
     public void getDb(){
@@ -127,7 +119,9 @@ public class Database {
         Statement stmt;
         try {
             stmt=conn.createStatement();
-            stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+"."+clubName+" VALUES (\'"+values[0]+"\',\'"+values[1]+"\',\'"+values[2]+"\',"+values[3]+","+values[4]+","+values[5]+","+values[6]+","+values[7]+")");
+            stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+"."+clubName+
+                    " VALUES (\'"+values[0]+"\',\'"+values[1]+"\',\'"+values[2]+"\',\'"
+                    +values[3]+"\',"+values[4]+","+values[5]+","+values[6]+","+values[7]+")");
             stmt.close();
         } catch(SQLException ex) {
             Start.createLog(ex, "A Database Error Occurred");
@@ -198,5 +192,13 @@ public class Database {
             Start.createLog(ex, "Unable to read from table: "+clubName);
         }
         return rs;
+    }
+    
+    public void closeConnection(){
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Error closing connecction to database");
+        }
     }
 }

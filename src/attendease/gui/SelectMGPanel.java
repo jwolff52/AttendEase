@@ -356,25 +356,13 @@ public class SelectMGPanel extends javax.swing.JPanel {
     private void fillList(String clubName){
         if(isGroup){
             groupList.clear();
-            ResultSet grs=Start.d.readClubsTable();
-            try {
-                while(grs.next()){
-                    String s=grs.getString("clubName");
-                    groupList.addElement(s);
-                }
-            } catch (SQLException ex) {
-                Start.createLog(ex, "A Database Error Occurred");
+            for(int i=0;i<FrameController.getInv().getGroups().size();i++) {
+                groupList.addElement(FrameController.getInv().getGroup(i).getName());
             }
         }else{
             meetingList.clear();
-            ResultSet mrs=Start.d.readMeetingsTable(clubName);
-            try {
-                while(mrs.next()){
-                    String s=mrs.getString(1);
-                    meetingList.addElement(s);
-                }
-            } catch (SQLException ex) {
-                Start.createLog(ex, "A Database Error Occurred");
+            for(int i=0;i<FrameController.getInv().getGroup(clubName).getMeetings().size(); i++) {
+                meetingList.addElement(FrameController.getInv().getGroup(clubName).getMeeting(i).getName());
             }
         }
     }

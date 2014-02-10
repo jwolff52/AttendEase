@@ -51,6 +51,10 @@ public class Group {
         return meats.get(m);
     }
     
+    public ArrayList<Meeting> getMeetings(){
+        return meats;
+    }
+    
     public Student getStudent(int s){
         return stews.get(s);
     }

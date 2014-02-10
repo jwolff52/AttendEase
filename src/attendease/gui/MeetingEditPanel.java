@@ -1013,11 +1013,13 @@ public class MeetingEditPanel extends javax.swing.JPanel {
     }
     
     public String[] getValues() {
-        String[] values=new String[8];
+        String[] values=new String[9];
         if(Validator.isValidName(titleTextBox.getText())){
             values[0]=titleTextBox.getText();
+            values[8]="false";
         }else{
-            values[0]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem()+"\t"+Validator.replaceColons(getStartTime(true));
+            values[0]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem()+"    "+Validator.replaceColons(getStartTime(true));
+            values[8]="true";
         }
         System.out.println(values[0]);
         values[1]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem();

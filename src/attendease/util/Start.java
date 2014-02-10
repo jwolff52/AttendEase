@@ -101,26 +101,6 @@ public class Start {
         d.getDb();
     }
     
-    public static void log(String value, String logFile){
-        for (File log : logs) {
-            if (log.getName().equals(logFile)) {
-                InputOutput.writeFile(log, value, false);
-            }
-        }
-    }
-    
-    public static void log(String[] values, String logFile){
-        for(String s:values){
-            log(s, logFile);
-        }
-    }
-    
-    public static void log(ArrayList<String> values, String logFile){
-        for(String s:values){
-            log(s, logFile);
-        }
-    }
-    
     public static void createLog(Exception e, String laymansTerm){
         if(!e.getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")){
             String s=new Date().toString()+" :\n\t"+e.toString()+"\n";

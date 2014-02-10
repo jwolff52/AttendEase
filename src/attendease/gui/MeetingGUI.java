@@ -166,7 +166,11 @@ public class MeetingGUI extends javax.swing.JFrame {
             FrameController.getSmgp().setState("meeting");
             dispose();
             System.out.println(values[0]);
-            FrameController.getSmgp().addMeeting(Validator.replaceSpaces(values[0]));
+            if(values[8].equals("true")){
+                FrameController.getSmgp().addMeeting(values[0].substring(0, values[0].length()-6)+":"+values[0].substring(values[0].length()-5));
+            }else{
+                FrameController.getSmgp().addMeeting(values[0]);
+            }
             Start.d.addMeeting(FrameController.getSmgp().getCurrentGroup(), values);
         }else if(!mep.isStartTimeGiven()){
             javax.swing.JOptionPane.showMessageDialog(this, "There was no start time provided!", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);

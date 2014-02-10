@@ -6,6 +6,8 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.GroupLayout;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -35,11 +37,11 @@ public class FrameController {
     private static Inventory inv;
     
     
-    public FrameController(){    
+    public FrameController(){   
+        initInventory(); 
         initPanelsAndFrames();
         initArrayLists();
         initFileChooser();
-        initInventory();
         setCurrentPanel("smgp");
     }
     
@@ -117,7 +119,18 @@ public class FrameController {
                 ResultSet mrs=Start.d.readMeetingsTable(club);
                 ArrayList<Meeting> meats=new ArrayList<>();
                 while(mrs.next()){
-                    meats.add(new Meeting(mrs.getString("ID"), mrs.getString("DATE"), mrs.getString("STARTTIME"), mrs.getString("ENDTIME"), mrs.getString("REOCURRINGDAYS"), (Integer)mrs.getObject("POINTSGIVEN"), (Integer)mrs.getObject("POINTSREQUIRED"), (Integer)mrs.getObject("LATEPOINTS")));
+                    String name=mrs.getString("ID");
+                    String date=mrs.getString("DATE");
+                    System.out.println(name);
+                    try{
+                        if(name.substring(0, date.length()).equals(date)){
+                            name=name.substring(0, name.length()-6)+":"+name.substring(name.length()-5);
+                        }
+                    }catch(StringIndexOutOfBoundsException e){
+                    }
+                    System.out.println(name);
+                    meats.add(new Meeting(name, date, mrs.getString("STARTTIME"), mrs.getString("ENDTIME"), mrs.getString("REOCURRINGDAYS"), (Integer)mrs.getObject("POINTSGIVEN"), (Integer)mrs.getObject("POINTSREQUIRED"), (Integer)mrs.getObject("LATEPOINTS")));
+                    Thread.sleep(1000);
                 }
                 ResultSet srs=Start.d.readStudentsTable(club);
                 ArrayList<Student> stews=new ArrayList<>();
@@ -135,6 +148,8 @@ public class FrameController {
             }
         } catch (SQLException ex) {
             Start.createLog(ex, "Error retreiving existing Groups!");
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FrameController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -259,6 +274,7 @@ public class FrameController {
     }
     
     public static void dispose(){
+        Start.d.closeConnection();
         System.exit(1);
     }
     

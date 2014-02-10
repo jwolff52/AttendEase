@@ -10,23 +10,27 @@ package attendease.util;
  */
 public class Validator {
     public static boolean isValidName(String name) {
-        char[] c=name.toCharArray();
-        name="";
-        for (int i=0;i<c.length;i++) {
-            if(c[i]!=' '){
-                name+=c[i];
-            }
-        }
-        for(int x=0;x<name.length();x++){
-            if(name.substring(x, x+1).toUpperCase().equals(name.substring(x, x+1).toLowerCase())){
-                try{
-                    int y=new Integer(name.substring(x, x+1));
-                }catch(NumberFormatException e){
-                    return false;
+        if(!name.equals("")){
+            char[] c=name.toCharArray();
+            name="";
+            for (int i=0;i<c.length;i++) {
+                if(c[i]!=' '){
+                    name+=c[i];
                 }
             }
+            for(int x=0;x<name.length();x++){
+                if(name.substring(x, x+1).toUpperCase().equals(name.substring(x, x+1).toLowerCase())){
+                    try{
+                        int y=new Integer(name.substring(x, x+1));
+                    }catch(NumberFormatException e){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }else{
+            return false;
         }
-        return true;
     }
     
     public static boolean isValidPoints(String points){
@@ -79,7 +83,9 @@ public class Validator {
             }else{
                 time+=c[i];
             }
+            System.out.println(time);
         }
+        System.out.println(time);
         return time;
     }
     public static String replaceSpaces(String time){
