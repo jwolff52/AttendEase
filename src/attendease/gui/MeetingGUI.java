@@ -157,6 +157,7 @@ public class MeetingGUI extends javax.swing.JFrame {
 
     private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
         FrameController.changeFrameState("mg");
+        FrameController.getMep().clearData();
     }//GEN-LAST:event_cancelButtonMouseReleased
 
     private void createButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createButtonMouseReleased
@@ -175,6 +176,7 @@ public class MeetingGUI extends javax.swing.JFrame {
         }else if(!Validator.isValidTime(mep.getEndHour(),mep.getEndMinute(), false, mep.is24Hour())){
             javax.swing.JOptionPane.showMessageDialog(this, "The end time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
         }
+        FrameController.getMep().clearData();
     }//GEN-LAST:event_createButtonMouseReleased
 
     private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased

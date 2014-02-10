@@ -98,4 +98,12 @@ public class Meeting {
     public void setlPoints(int lPoints) {
         this.lPoints = lPoints;
     }
+
+    public int getReocurringDays() {
+        return reocurringDays;
+    }
+
+    public void setReocurringDays(int reocurringDays) {
+        this.reocurringDays = reocurringDays;
+    }
 }

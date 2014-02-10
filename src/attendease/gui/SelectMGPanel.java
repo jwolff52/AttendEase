@@ -44,6 +44,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
         isGroup=true;
         buttonsEnabled=false;
         setCurrentGroup("");
+        setCurrentMeeting("");
         groupList=new DefaultListModel();
         meetingList=new DefaultListModel();
         fillList("Clubs");
@@ -170,6 +171,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
                 FrameController.getGg().toggleMeetingTab();
                 FrameController.changeFrameState("gg");
             }else{
+                FrameController.getMep().putData(FrameController.getGroup(getCurrentGroup()).getMeeting(gmList.getSelectedIndex()));
                 FrameController.getMg().setButtonText(FrameController.getMg().getFinishButton());
                 FrameController.changeFrameState("mg");
             }
@@ -348,6 +350,16 @@ public class SelectMGPanel extends javax.swing.JPanel {
         }
     }
     
+    public String getCurrentMeeting() {
+        return currentMeeting;
+    }
+
+    public void setCurrentMeeting(String cm) {
+        if(cm!=null){
+            currentMeeting = cm;
+        }
+    }
+    
     private void fillList(String clubName){
         if(isGroup){
             groupList.clear();
@@ -368,6 +380,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
     private final String GROUP_TITLE="Select or Add Group";
     private final String MEETING_TITLE="Select or Add Meeting";
     private String currentGroup;
+    private String currentMeeting;
     
     private DefaultListModel groupList;
     private DefaultListModel meetingList;

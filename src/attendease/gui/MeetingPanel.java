@@ -52,11 +52,11 @@ public class MeetingPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
-        jLabel1.setText("Start Date");
+        jLabel1.setText("");
 
-        jLabel2.setText("Start Time");
+        jLabel2.setText("");
 
-        jLabel3.setText("Meeting Title");
+        jLabel3.setText("");
 
         doneButton.setText("Done");
         doneButton.addMouseListener(new java.awt.event.MouseAdapter() {

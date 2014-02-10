@@ -4,9 +4,11 @@
  */
 package attendease.gui;
 
+import attendease.util.Meeting;
 import attendease.util.Start;
 import attendease.util.Validator;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 import javax.swing.DefaultComboBoxModel;
@@ -974,6 +976,159 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         colorTimes("startBasic");
         colorTimes("startAdvanced");
         colorTimes("end");
+    }
+    
+    public void putData(Meeting m) {
+        ArrayList<Object> p=parseMeetingData(m);
+        titleTextBox.setText((String)p.get(0));
+        sDYear.setSelectedItem(Integer.parseInt((String)p.get(1)));
+        refreshMonths();
+        sDMonth.setSelectedIndex(getMonthNumber((String)p.get(2))-getBeginningMonth());
+        refreshDays();
+        sDDay.setSelectedItem(Integer.parseInt((String)p.get(3)));
+        sHTextBoxBasic.setText((String)p.get(4));
+        sMTextBoxBasic.setText((String)p.get(5));
+        String sampm=(String)p.get(6);
+        switch(sampm.toLowerCase()){
+            case "pm":
+                sTPMRadioButtonBasic.setSelected(true);
+                sTPMRadioButtonAdv.setSelected(true);
+                break;
+            case "":
+                sT24RadioButtonAdv.setSelected(true);
+                iET24RadioButtonAdv.setSelected(true);
+                eTAMRadioButtonAdv.setFocusable(false);
+                eTPMRadioButtonAdv.setFocusable(false);
+                break;
+        }
+        eHTextBoxAdv.setText((String)p.get(7));
+        eMTextBoxAdv.setText((String)p.get(8));
+        if(!sT24RadioButtonBasic.isSelected()){
+            String eampm=(String)p.get(9);
+            switch(eampm.toLowerCase()){
+                case "pm":
+                    eTPMRadioButtonAdv.setSelected(true);
+                    break;
+            }
+        }
+        colorTimes("startBasic");
+        colorTimes("startAdvanced");
+        colorTimes("end");
+        String r=(Integer)p.get(10)+"";
+        sundayButton.setSelected(r.contains("1"));
+        mondayButton.setSelected(r.contains("2"));
+        tuesdayButton.setSelected(r.contains("3"));
+        wednesdayButton.setSelected(r.contains("4"));
+        thursdayButton.setSelected(r.contains("5"));
+        fridayButton.setSelected(r.contains("6"));
+        saturdayButton.setSelected(r.contains("7"));
+        givenTextBoxBasic.setText((Integer)p.get(11)+"");
+        givenTextBoxPoints.setText((Integer)p.get(11)+"");
+        requiredTextBoxBasic.setText((Integer)p.get(12)+"");
+        requiredTextBoxPoints.setText((Integer)p.get(12)+"");
+        lateTextBoxPoints.setText((Integer)p.get(13)+"");
+    }
+    
+    private ArrayList<Object> parseMeetingData(Meeting m){
+        ArrayList<Object> p=new ArrayList<>();
+        String temp=m.getDate();
+        ArrayList<Character> d=new ArrayList<>();
+        for(int i=0;i<temp.length();i++){
+            d.add(temp.charAt(i));
+        }
+        ArrayList<Character> y=new ArrayList<>();
+        for(int i=d.size()-1;i>=0;i--){
+           if(d.get(i)!='/'){
+               y.add(d.get(i));
+               d.remove(i);
+           } else{
+               d.remove(i);
+               break;
+           }
+        }
+        ArrayList<Character> da=new ArrayList<>();
+        for(int i=d.size()-1;i>=0;i--){
+           if(d.get(i)!='/'){
+               da.add(d.get(i));
+               d.remove(i);
+           } else{
+               d.remove(i);
+               break;
+           }
+        }
+        ArrayList<Character> mo=new ArrayList<>();
+        for(int i=d.size()-1;i>=0;i--){
+           if(d.get(i)!='/'){
+               mo.add(d.get(i));
+               d.remove(i);
+           }
+        }
+        ArrayList<Character> atemp=new ArrayList<>();
+        for(int i=0;i<y.size();i++){
+            atemp.add(y.get(i));
+        }
+        y=new ArrayList<>();
+        for(int i=atemp.size()-1;i>=0;i--){
+            y.add(atemp.get(i));
+        }
+        String sy="";
+        for(char c:y){
+            sy+=c;
+        }
+        atemp=new ArrayList<>();
+        for(int i=0;i<mo.size();i++){
+            atemp.add(mo.get(i));
+        }
+        mo=new ArrayList<>();
+        for(int i=atemp.size()-1;i>=0;i--){
+            mo.add(atemp.get(i));
+        }
+        String smo="";
+        for(char c:mo){
+            smo+=c;
+        }
+        atemp=new ArrayList<>();
+        for(int i=0;i<da.size();i++){
+            atemp.add(da.get(i));
+        }
+        da=new ArrayList<>();
+        for(int i=atemp.size()-1;i>=0;i--){
+            da.add(atemp.get(i));
+        }
+        String sda="";
+        for(char c:da){
+            sda+=c;
+        }
+        String s=m.getStartTime().substring(0, m.getStartTime().length()-3);
+        String sampm=m.getStartTime().substring(m.getStartTime().length()-2);
+        String et;
+        String et1;
+        String et2;
+        if(m.getEndTime().equals("")){
+            et=m.getEndTime();
+            et1="";
+            et2="";
+        }else{
+            String e=m.getEndTime().substring(0, m.getEndTime().length()-3);
+            et2=m.getEndTime().substring(m.getEndTime().length()-2);
+            et=s.substring(0,e.indexOf(' '));
+            et1=s.substring(e.indexOf(' ')+1);
+        }
+        p.add(m.getName());
+        p.add(sy);
+        p.add(smo);
+        p.add(sda);
+        p.add(s.substring(0,s.indexOf(' ')));
+        p.add(s.substring(s.indexOf(' ')+1));
+        p.add(sampm);
+        p.add(et);
+        p.add(et1);
+        p.add(et2);
+        p.add(m.getReocurringDays());
+        p.add(m.getgPoints());
+        p.add(m.getrPoints());
+        p.add(m.getlPoints());
+        return p;
     }
     
     /*

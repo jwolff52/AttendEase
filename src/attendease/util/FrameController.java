@@ -268,6 +268,10 @@ public class FrameController {
         return inv.getGroup(i);
     }
     
+    public static Group getGroup(String s){
+        return inv.getGroup(s);
+    }
+    
     public static void dispose(){
         Start.d.closeConnection();
         System.exit(1);
