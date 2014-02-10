@@ -128,7 +128,6 @@ public class FrameController {
                     }catch(StringIndexOutOfBoundsException e){
                     }
                     meats.add(new Meeting(name, date, mrs.getString("STARTTIME"), mrs.getString("ENDTIME"), mrs.getString("REOCURRINGDAYS"), (Integer)mrs.getObject("POINTSGIVEN"), (Integer)mrs.getObject("POINTSREQUIRED"), (Integer)mrs.getObject("LATEPOINTS")));
-                    Thread.sleep(1000);
                 }
                 ResultSet srs=Start.d.readStudentsTable(club);
                 ArrayList<Student> stews=new ArrayList<>();
@@ -146,8 +145,6 @@ public class FrameController {
             }
         } catch (SQLException ex) {
             Start.createLog(ex, "Error retreiving existing Groups!");
-        } catch (InterruptedException ex) {
-            Logger.getLogger(FrameController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

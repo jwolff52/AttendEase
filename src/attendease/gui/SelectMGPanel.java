@@ -14,8 +14,6 @@ package attendease.gui;
 import attendease.util.FrameController;
 import attendease.util.Start;
 import java.awt.Font;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import javax.swing.DefaultListModel;
 
@@ -169,6 +167,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
         if(optionSelected()){
             if(isGroup){
                 FrameController.getGg().putData(FrameController.getGroup(gmList.getSelectedIndex()));
+                FrameController.getGg().toggleMeetingTab();
                 FrameController.changeFrameState("gg");
             }else{
                 FrameController.getMg().setButtonText(FrameController.getMg().getFinishButton());
@@ -347,22 +346,6 @@ public class SelectMGPanel extends javax.swing.JPanel {
         if(cg!=null){
             currentGroup = cg;
         }
-    }
-    
-    public Object getGroup(int i){
-        return groupList.getElementAt(i);
-    }
-    
-    public void addGroup(String group){
-        groupList.addElement(group);
-    }
-    
-    public Object getMeeting(int i){
-        return meetingList.getElementAt(i);
-    }
-    
-    public void addMeeting(String string) {
-        meetingList.addElement(string);
     }
     
     private void fillList(String clubName){

@@ -10,7 +10,6 @@ import attendease.util.Meeting;
 import attendease.util.Start;
 import attendease.util.Student;
 import java.util.ArrayList;
-import javax.swing.JTabbedPane;
 
 /**
  *
@@ -38,29 +37,30 @@ public class GroupGUI extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
-        meetingTab=new javax.swing.JPanel();
     }
     
     
     private void postInit(){
-        JTabbedPane m=new MeetingEditPanel().getMeetingTabbedPane();
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(meetingTab);
-        meetingTab.setLayout(layout);
+        meetingIsHidden=false;
+        meetingTabPanel=new javax.swing.JPanel();
+        mep=new MeetingEditPanel();
+        meetingTab=mep.getMeetingTabbedPane();
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(meetingTabPanel);
+        meetingTabPanel.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(m, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(meetingTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 55, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(m, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(meetingTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        
-        mainTabbedPane.addTab("Meeting", meetingTab);
+        mainTabbedPane.addTab("Meeting", meetingTabPanel);
     }
 
     /**
@@ -260,11 +260,17 @@ public class GroupGUI extends javax.swing.JFrame {
         }else{
             javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "Group Name cannot be blank!");
         }
+        if(meetingIsHidden){
+            toggleMeetingTab();
+        }
     }//GEN-LAST:event_createButtonMouseReleased
 
     private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
         FrameController.changeFrameState("gg");
         clearData();
+        if(meetingIsHidden){
+            toggleMeetingTab();
+        }
     }//GEN-LAST:event_cancelButtonMouseReleased
 
     private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
@@ -289,8 +295,12 @@ public class GroupGUI extends javax.swing.JFrame {
         groupNameTextField.setText("");
         locationTextField.setText("");
         pointsCheckBox.setSelected(false);
-        FrameController.getMep().clearData();
-        mainTabbedPane.getComponent(1).repaint();
+        mep.clearData();
+        meetingTab.setSelectedIndex(0);
+        if(!meetingIsHidden){
+            mainTabbedPane.getComponent(1).repaint();
+        }
+        mainTabbedPane.setSelectedIndex(0);
     }
     
     public void putData(Group g){
@@ -298,35 +308,20 @@ public class GroupGUI extends javax.swing.JFrame {
         locationTextField.setText(g.getEPath());
         pointsCheckBox.setSelected(g.usesPoints());
     }
+
+    public void toggleMeetingTab(){
+        if(meetingIsHidden){
+            mainTabbedPane.addTab("Meeting", meetingTabPanel);
+        }else{
+            mainTabbedPane.removeTabAt(1);
+        }
+        meetingIsHidden=!meetingIsHidden;
+    }
     
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(GroupGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new GroupGUI().setVisible(true);
-//            }
-//        });
-//    }
-    
-    
-    private javax.swing.JPanel meetingTab;
+    private javax.swing.JPanel meetingTabPanel;
+    private javax.swing.JTabbedPane meetingTab;
+    private MeetingEditPanel mep;
+    private boolean meetingIsHidden;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;

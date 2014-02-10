@@ -162,14 +162,11 @@ public class MeetingGUI extends javax.swing.JFrame {
     private void createButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createButtonMouseReleased
         if(Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&Validator.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
             String[] values=FrameController.getMep().getValues();
-            FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).addMeeting(new Meeting(values));
+            String[] localValues=values;
+            localValues[0]=localValues[0].substring(0, localValues[0].length()-6)+":"+localValues[0].substring(localValues[0].length()-5);
+            FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).addMeeting(new Meeting(localValues));
             FrameController.getSmgp().setState("meeting");
             dispose();
-            if(values[8].equals("true")){
-                FrameController.getSmgp().addMeeting(values[0].substring(0, values[0].length()-6)+":"+values[0].substring(values[0].length()-5));
-            }else{
-                FrameController.getSmgp().addMeeting(values[0]);
-            }
             Start.d.addMeeting(FrameController.getSmgp().getCurrentGroup(), values);
         }else if(!mep.isStartTimeGiven()){
             javax.swing.JOptionPane.showMessageDialog(this, "There was no start time provided!", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);

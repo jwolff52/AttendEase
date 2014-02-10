@@ -868,11 +868,11 @@ public class MeetingEditPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_lateTextBoxPointsKeyReleased
 
     private void sHTextBoxAdvKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sHTextBoxAdvKeyReleased
-        colorTimes("startAdv");
+        colorTimes("startAdvanced");
     }//GEN-LAST:event_sHTextBoxAdvKeyReleased
 
     private void sMTextBoxAdvKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sMTextBoxAdvKeyReleased
-        colorTimes("startAdv");
+        colorTimes("startAdvanced");
     }//GEN-LAST:event_sMTextBoxAdvKeyReleased
 
     private void sMTextBoxBasicKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sMTextBoxBasicKeyReleased
@@ -965,6 +965,15 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         titleTextBox.setText("");
         tuesdayButton.setSelected(false);
         wednesdayButton.setSelected(false);
+        sTAMRadioButtonBasic.setSelected(true);
+        sTAMRadioButtonBasic.setSelected(false);
+        sTAMRadioButtonAdv.setSelected(true);
+        sTAMRadioButtonAdv.setSelected(false);
+        eTAMRadioButtonAdv.setSelected(true);
+        eTAMRadioButtonAdv.setSelected(false);
+        colorTimes("startBasic");
+        colorTimes("startAdvanced");
+        colorTimes("end");
     }
     
     /*
@@ -1023,7 +1032,11 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         }
         values[1]=sDMonth.getSelectedItem()+"/"+sDDay.getSelectedItem()+"/"+sDYear.getSelectedItem();
         values[2]=Validator.replaceColons(getStartTime(true));
-        values[3]=Validator.replaceColons(getEndTime(true));
+        if(!(eHTextBoxAdv.getText().equals("")||eHTextBoxAdv.getText()==null)){
+            values[3]=Validator.replaceColons(getEndTime(true));
+        }else{
+            values[3]="";
+        }
         values[4]=getReocurring();
         if(areValidPoints("all")){ 
             values[5]=givenTextBoxBasic.getText();
@@ -1191,7 +1204,7 @@ public class MeetingEditPanel extends javax.swing.JPanel {
                 }
                 break;
             case "end":
-                if(Validator.isValidTime(eHTextBoxAdv.getText(), eMTextBoxAdv.getText(), true, is24Hour())){
+                if(Validator.isValidTime(eHTextBoxAdv.getText(), eMTextBoxAdv.getText(), false, is24Hour())){
                     eMTextBoxAdv.setBackground(Color.GREEN);
                     eHTextBoxAdv.setBackground(Color.GREEN);
                 }else{
