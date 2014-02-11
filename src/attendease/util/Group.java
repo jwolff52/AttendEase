@@ -51,12 +51,25 @@ public class Group {
         return meats.get(m);
     }
     
+    public Meeting getMeeting(String m){
+        for(int x=0;x<meats.size();x++){
+            if(m.equalsIgnoreCase(meats.get(x).getName())){
+                return meats.get(x);
+            }
+        }
+        return null;
+    }
+    
     public ArrayList<Meeting> getMeetings(){
         return meats;
     }
     
     public Student getStudent(int s){
         return stews.get(s);
+    }
+
+    public ArrayList<Student> getStudents() {
+        return stews;
     }
 
     public String getEPath(){

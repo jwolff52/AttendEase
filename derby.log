@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Mon Feb 10 02:32:15 CST 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instance a816c00e-0144-1aec-e065-00000531c1e8 
-on database directory C:\Users\James\Documents\NetBeansProjects\AttendEase\AttendEase  with class loader sun.misc.Launcher$AppClassLoader@6140c973 
+Mon Feb 10 17:44:56 CST 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instance a816c00e-0144-1e30-7492-00000538e498 
+on database directory C:\Users\James\Documents\NetBeansProjects\AttendEase\AttendEase  with class loader sun.misc.Launcher$AppClassLoader@6469cee6 
 Loaded from file:/C:/Users/James/Documents/NetBeansProjects/AttendEase/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_21-b11

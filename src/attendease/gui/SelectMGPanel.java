@@ -192,6 +192,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
             if(isGroup){
                 FrameController.setCurrentPanel("gop");
             }else{
+                setCurrentMeeting(gmList.getSelectedValue().toString());
                 FrameController.setCurrentPanel("mp");
             }
             gmList.clearSelection();

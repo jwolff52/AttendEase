@@ -9,9 +9,9 @@ package attendease.util;
  * @author timothy.chandler
  */
 public class Student {
-    private String name;
-    private int ID;
-    private int points;
+    private final String name;
+    private final int ID;
+    private final int points;
     
     public Student(String n,int id){
         name=n;
@@ -24,24 +24,15 @@ public class Student {
         ID=id;
         points=p;
     }
-
-    /**
-     * @return the name
-     */
+    
     public String getName() {
         return name;
     }
-
-    /**
-     * @return the ID
-     */
+    
     public int getID() {
         return ID;
     }
-
-    /**
-     * @return the points
-     */
+    
     public int getPoints() {
         return points;
     }

@@ -36,7 +36,6 @@ public class FrameController {
     private static JFileChooser fc;
     private static Inventory inv;
     
-    
     public FrameController(){   
         initInventory(); 
         initPanelsAndFrames();
@@ -123,7 +122,7 @@ public class FrameController {
                     String date=mrs.getString("DATE");
                     try{
                         if(name.substring(0, date.length()).equals(date)){
-                            name=name.substring(0, name.length()-6)+":"+name.substring(name.length()-5);
+                            name=date+name.substring(date.length(), name.length()-6)+":"+name.substring(name.length()-5);
                         }
                     }catch(StringIndexOutOfBoundsException e){
                     }
@@ -189,16 +188,19 @@ public class FrameController {
             case "mp":
                 layout=new GroupLayout(mf.getContentPane());
                 layout.setHorizontalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(mp)
+                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(getMp())
                 );
                 layout.setVerticalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(mp)
+                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(getMp())
                 );
                 mf.setLayout(layout);
                 mf.setBounds(new Rectangle(473,450));
+                mp.setTitle(smgp.getCurrentMeeting());
+                mp.setStartDate(inv.getGroup(smgp.getCurrentGroup()).getMeeting(smgp.getCurrentMeeting()).getDate());
+                mp.setStartDate(inv.getGroup(smgp.getCurrentGroup()).getMeeting(smgp.getCurrentMeeting()).getStartTime());
+                mp.populateStudents(inv.getGroup(smgp.getCurrentGroup()).getStudents());
                 break;
             case "smgp":
-                
                 layout=new GroupLayout(mf.getContentPane());
                 layout.setHorizontalGroup(
                         layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(smgp)
@@ -313,6 +315,10 @@ public class FrameController {
         return mep;
     }
 
+    public static MeetingPanel getMp() {
+        return mp;
+    }
+    
     public static SelectMGPanel getSmgp() {
         return smgp;
     }
