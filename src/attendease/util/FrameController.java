@@ -6,8 +6,6 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.GroupLayout;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -20,7 +18,7 @@ public class FrameController {
     private static ArrayList<String> frames;
     private static ArrayList<String> names;
     
-    private static AddMembersWarningGUI amwg;
+    private static AddRemoveMembersWarningGUI armwg;
     private static DeleteMeetingWarningGUI dmwg;
     private static EndMeetingPanel emp;
     private static GroupGUI gg;
@@ -52,14 +50,14 @@ public class FrameController {
         smgp=new SelectMGPanel();
         sp=new StudentPanel();
         
-        amwg=new AddMembersWarningGUI();
+        armwg=new AddRemoveMembersWarningGUI();
         dmwg=new DeleteMeetingWarningGUI();
         gg=new GroupGUI();
         mf=new MainFrame();
         mg=new MeetingGUI();
         umg=new UpdateMembersGUI();
         
-        amwg.setVisible(false);
+        armwg.setVisible(false);
         dmwg.setVisible(false);
         gg.setVisible(false);
         mf.setVisible(false);
@@ -69,7 +67,7 @@ public class FrameController {
     
     private static void initArrayLists(){
         names=new ArrayList<>();
-        names.add("amwg");
+        names.add("armwg");
         names.add("dmwg");
         names.add("emp");
         names.add("gg");
@@ -98,19 +96,19 @@ public class FrameController {
 
             @Override
             public boolean accept(File file) {
-                return file.getPath().endsWith(".xls")/*||file.getPath().endsWith(".xlsx")*/||file.isDirectory();
+                return file.getPath().endsWith(".xls")||file.getPath().endsWith(".xlsx")||file.isDirectory();
             }
 
             @Override
             public String getDescription() {
-                return "Excel files (*.xls)";
+                return "Excel files (*.xls;*.xlsx)";
             }
         });
     }
     
     private static void initInventory(){
         inv=new Inventory();
-        ResultSet crs=Start.d.readClubsTable();
+        ResultSet crs=Start.d.readGroupsTable();
         String club;
         try {
             while(crs.next()){
@@ -118,7 +116,7 @@ public class FrameController {
                 ResultSet mrs=Start.d.readMeetingsTable(club);
                 ArrayList<Meeting> meats=new ArrayList<>();
                 while(mrs.next()){
-                    String name=mrs.getString("ID");
+                    String name=mrs.getString("name");
                     String date=mrs.getString("DATE");
                     try{
                         if(name.substring(0, date.length()).equals(date)){
@@ -126,19 +124,27 @@ public class FrameController {
                         }
                     }catch(StringIndexOutOfBoundsException e){
                     }
-                    meats.add(new Meeting(name, date, mrs.getString("STARTTIME"), mrs.getString("ENDTIME"), mrs.getString("REOCURRINGDAYS"), (Integer)mrs.getObject("POINTSGIVEN"), (Integer)mrs.getObject("POINTSREQUIRED"), (Integer)mrs.getObject("LATEPOINTS")));
+                    meats.add(new Meeting(name, date, Validator.replaceSpaces(mrs.getString("STARTTIME")), Validator.replaceSpaces(mrs.getString("ENDTIME")), mrs.getInt("ATTENDANCE"),mrs.getString("REOCURRINGDAYS"), mrs.getInt("POINTSGIVEN"), mrs.getInt("POINTSREQUIRED"), mrs.getInt("LATEPOINTS"), mrs.getBoolean("MEETINGHELD")));
                 }
                 ResultSet srs=Start.d.readStudentsTable(club);
                 ArrayList<Student> stews=new ArrayList<>();
                 while(srs.next()){
-                    stews.add(new Student(srs.getString(1), (Integer)srs.getObject(2), (Integer)srs.getObject(3)));
+                    stews.add(new Student(srs.getString(2), srs.getInt(1), srs.getInt(4), srs.getInt(3)));
                 }
                 String eFile=crs.getString(2);
                 boolean usePoints=crs.getBoolean(3);
                 if(usePoints){
-                    inv.add(new Group(club, meats, stews, eFile, true));
+                    if(!(eFile==null||eFile.equals(""))){
+                        inv.add(new Group(club, meats, stews, eFile, true));
+                    }else{
+                        inv.add(new Group(club, meats, stews, null, true));
+                    }
                 }else{
-                    inv.add(new Group(club, meats, stews, eFile, false));
+                    if(!(eFile==null||eFile.equals(""))){
+                        inv.add(new Group(club, meats, stews, eFile, false));
+                    }else{
+                        inv.add(new Group(club, meats, stews, null, false));
+                    }
                 }
                 
             }
@@ -194,11 +200,8 @@ public class FrameController {
                         layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(getMp())
                 );
                 mf.setLayout(layout);
-                mf.setBounds(new Rectangle(473,450));
-                mp.setTitle(smgp.getCurrentMeeting());
-                mp.setStartDate(inv.getGroup(smgp.getCurrentGroup()).getMeeting(smgp.getCurrentMeeting()).getDate());
-                mp.setStartDate(inv.getGroup(smgp.getCurrentGroup()).getMeeting(smgp.getCurrentMeeting()).getStartTime());
-                mp.populateStudents(inv.getGroup(smgp.getCurrentGroup()).getStudents());
+                mf.setBounds(new Rectangle(402,625));
+                mp.initMeeting(inv.getGroup(smgp.getCurrentGroup()).getMeeting(smgp.getCurrentMeeting()),inv.getGroup(smgp.getCurrentGroup()).getStudents());
                 break;
             case "smgp":
                 layout=new GroupLayout(mf.getContentPane());
@@ -219,18 +222,15 @@ public class FrameController {
                 layout.setVerticalGroup(
                         layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(sp)
                 );
-                sp.changeDone(true);
-                sp.changeSize(800, 600);
                 mf.setLayout(layout);
-                mf.setBounds(new Rectangle(808,636));
                 break;
         }
     }
     
     public static void changeFrameState(String g){
         switch(g){
-            case "amwg":
-                amwg.setVisible(!amwg.isVisible());
+            case "armwg":
+                armwg.setVisible(!armwg.isVisible());
                 break;
             case "dmwg":
                 dmwg.setVisible(!dmwg.isVisible());
@@ -246,8 +246,6 @@ public class FrameController {
                 break;
             case "umg":
                 umg.setVisible(!umg.isVisible());
-                sp.changeDone(false);
-                sp.changeSize(569, 416);
                 break;
         }
     }
@@ -255,8 +253,14 @@ public class FrameController {
     public static String chooseFile(){
         int returnVal;
         returnVal = fc.showOpenDialog(mf);
+        try{
+            fc.setCurrentDirectory(new File(Start.d.getLastUsedDirectory(getSmgp().getCurrentGroup())));
+        }catch(NullPointerException e){
+            fc.setCurrentDirectory(null);
+        }
         if(returnVal==JFileChooser.APPROVE_OPTION){
             InputOutput.readFile(fc.getSelectedFile());
+            Start.d.setLastUsedDirectory(getSmgp().getCurrentGroup(), fc.getSelectedFile().getParent());
             return fc.getSelectedFile().getPath();
         }
         return null;
@@ -279,8 +283,8 @@ public class FrameController {
         System.exit(1);
     }
     
-    public static AddMembersWarningGUI getArmwg() {
-        return amwg;
+    public static AddRemoveMembersWarningGUI getArmwg() {
+        return armwg;
     }
 
     public static DeleteMeetingWarningGUI getDmwg() {

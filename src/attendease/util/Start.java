@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -22,43 +25,48 @@ public class Start {
     private static File[] logs;
     private static Splash s;
     private static String nextString;
+    private static ProcessBuilder p;
+    
     
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public static void main(String[]args){
         errors=new ArrayList[2];
         errors[0]=new ArrayList<>();
         errors[1]=new ArrayList<>();
-//        s=new Splash("Starting up");
-//        new Thread(new Runnable(){
-//            @Override
-//            public void run() {
-//                s.startSplash();
-//            }
-//        }).start();
+        s=new Splash("Starting up");
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                s.startSplash();
+            }
+        }).start();
         try {
             Thread.sleep(1800);
         } catch (InterruptedException ex) {
             preLogError(ex, "Error in Loading");
         }
         initVariables();
-//        s.setDoneLoading(true);
+        s.setDoneLoading(true);
         try {
             Thread.sleep(20);
         } catch (InterruptedException ex) {
             createLog(ex, "Error in Loading");
         }
-//        removeSplash();
+        removeSplash();
         FrameController.changeFrameState("mf");
+        try{
+            p.start();
+        }catch(IOException ex){}
     }
     
     public static void removeSplash(){
-//        s.dispose();
+        s.dispose();
     }
     
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private static void initVariables() {
         new InputOutput();
-//        s.updateString("Locating log files");
+        s.updateString("Locating log files");
         logs=new File[2];
         logs[0]=new File("Developer.log");
         logs[1]=new File("User.log");
@@ -71,24 +79,24 @@ public class Start {
                 }
             }
         }
-//        s.updateString("Log files located");
+        s.updateString("Log files located");
         logErrors();
-//        s.updateString("Connecting to Database");
+        s.updateString("Connecting to Database");
         initDatabase();
-//        s.updateString("Connected to database");
-//        try {
-//            Thread.sleep(90);
-//        } catch (InterruptedException ex) {
-//            createLog(ex, "Error in Loading");
-//        }
-//        s.updateString("Loading Interface");
+        s.updateString("Connected to Database");
+        try {
+            Thread.sleep(90);
+        } catch (InterruptedException ex) {
+            createLog(ex, "Error in Loading");
+        }
+        s.updateString("Loading Interface");
         new FrameController();
-//        s.updateString("Finishing up");
-//        try {
-//            Thread.sleep(180);
-//        } catch (InterruptedException ex) {
-//            createLog(ex, "Error in Loading");
-//        }
+        s.updateString("Finishing up");
+        try {
+            Thread.sleep(180);
+        } catch (InterruptedException ex) {
+            createLog(ex, "Error in Loading");
+        }
     }
 
     private static void initDatabase() {
@@ -131,5 +139,9 @@ public class Start {
                 s.updateString(nextString);
             }
         }).start();
+    }
+    
+    public static void showReadMe(){
+        p = new ProcessBuilder("Notepad.exe", new JFileChooser().getFileSystemView().getDefaultDirectory().getPath()+"/AttendEase/README.md");
     }
 }

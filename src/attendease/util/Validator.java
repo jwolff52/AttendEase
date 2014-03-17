@@ -33,6 +33,11 @@ public class Validator {
         }
     }
     
+    public static boolean isLate(int s, int c){
+        System.out.println(c+"\t"+s);
+        return c>s;
+    }
+    
     public static boolean isValidPoints(String points){
         if(points==null||points.equals("")){
             return false;
@@ -73,6 +78,7 @@ public class Validator {
         }
         return true;
     }
+    
     public static String replaceColons(String time){
         char[] c=time.toCharArray();
         time="";
@@ -85,6 +91,7 @@ public class Validator {
         }
         return time;
     }
+    
     public static String replaceSpaces(String time){
         char[] c=time.toCharArray();
         time="";
@@ -97,10 +104,45 @@ public class Validator {
             }else{
                 time+=c[x];
             }
+            x++;
         }
-        for (;x<c.length;x++){
+        while(x<c.length){
             time+=c[x];
+            x++;
         }
         return time;
+    }
+    
+    public static int timeToInt(String time){
+        char[] c=time.toCharArray();
+        time="";
+        String period="";
+        int x=0;
+        while(x<c.length){
+            if(c[x]==' '||c[x]==':'){
+                x++;
+                break;
+            }else{
+                time+=c[x];
+            }
+            x++;
+        }
+        while(x<c.length){
+            if(c[x]==' '||c[x]==':'){
+                x++;
+                break;
+            }
+            time+=c[x];
+            x++;
+        }
+        while(x<c.length){
+            period+=c[x];
+            x++;
+        }
+        x=Integer.valueOf(time);
+        if(period.equalsIgnoreCase("pm")){
+            return (x+1200)%2400;
+        }
+        return x;
     }
 }

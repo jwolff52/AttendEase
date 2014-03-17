@@ -4,9 +4,17 @@
  */
 package attendease.gui;
 
+import attendease.util.ATableModel;
+import attendease.util.EFile;
+import attendease.util.EFileReader;
 import attendease.util.FrameController;
+import attendease.util.Group;
 import attendease.util.Start;
-import javax.swing.GroupLayout;
+import attendease.util.Student;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  *
@@ -14,13 +22,9 @@ import javax.swing.GroupLayout;
  */
 public class UpdateMembersGUI extends javax.swing.JFrame {
 
-    /**
-     * Creates new form UpdateMembers
-     */
     public UpdateMembersGUI() {
         preInit();
         initComponents();
-        postInit();
     }
 
     private void preInit(){
@@ -34,22 +38,18 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
+        updateStews=new ArrayList<>();
+        initTable();
     }
     
-    private void postInit(){
-        javax.swing.GroupLayout layout;
-        layout=new javax.swing.GroupLayout(this.removeMemberPanel);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(FrameController.getSp())
-        );
-        layout.setVerticalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(FrameController.getSp())
-        );
-        removeMemberPanel.setLayout(layout);
-        cancelButton.setVisible(true);
-        updateButton.setVisible(true);
+    private void initTable(){
+        sTableModel=new ATableModel();
+        sTableModel.addColumn("ID Number");
+        sTableModel.addColumn("Name");
+        sTableModel.addColumn("Points");
+        sTableModel.addColumn("Meetings Attended");
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -63,7 +63,7 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
         cancelButton = new javax.swing.JButton();
         updateButton = new javax.swing.JButton();
         tabbedPane = new javax.swing.JTabbedPane();
-        updateGroupPanel = new javax.swing.JPanel();
+        importMembersPanel = new javax.swing.JPanel();
         importLabel = new javax.swing.JLabel();
         importTextBox = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
@@ -78,16 +78,18 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
         pointsTextBox = new javax.swing.JTextField();
         warningLabel = new javax.swing.JLabel();
         removeMemberPanel = new javax.swing.JPanel();
+        tablePanel = new javax.swing.JPanel();
+        searchTextField = new javax.swing.JTextField();
+        searchLabel = new javax.swing.JLabel();
+        studentTableScrollPane = new javax.swing.JScrollPane();
+        studentTable = new javax.swing.JTable();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         homeMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setName("updateMembersFrame"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(825, 675));
-        setResizable(false);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         mainPanel.setPreferredSize(new java.awt.Dimension(800, 600));
 
@@ -98,7 +100,7 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
             }
         });
 
-        updateButton.setText("Update");
+        updateButton.setText("Import");
         updateButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 updateButtonMouseReleased(evt);
@@ -107,8 +109,13 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
 
         tabbedPane.setName("Update Group"); // NOI18N
         tabbedPane.setPreferredSize(new java.awt.Dimension(800, 500));
+        tabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tabbedPaneStateChanged(evt);
+            }
+        });
 
-        updateGroupPanel.setPreferredSize(new java.awt.Dimension(735, 535));
+        importMembersPanel.setPreferredSize(new java.awt.Dimension(735, 535));
 
         importLabel.setText("Import Students as Excel File");
 
@@ -119,35 +126,35 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout updateGroupPanelLayout = new javax.swing.GroupLayout(updateGroupPanel);
-        updateGroupPanel.setLayout(updateGroupPanelLayout);
-        updateGroupPanelLayout.setHorizontalGroup(
-            updateGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(updateGroupPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout importMembersPanelLayout = new javax.swing.GroupLayout(importMembersPanel);
+        importMembersPanel.setLayout(importMembersPanelLayout);
+        importMembersPanelLayout.setHorizontalGroup(
+            importMembersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(importMembersPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(updateGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(updateGroupPanelLayout.createSequentialGroup()
+                .addGroup(importMembersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(importMembersPanelLayout.createSequentialGroup()
                         .addComponent(importLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(updateGroupPanelLayout.createSequentialGroup()
+                    .addGroup(importMembersPanelLayout.createSequentialGroup()
                         .addComponent(importTextBox, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(browseButton)))
                 .addContainerGap())
         );
-        updateGroupPanelLayout.setVerticalGroup(
-            updateGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(updateGroupPanelLayout.createSequentialGroup()
+        importMembersPanelLayout.setVerticalGroup(
+            importMembersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(importMembersPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(importLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(updateGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(importMembersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(importTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseButton))
                 .addContainerGap(471, Short.MAX_VALUE))
         );
 
-        tabbedPane.addTab("Import Members", updateGroupPanel);
+        tabbedPane.addTab("Import Members", importMembersPanel);
 
         addMemberPanel.setPreferredSize(new java.awt.Dimension(735, 535));
 
@@ -221,15 +228,81 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
 
         removeMemberPanel.setPreferredSize(new java.awt.Dimension(800, 535));
 
+        tablePanel.setPreferredSize(new java.awt.Dimension(800, 600));
+
+        searchTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchTextFieldKeyReleased(evt);
+            }
+        });
+
+        searchLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        searchLabel.setText("Search Student:");
+
+        studentTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Name", "Points", "Meeting"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        studentTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        studentTable.setAutoscrolls(false);
+        studentTable.setRowHeight(24);
+        studentTable.getTableHeader().setReorderingAllowed(false);
+        studentTableScrollPane.setViewportView(studentTable);
+
+        javax.swing.GroupLayout tablePanelLayout = new javax.swing.GroupLayout(tablePanel);
+        tablePanel.setLayout(tablePanelLayout);
+        tablePanelLayout.setHorizontalGroup(
+            tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tablePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(studentTableScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
+                    .addGroup(tablePanelLayout.createSequentialGroup()
+                        .addComponent(searchLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        tablePanelLayout.setVerticalGroup(
+            tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tablePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchLabel))
+                .addGap(18, 18, 18)
+                .addComponent(studentTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout removeMemberPanelLayout = new javax.swing.GroupLayout(removeMemberPanel);
         removeMemberPanel.setLayout(removeMemberPanelLayout);
         removeMemberPanelLayout.setHorizontalGroup(
             removeMemberPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 795, Short.MAX_VALUE)
+            .addGroup(removeMemberPanelLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 784, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         removeMemberPanelLayout.setVerticalGroup(
             removeMemberPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 525, Short.MAX_VALUE)
+            .addGroup(removeMemberPanelLayout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 498, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Remove Member", removeMemberPanel);
@@ -238,12 +311,14 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cancelButton)
-                .addGap(25, 25, 25)
                 .addComponent(updateButton)
+                .addGap(33, 33, 33)
+                .addComponent(cancelButton)
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -256,8 +331,6 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
                     .addComponent(updateButton)))
         );
 
-        tabbedPane.getAccessibleContext().setAccessibleName("Add Member");
-
         fileMenu.setText("File");
 
         homeMenuItem.setText("Home");
@@ -267,12 +340,12 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
             }
         });
         homeMenuItem.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
-            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
-                homeMenuItemMenuKeyTyped(evt);
-            }
             public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
             }
             public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
+            }
+            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
+                homeMenuItemMenuKeyTyped(evt);
             }
         });
         fileMenu.add(homeMenuItem);
@@ -302,31 +375,16 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 598, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 11, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void updateButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateButtonMouseReleased
-        if(tabbedPane.getSelectedIndex()!=2){
-            FrameController.changeFrameState("amwg");
-        }else{
-            FrameController.changeFrameState("umg");
-        }
-    }//GEN-LAST:event_updateButtonMouseReleased
-
-    private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
-        this.dispose();
-    }//GEN-LAST:event_cancelButtonMouseReleased
-
-    private void browseButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_browseButtonMouseReleased
-        FrameController.chooseFile();
-    }//GEN-LAST:event_browseButtonMouseReleased
-
     private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
         FrameController.getSmgp().setState("Group");
         FrameController.setCurrentPanel("smgp");
+        FrameController.changeFrameState("mf");
         FrameController.changeFrameState("umg");
     }//GEN-LAST:event_homeMenuItemMouseReleased
 
@@ -339,31 +397,153 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
         FrameController.dispose();
     }//GEN-LAST:event_exitMenuItemMouseReleased
 
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(UpdateMembersGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new UpdateMembersGUI().setVisible(true);
-//            }
-//        });
-//    }
+    private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
+        FrameController.changeFrameState("umg");
+        FrameController.changeFrameState("mf");
+    }//GEN-LAST:event_cancelButtonMouseReleased
+
+    private void updateButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateButtonMouseReleased
+        if(tabbedPane.getSelectedIndex()==0){
+            FrameController.getArmwg().setWarningString(true);
+            Group tempGroup=new Group("temp"+FrameController.getSmgp().getCurrentGroup());
+            try {
+                tempGroup.populateStudents(EFileReader.readFile(new EFile(importTextBox.getText())));
+            } catch (IOException ex) {
+                Start.createLog(ex, "Unable to add students to group "+FrameController.getSmgp().getCurrentGroup());
+            }
+            updateStews=FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getNonMembers(tempGroup.getStudents());
+            FrameController.getArmwg().fillNameList(updateStews);
+            FrameController.changeFrameState("armwg");
+            new Thread(new Runnable(){
+                @SuppressWarnings("empty-statement")
+                public void run(){
+                    while(FrameController.getArmwg().isVisible());
+                    if(FrameController.getArmwg().approved()){
+                        FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).updateStudents(getUpdateStudents(), true);
+                        FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).setEPath(importTextBox.getText());
+                        Start.d.addStudents(FrameController.getSmgp().getCurrentGroup(), updateStews);
+                    }
+                }
+            }).start();
+        }else if(tabbedPane.getSelectedIndex()==1){
+            Student tempStudent=new Student(studentNameTextBox.getText(), Integer.valueOf(idNumberTextBox.getText()), Integer.valueOf(pointsTextBox.getText()), 0);
+            if(!FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).isMember(tempStudent)){
+                FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).updateStudents(tempStudent, true);
+                Start.d.addStudent(FrameController.getSmgp().getCurrentGroup(), tempStudent);
+                clear();
+            }
+        }else if(tabbedPane.getSelectedIndex()==2){
+            FrameController.getArmwg().setWarningString(false);
+            int[] selected=studentTable.getSelectedRows();
+            ArrayList<String> temp=new ArrayList<>();
+            for(int x:selected){
+                temp.add((String)studentTable.getValueAt(x, 1));
+            }
+            updateStews=FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getStudentsFromName(temp);
+            FrameController.getArmwg().fillNameList(updateStews);
+            FrameController.changeFrameState("armwg");
+            new Thread(new Runnable(){
+                @SuppressWarnings("empty-statement")
+                public void run(){
+                    while(FrameController.getArmwg().isVisible());
+                    if(FrameController.getArmwg().approved()){
+                        FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).updateStudents(getUpdateStudents(), false);
+                        Start.d.deleteStudents(FrameController.getSmgp().getCurrentGroup(), updateStews);
+                    }
+                }
+            }).start();
+        }else{
+            FrameController.changeFrameState("mf");
+            FrameController.changeFrameState("umg");
+            clear();
+        }
+    }//GEN-LAST:event_updateButtonMouseReleased
+
+    private void browseButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_browseButtonMouseReleased
+        importTextBox.setText(FrameController.chooseFile());
+    }//GEN-LAST:event_browseButtonMouseReleased
+
+    private void tabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPaneStateChanged
+        switch(tabbedPane.getSelectedIndex()){
+            case 0:
+            updateButton.setText("Import");
+            break;
+            case 1:
+            updateButton.setText("Add");
+            break;
+            case 2:
+            updateButton.setText("Remove");
+            break;
+            default:
+            updateButton.setText("Update");
+        }
+    }//GEN-LAST:event_tabbedPaneStateChanged
+
+    private void searchTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchTextFieldKeyReleased
+        if(searchTextField.getText()==null||searchTextField.getText().equals("")){
+            fillStudentTable();
+        }else{
+            ArrayList<Student> newList=new ArrayList<>();
+            fillStudentTable();
+            for(Student s:currentList){
+                if(s.getName().toLowerCase().contains(searchTextField.getText().toLowerCase())||(s.getID()+"").contains(searchTextField.getText())){
+                    newList.add(s);
+                }
+            }
+            fillStudentTable(newList);
+        }
+    }//GEN-LAST:event_searchTextFieldKeyReleased
+
+    public static ArrayList<Student> getUpdateStudents(){
+        return updateStews;
+    }
+    
+    public void fillStudentTable(){
+        initTable();
+        currentList=FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getStudents();
+        Collections.sort(currentList, new Comparator<Student>(){
+                @Override
+                public int compare(Student s1, Student s2){
+                    Integer i1=s1.getID();
+                    Integer i2=s2.getID();
+                    return i1.compareTo(i2);
+                }
+            });
+        for(Student s:currentList){
+            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints(),s.getMeetingsAttended()});
+        }
+        studentTable.setModel(sTableModel);
+    }
+    
+    public void fillStudentTable(ArrayList<Student> newStudents){
+        initTable();
+        currentList=newStudents;
+        Collections.sort(currentList, new Comparator<Student>(){
+                @Override
+                public int compare(Student s1, Student s2){
+                    Integer i1=s1.getID();
+                    Integer i2=s2.getID();
+                    return i1.compareTo(i2);
+                }
+            });
+        for(Student s:currentList){
+            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints(),s.getMeetingsAttended()});
+        }
+        studentTable.setModel(sTableModel);
+    }
+    
+    public void clear(){
+        importTextBox.setText("");
+        studentNameTextBox.setText("Doe, John");
+        idNumberTextBox.setText("");
+        pointsTextBox.setText("0");
+        searchTextField.setText("");
+        initTable();
+    }
+    
+    private static ArrayList<Student> updateStews;
+    private static ArrayList<Student> currentList;
+    private ATableModel sTableModel;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel addMemberPanel;
     private javax.swing.JLabel asteriskLabel1;
@@ -377,17 +557,22 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
     private javax.swing.JLabel idNumberLabel;
     private javax.swing.JTextField idNumberTextBox;
     private javax.swing.JLabel importLabel;
+    private javax.swing.JPanel importMembersPanel;
     private javax.swing.JTextField importTextBox;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JLabel pointsLabel;
     private javax.swing.JTextField pointsTextBox;
     private javax.swing.JPanel removeMemberPanel;
+    private javax.swing.JLabel searchLabel;
+    private javax.swing.JTextField searchTextField;
     private javax.swing.JLabel studentNameLabel;
     private javax.swing.JTextField studentNameTextBox;
+    private javax.swing.JTable studentTable;
+    private javax.swing.JScrollPane studentTableScrollPane;
     private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JPanel tablePanel;
     private javax.swing.JButton updateButton;
-    private javax.swing.JPanel updateGroupPanel;
     private javax.swing.JLabel warningLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -11,9 +11,18 @@
 
 package attendease.gui;
 
+import attendease.util.ATableModel;
+import attendease.util.EFile;
+import attendease.util.EFileWriter;
 import attendease.util.FrameController;
+import attendease.util.Meeting;
 import attendease.util.Start;
-import java.awt.Rectangle;
+import attendease.util.Student;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  *
@@ -21,11 +30,10 @@ import java.awt.Rectangle;
  */
 public class StudentPanel extends javax.swing.JPanel {
 
-    /** Creates new form StudentPanel */
     public StudentPanel() {
         preInit();
         initComponents();
-        postInit();
+        initTable();
     }
 
     private void preInit(){
@@ -39,12 +47,17 @@ public class StudentPanel extends javax.swing.JPanel {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
-        isCurrentMeeting=false;
+        currentList=new ArrayList<>();
     }
     
-    private void postInit(){
-        setColumnWidth();
+    private void initTable(){
+        sTableModel=new ATableModel();
+        sTableModel.addColumn("ID Number");
+        sTableModel.addColumn("Name");
+        sTableModel.addColumn("Points");
+        sTableModel.addColumn("Meetings Attended");
     }
+    
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -54,19 +67,22 @@ public class StudentPanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
-        searchTextField = new javax.swing.JTextField();
+        doneButton = new javax.swing.JButton();
         searchLabel = new javax.swing.JLabel();
         studentTableScrollPane = new javax.swing.JScrollPane();
         studentTable = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
-        doneButton = new javax.swing.JButton();
+        searchTextField = new javax.swing.JTextField();
+        exportButton = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(800, 600));
 
-        jPanel1.setPreferredSize(new java.awt.Dimension(800, 600));
+        doneButton.setText("Done");
+        doneButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                doneButtonMouseReleased(evt);
+            }
+        });
 
         searchLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         searchLabel.setText("Search Student:");
@@ -75,124 +91,166 @@ public class StudentPanel extends javax.swing.JPanel {
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
+                {null, null, null},
                 {null, null, null}
             },
             new String [] {
-                "Name", "Points", "Meeting"
+                "Title 1", "Title 2", "Title 3"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            boolean[] canEdit = new boolean [] {
+                false, false, false
             };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-        studentTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        studentTable.setColumnSelectionAllowed(true);
+        studentTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        studentTable.setAutoscrolls(false);
         studentTable.setRowHeight(24);
         studentTable.getTableHeader().setReorderingAllowed(false);
         studentTableScrollPane.setViewportView(studentTable);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(studentTableScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(searchLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchLabel))
-                .addGap(18, 18, 18)
-                .addComponent(studentTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
-        );
-
-        jPanel2.setPreferredSize(new java.awt.Dimension(800, 600));
-        jPanel2.setLayout(new java.awt.GridBagLayout());
-
-        doneButton.setText("Done");
-        doneButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                doneButtonMouseReleased(evt);
+        searchTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchTextFieldKeyReleased(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 100;
-        gridBagConstraints.ipady = 35;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 600, 0, 0);
-        jPanel2.add(doneButton, gridBagConstraints);
+
+        exportButton.setText("Export");
+        exportButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                exportButtonMouseReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(studentTableScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 767, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 784, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(exportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(doneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(searchLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 498, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(studentTableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(doneButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(exportButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void doneButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_doneButtonMouseReleased
-        if(isCurrentMeeting){
-            FrameController.setCurrentPanel("emp");
-            setIsCurrentMeeting(false);
-        }else{
-            FrameController.setCurrentPanel("gop");
-        }
+        FrameController.setCurrentPanel("gop");
     }//GEN-LAST:event_doneButtonMouseReleased
-    public void changeDone(boolean visible){
-        doneButton.setVisible(visible);
-    }
-    public void setColumnWidth()
-    {
-        studentTable.getColumnModel().getColumn(0).setPreferredWidth(200);
-        studentTable.getColumnModel().getColumn(1).setPreferredWidth(60);
+
+    private void searchTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchTextFieldKeyReleased
+        if(searchTextField.getText()==null||searchTextField.getText().equals("")){
+            fillStudentTable();
+        }else{
+            ArrayList<Student> newList=new ArrayList<>();
+            fillStudentTable();
+            for(Student s:currentList){
+                if(s.getName().toLowerCase().contains(searchTextField.getText().toLowerCase())||(s.getID()+"").contains(searchTextField.getText())){
+                    newList.add(s);
+                }
+            }
+            fillStudentTable(newList);
+        }
+    }//GEN-LAST:event_searchTextFieldKeyReleased
+
+    private void exportButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportButtonMouseReleased
+        javax.swing.JOptionPane.showMessageDialog(this, "Please choose a location to export attendance to.", "AttendEase", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        String loc=FrameController.chooseFile();
+        EFile newFile=new EFile(loc);
+        if(!newFile.exists()){
+            try {
+                newFile.createNewFile();
+            } catch (IOException ex) {
+                Start.createLog(ex, "Unable to create attendance file at "+loc.substring(loc.lastIndexOf(File.separatorChar)+1));
+            }
+        }
+        EFileWriter.writeAttendanceFile(newFile, FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getStudents(), getMeetingNames(), getMeetingAttendance());
+    }//GEN-LAST:event_exportButtonMouseReleased
+    
+    public void fillStudentTable(){
+        initTable();
+        currentList=FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getStudents();
+        Collections.sort(currentList, new Comparator<Student>(){
+                @Override
+                public int compare(Student s1, Student s2){
+                    Integer i1=s1.getID();
+                    Integer i2=s2.getID();
+                    return i1.compareTo(i2);
+                }
+            });
+        for(Student s:currentList){
+            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints(),s.getMeetingsAttended()});
+        }
+        studentTable.setModel(sTableModel);
     }
     
-    public void setIsCurrentMeeting(boolean bool){
-        isCurrentMeeting=bool;
+    public void fillStudentTable(ArrayList<Student> newStudents){
+        initTable();
+        currentList=newStudents;
+        Collections.sort(currentList, new Comparator<Student>(){
+                @Override
+                public int compare(Student s1, Student s2){
+                    Integer i1=s1.getID();
+                    Integer i2=s2.getID();
+                    return i1.compareTo(i2);
+                }
+            });
+        for(Student s:currentList){
+            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints(),s.getMeetingsAttended()});
+        }
+        studentTable.setModel(sTableModel);
     }
-    public void changeSize(int w,int h){
-        this.setBounds(new Rectangle(w,h));
-    }
-    private boolean isCurrentMeeting;
     
+    private ArrayList<String> getMeetingNames(){
+        ArrayList<String> mNames=new ArrayList<>();
+        for(Meeting m:FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getMeetings()){
+            mNames.add(m.getName());
+        }
+        return mNames;
+    }
+    
+    private ArrayList<Integer> getMeetingAttendance(){
+        ArrayList<Integer> mAttendance=new ArrayList<>();
+        for(Meeting m:FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getMeetings()){
+            mAttendance.add(m.getAttendance());
+        }
+        return mAttendance;
+    }
+    
+    private ATableModel sTableModel;
+    private ArrayList<Student> currentList;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton doneButton;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JButton exportButton;
     private javax.swing.JLabel searchLabel;
     private javax.swing.JTextField searchTextField;
     private javax.swing.JTable studentTable;

@@ -12,6 +12,7 @@ import java.io.File;
  */
 public class EFile extends File{
     private String type;
+    
     public EFile(String path){
         super(path);
         if(!path.equals("")){

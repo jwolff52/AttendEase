@@ -5,31 +5,37 @@ public class Meeting {
     private String date;
     private String startTime;
     private String endTime;
+    private int attendance;
     private int reocurringDays;
     private int gPoints;
     private int rPoints;
     private int lPoints;
+    private boolean meatHeld;
     
-    public Meeting(String d, String sTime, String eTime, String rD, int g, int r, int l){
+    public Meeting(String d, String sTime, String eTime, int a, String rD, int g, int r, int l, boolean m){
         name=d+" @ "+sTime;
         date=d;
         startTime=sTime;
         endTime=eTime;
+        attendance=a;
         reocurringDays=new Integer(rD);
         gPoints=g;
         rPoints=r;
         lPoints=l;
+        meatHeld=m;
     }
     
-    public Meeting(String n, String d, String sTime, String eTime, String rD, int g, int r, int l){
+    public Meeting(String n, String d, String sTime, String eTime, int a, String rD, int g, int r, int l, boolean m){
         name=n;
         date=d;
         startTime=sTime;
         endTime=eTime;
+        attendance=a;
         reocurringDays=new Integer(rD);
         gPoints=g;
         rPoints=r;
         lPoints=l;
+        meatHeld=m;
     }
     
     public Meeting(String[] v){
@@ -37,10 +43,12 @@ public class Meeting {
         date=v[1];
         startTime=v[2];
         endTime=v[3];
-        reocurringDays=new Integer(v[4]);
-        gPoints=new Integer(v[5]);
-        rPoints=new Integer(v[6]);
-        lPoints=new Integer(v[7]);
+        attendance=new Integer(v[4]);
+        reocurringDays=new Integer(v[5]);
+        gPoints=new Integer(v[6]);
+        rPoints=new Integer(v[7]);
+        lPoints=new Integer(v[8]);
+        meatHeld=Boolean.valueOf(v[9]);
     }
 
     public String getName() {
@@ -105,5 +113,25 @@ public class Meeting {
 
     public void setReocurringDays(int reocurringDays) {
         this.reocurringDays = reocurringDays;
+    }
+
+    public boolean isMeatHeld() {
+        return meatHeld;
+    }
+
+    public void setMeatHeld(boolean meatHeld) {
+        this.meatHeld = meatHeld;
+    }
+
+    public String[] getVaules() {
+        return new String[]{name,date,startTime,endTime,reocurringDays+"",gPoints+"",rPoints+"",lPoints+"",meatHeld+""};
+    }
+
+    public int getAttendance() {
+        return attendance;
+    }
+
+    public void setAttendance(int attendance) {
+        this.attendance = attendance;
     }
 }

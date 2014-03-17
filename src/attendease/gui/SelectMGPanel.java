@@ -175,6 +175,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
                 FrameController.getMg().setButtonText(FrameController.getMg().getFinishButton());
                 FrameController.changeFrameState("mg");
             }
+            setIsEditing(true);
         }
     }//GEN-LAST:event_editButtonMouseReleased
 
@@ -185,6 +186,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
             FrameController.getMg().setButtonText(FrameController.getMg().getCreateButton());
             FrameController.changeFrameState("mg");
         }
+        setIsEditing(false);
     }//GEN-LAST:event_addButtonMouseReleased
 
     private void selectButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectButtonMouseReleased
@@ -229,11 +231,11 @@ public class SelectMGPanel extends javax.swing.JPanel {
                     if(multipleSelected()){
                         int[] nums=gmList.getSelectedIndices();
                         for(int i=g.size()-1;i>=0;i--){
-                            Start.d.deleteClub((String)g.get(i));
+                            Start.d.deleteGroup((String)g.get(i));
                             groupList.remove(nums[i]);
                         }
                     }else{
-                        Start.d.deleteClub((String)gmList.getSelectedValue());
+                        Start.d.deleteGroup((String)gmList.getSelectedValue());
                         groupList.remove(gmList.getSelectedIndex());
                     }
                     gmList.repaint();
@@ -256,6 +258,13 @@ public class SelectMGPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_gmListValueChanged
+    
+    public boolean isEditing(){
+        if(isGroup){
+            return iEGroup;
+        }
+        return iEMeeting;
+    }
     
     public void setState(String state){
         state=state.toLowerCase();
@@ -375,7 +384,17 @@ public class SelectMGPanel extends javax.swing.JPanel {
         }
     }
     
+    private void setIsEditing(boolean ie){
+        if(isGroup){
+            iEGroup=ie;
+        }else{
+            iEMeeting=ie;
+        }
+    }
+    
     private boolean isGroup;
+    private boolean iEGroup;
+    private boolean iEMeeting;
     private boolean buttonsEnabled;
     
     private final String GROUP_TITLE="Select or Add Group";
