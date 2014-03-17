@@ -35,6 +35,7 @@ public class MeetingGUI extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
+        meatName="";
     }
     
     private void postInit(){
@@ -161,20 +162,49 @@ public class MeetingGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonMouseReleased
 
     private void createButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createButtonMouseReleased
-        if(Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&Validator.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
-            String[] values=FrameController.getMep().getValues();
-            String[] localValues=values;
-            localValues[0]=localValues[0].substring(0, localValues[0].length()-6)+":"+localValues[0].substring(localValues[0].length()-5);
-            FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).addMeeting(new Meeting(localValues));
-            FrameController.getSmgp().setState("meeting");
-            dispose();
-            Start.d.addMeeting(FrameController.getSmgp().getCurrentGroup(), values);
-        }else if(!mep.isStartTimeGiven()){
-            javax.swing.JOptionPane.showMessageDialog(this, "There was no start time provided!", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-        }else if(!Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())){
-            javax.swing.JOptionPane.showMessageDialog(this, "The start time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-        }else if(!Validator.isValidTime(mep.getEndHour(),mep.getEndMinute(), false, mep.is24Hour())){
-            javax.swing.JOptionPane.showMessageDialog(this, "The end time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+        if(FrameController.getSmgp().isEditing()){
+            if(Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&Validator.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
+                String[] values=FrameController.getMep().getValues();
+                String[] localValues=values;
+                try{
+                    if(localValues[0].substring(0, localValues[1].length()).equals(localValues[1])){
+                        localValues[0]=localValues[1]+localValues[0].substring(localValues[1].length(), localValues[0].length()-6)+":"+localValues[0].substring(localValues[0].length()-5);
+                    }
+                }catch(StringIndexOutOfBoundsException e){
+                }
+                FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).removeMeeting(localValues[0]);
+                FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).addMeeting(new Meeting(localValues));
+                FrameController.getSmgp().setState("meeting");
+                dispose();
+                Start.d.editMeeting(FrameController.getSmgp().getCurrentGroup(), meatName, values);
+            }else if(!mep.isStartTimeGiven()){
+                javax.swing.JOptionPane.showMessageDialog(this, "There was no start time provided!", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            }else if(!Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())){
+                javax.swing.JOptionPane.showMessageDialog(this, "The start time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            }else if(!Validator.isValidTime(mep.getEndHour(),mep.getEndMinute(), false, mep.is24Hour())){
+                javax.swing.JOptionPane.showMessageDialog(this, "The end time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            }
+        }else{
+            if(Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&Validator.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
+                String[] values=FrameController.getMep().getValues();
+                String[] localValues=values;
+                try{
+                    if(localValues[0].substring(0, localValues[1].length()).equals(localValues[1])){
+                        localValues[0]=localValues[1]+localValues[0].substring(localValues[1].length(), localValues[0].length()-6)+":"+localValues[0].substring(localValues[0].length()-5);
+                    }
+                }catch(StringIndexOutOfBoundsException e){
+                }
+                FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).addMeeting(new Meeting(localValues));
+                FrameController.getSmgp().setState("meeting");
+                dispose();
+                Start.d.addMeeting(FrameController.getSmgp().getCurrentGroup(), values);
+            }else if(!mep.isStartTimeGiven()){
+                javax.swing.JOptionPane.showMessageDialog(this, "There was no start time provided!", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            }else if(!Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())){
+                javax.swing.JOptionPane.showMessageDialog(this, "The start time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            }else if(!Validator.isValidTime(mep.getEndHour(),mep.getEndMinute(), false, mep.is24Hour())){
+                javax.swing.JOptionPane.showMessageDialog(this, "The end time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            }
         }
         FrameController.getMep().clearData();
     }//GEN-LAST:event_createButtonMouseReleased
@@ -182,6 +212,7 @@ public class MeetingGUI extends javax.swing.JFrame {
     private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
         FrameController.getSmgp().setState("Group");
         FrameController.setCurrentPanel("smgp");
+        FrameController.changeFrameState("mg");
     }//GEN-LAST:event_homeMenuItemMouseReleased
 
     private void homeMenuItemMenuKeyTyped(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_homeMenuItemMenuKeyTyped
@@ -192,32 +223,6 @@ public class MeetingGUI extends javax.swing.JFrame {
     private void exitMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMenuItemMouseReleased
         FrameController.dispose();
     }//GEN-LAST:event_exitMenuItemMouseReleased
-
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(MeetingGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new MeetingGUI().setVisible(true);
-//            }
-//        });
-//    }
     
     public String getCreateButton(){
         return CREATE_BUTTON;
@@ -231,7 +236,13 @@ public class MeetingGUI extends javax.swing.JFrame {
         createButton.setText(text);
     }
     
+    public void setMeatName(String name){
+        meatName=name;
+    }
+    
     private final MeetingEditPanel mep=FrameController.getMep();
+    
+    private String meatName;
     private final String CREATE_BUTTON="Create";
     private final String FINISH_BUTTON="Finish";
     // Variables declaration - do not modify//GEN-BEGIN:variables

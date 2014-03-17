@@ -119,11 +119,15 @@ public class GroupOptionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_viewMeetingsButtonMouseReleased
 
     private void viewMembersButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewMembersButtonMouseReleased
+        FrameController.getSp().fillStudentTable();
         FrameController.setCurrentPanel("sp");
     }//GEN-LAST:event_viewMembersButtonMouseReleased
 
     private void updateMembersButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateMembersButtonMouseReleased
         FrameController.changeFrameState("umg");
+        FrameController.getUmg().toFront();
+        FrameController.getUmg().fillStudentTable();
+        FrameController.changeFrameState("mf");
     }//GEN-LAST:event_updateMembersButtonMouseReleased
 
     private void backButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backButtonMouseReleased

@@ -24,11 +24,9 @@ public class AutoDismiss implements ActionListener{
     public void actionPerformed(ActionEvent e)
     {
         dialog.dispose();
-    }    
-
-    // EDIT: in response to comment
+    }
+    
     public static void showMessageDialog(Component parent, Object message) {
-        // run all of this on the EDT
         final JOptionPane optionPane = new JOptionPane(message);
         String title = UIManager.getString("OptionPane.messageDialogTitle");
         final JDialog dialog = optionPane.createDialog(parent, title);

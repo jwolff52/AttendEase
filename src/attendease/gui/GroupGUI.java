@@ -249,11 +249,19 @@ public class GroupGUI extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "The first character of the Group Name must be a letter. (A-Z, a-z)");
                 return;
             }
-            if(Start.d.addClub(groupNameTextField.getText(), locationTextField.getText(), pointsCheckBox.isSelected())){
+            if(Start.d.addGroup(groupNameTextField.getText(), locationTextField.getText(), pointsCheckBox.isSelected())){
                 FrameController.changeFrameState("gg");
                 FrameController.addGroup(new Group(groupNameTextField.getText(),new ArrayList<Meeting>(),new ArrayList<Student>(), locationTextField.getText(), pointsCheckBox.isSelected()));
+                FrameController.getGroup(groupNameTextField.getText()).populateStudents();
                 FrameController.getSmgp().setState("Group");
-                clearData();
+                new Thread(new Runnable(){
+                    @Override
+                    public void run(){
+                        String groupName=getGroupName();
+                        clearData();
+                        Start.d.addStudents(groupName, FrameController.getGroup(groupName).getStudents());
+                    }
+                }).start();
             }else{
                 javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), groupNameTextField.getText()+" already exists!");
             }
@@ -276,6 +284,7 @@ public class GroupGUI extends javax.swing.JFrame {
     private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
         FrameController.getSmgp().setState("Group");
         FrameController.setCurrentPanel("smgp");
+        FrameController.changeFrameState("gg");
     }//GEN-LAST:event_homeMenuItemMouseReleased
 
     private void homeMenuItemMenuKeyTyped(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_homeMenuItemMenuKeyTyped
@@ -316,6 +325,10 @@ public class GroupGUI extends javax.swing.JFrame {
             mainTabbedPane.removeTabAt(1);
         }
         meetingIsHidden=!meetingIsHidden;
+    }
+    
+    public String getGroupName(){
+        return groupNameTextField.getText();
     }
     
     private javax.swing.JPanel meetingTabPanel;

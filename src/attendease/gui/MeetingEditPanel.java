@@ -4,6 +4,7 @@
  */
 package attendease.gui;
 
+import attendease.util.FrameController;
 import attendease.util.Meeting;
 import attendease.util.Start;
 import attendease.util.Validator;
@@ -953,12 +954,12 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         sHTextBoxBasic.setText("");
         sMTextBoxBasic.setText("");
         fridayButton.setSelected(false);
-        givenTextBoxBasic.setText("");
-        givenTextBoxPoints.setText("");
-        lateTextBoxPoints.setText("");
+        givenTextBoxBasic.setText("0");
+        givenTextBoxPoints.setText("0");
+        lateTextBoxPoints.setText("0");
         mondayButton.setSelected(false);
-        requiredTextBoxBasic.setText("");
-        requiredTextBoxPoints.setText("");
+        requiredTextBoxBasic.setText("0");
+        requiredTextBoxPoints.setText("0");
         initModels();
         saturdayButton.setSelected(false);
         sundayButton.setSelected(false);
@@ -981,6 +982,7 @@ public class MeetingEditPanel extends javax.swing.JPanel {
     public void putData(Meeting m) {
         ArrayList<Object> p=parseMeetingData(m);
         titleTextBox.setText((String)p.get(0));
+        FrameController.getMg().setMeatName((String)p.get(0));
         sDYear.setSelectedItem(Integer.parseInt((String)p.get(1)));
         refreshMonths();
         sDMonth.setSelectedIndex(getMonthNumber((String)p.get(2))-getBeginningMonth());
@@ -1029,105 +1031,98 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         lateTextBoxPoints.setText((Integer)p.get(13)+"");
     }
     
-    private ArrayList<Object> parseMeetingData(Meeting m){
+    private ArrayList<Object> parseMeetingData(Meeting meat){
         ArrayList<Object> p=new ArrayList<>();
-        String temp=m.getDate();
-        ArrayList<Character> d=new ArrayList<>();
-        for(int i=0;i<temp.length();i++){
-            d.add(temp.charAt(i));
-        }
-        ArrayList<Character> y=new ArrayList<>();
-        for(int i=d.size()-1;i>=0;i--){
-           if(d.get(i)!='/'){
-               y.add(d.get(i));
-               d.remove(i);
-           } else{
-               d.remove(i);
+        p.add(meat.getName());
+        p.add(parseDateData(meat));
+        p.add(parseTimeData(meat));
+        p.add(meat.getReocurringDays());
+        p.add(meat.getgPoints());
+        p.add(meat.getrPoints());
+        p.add(meat.getlPoints());
+        return p;
+    }
+    
+    private ArrayList<Object> parseDateData(Meeting meat){
+        ArrayList<Object> p=new ArrayList<>();
+        char[] date=meat.getDate().toCharArray();
+        char[] y=new char[4];
+        char[] d=new char[2];
+        char[] m=new char[8];
+        String year="";
+        String month="";
+        String day="";
+        int i=date.length-1;
+        for(;i>=0;i--){
+           if(date[i]!='/'){
+               y[i]=date[i];
+           }else{
                break;
            }
         }
-        ArrayList<Character> da=new ArrayList<>();
-        for(int i=d.size()-1;i>=0;i--){
-           if(d.get(i)!='/'){
-               da.add(d.get(i));
-               d.remove(i);
-           } else{
-               d.remove(i);
+        for(;i>=0;i--){
+           if(date[i]!='/'){
+               d[i]=date[i];
+           }else{
                break;
            }
         }
-        ArrayList<Character> mo=new ArrayList<>();
-        for(int i=d.size()-1;i>=0;i--){
-           if(d.get(i)!='/'){
-               mo.add(d.get(i));
-               d.remove(i);
+        for(;i>=0;i--){
+           if(date[i]!='/'){
+               m[i]=date[i];
            }
         }
-        ArrayList<Character> atemp=new ArrayList<>();
-        for(int i=0;i<y.size();i++){
-            atemp.add(y.get(i));
-        }
-        y=new ArrayList<>();
-        for(int i=atemp.size()-1;i>=0;i--){
-            y.add(atemp.get(i));
-        }
-        String sy="";
         for(char c:y){
-            sy+=c;
+            year+=c;
         }
-        atemp=new ArrayList<>();
-        for(int i=0;i<mo.size();i++){
-            atemp.add(mo.get(i));
+        for(char c:m){
+            month+=c;
         }
-        mo=new ArrayList<>();
-        for(int i=atemp.size()-1;i>=0;i--){
-            mo.add(atemp.get(i));
+        for(char c:d){
+            day+=c;
         }
-        String smo="";
-        for(char c:mo){
-            smo+=c;
+        p.add(year);
+        p.add(month);
+        p.add(day);
+        return p;
+    }
+    
+    private ArrayList<Object> parseTimeData(Meeting meat){
+        ArrayList<Object> p=new ArrayList<>();
+        //Parse Start Time
+        String s;
+        String sp;
+        s=meat.getStartTime();
+        //Removes Period
+        if(!is24Hour()){
+            s=s.substring(0, s.length()-3);
         }
-        atemp=new ArrayList<>();
-        for(int i=0;i<da.size();i++){
-            atemp.add(da.get(i));
-        }
-        da=new ArrayList<>();
-        for(int i=atemp.size()-1;i>=0;i--){
-            da.add(atemp.get(i));
-        }
-        String sda="";
-        for(char c:da){
-            sda+=c;
-        }
-        String s=m.getStartTime().substring(0, m.getStartTime().length()-3);
-        String sampm=m.getStartTime().substring(m.getStartTime().length()-2);
+        sp=meat.getStartTime().substring(meat.getStartTime().length()-2);
+        //Adds Start Hour
+        p.add(s.substring(0,s.indexOf(':')));
+        //Adds Start Minute
+        p.add(s.substring(s.indexOf(':')+1));
+        p.add(sp);
+        
+        //Parse End Time
         String et;
-        String et1;
-        String et2;
-        if(m.getEndTime().equals("")){
-            et=m.getEndTime();
-            et1="";
-            et2="";
+        String eh;
+        String em;
+        String ep;
+        //End Time can be empty
+        if(meat.getEndTime()==null||meat.getEndTime().equals("")){
+            eh="";
+            em="";
+            ep="";
         }else{
-            String e=m.getEndTime().substring(0, m.getEndTime().length()-3);
-            et2=m.getEndTime().substring(m.getEndTime().length()-2);
-            et=s.substring(0,e.indexOf(' '));
-            et1=s.substring(e.indexOf(' ')+1);
+            et=meat.getEndTime().substring(0, meat.getEndTime().length()-3);
+            eh=et.substring(0,et.indexOf(':'));
+            em=et.substring(et.indexOf(':')+1);
+            ep=et.substring(meat.getEndTime().length()-2);
         }
-        p.add(m.getName());
-        p.add(sy);
-        p.add(smo);
-        p.add(sda);
-        p.add(s.substring(0,s.indexOf(' ')));
-        p.add(s.substring(s.indexOf(' ')+1));
-        p.add(sampm);
-        p.add(et);
-        p.add(et1);
-        p.add(et2);
-        p.add(m.getReocurringDays());
-        p.add(m.getgPoints());
-        p.add(m.getrPoints());
-        p.add(m.getlPoints());
+        p.add(eh);
+        p.add(em);
+        p.add(ep);
         return p;
     }
     
@@ -1198,6 +1193,7 @@ public class MeetingEditPanel extends javax.swing.JPanel {
             values[6]=requiredTextBoxBasic.getText();
             values[7]=lateTextBoxPoints.getText();
         }
+        values[8]="false";
         return values;
     }
     

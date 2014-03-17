@@ -4,14 +4,19 @@
  */
 package attendease.gui;
 
+import attendease.util.ATableModel;
 import attendease.util.AutoDismiss;
+import attendease.util.ColorRenderer;
 import attendease.util.FrameController;
+import attendease.util.Meeting;
 import attendease.util.Start;
 import attendease.util.Student;
+import attendease.util.Validator;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import javax.swing.table.DefaultTableModel;
+import java.util.TimeZone;
 
 /**
  *
@@ -25,6 +30,7 @@ public class MeetingPanel extends javax.swing.JPanel {
     public MeetingPanel() {
         preInit();
         initComponents();
+        postInit();
     }
     
     private void preInit(){
@@ -40,12 +46,19 @@ public class MeetingPanel extends javax.swing.JPanel {
         }
         initTable();
     }
+    
+    private void postInit(){
+        cRenderer=new ColorRenderer();
+        attendanceTable.getColumnModel().getColumn(NAME_COLUMN).setCellRenderer(cRenderer);
+        attendanceTable.getColumnModel().getColumn(TIME_COLUMN).setCellRenderer(cRenderer);
+        attendanceTable.getColumnModel().getColumn(POINTS_COLUMN).setCellRenderer(cRenderer);
+    }
 
     private void initTable(){
-        aTableModel=new DefaultTableModel();
+        aTableModel=new ATableModel();
         aTableModel.addColumn("Name");
-        aTableModel.addColumn("Arrived at:");
-        aTableModel.addColumn("Points");
+        aTableModel.addColumn("Arrived at");
+        aTableModel.addColumn("Point Total");
     }
     
     /**
@@ -58,96 +71,73 @@ public class MeetingPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         sDLabel = new javax.swing.JLabel();
-        sTLabel = new javax.swing.JLabel();
         mTLabel = new javax.swing.JLabel();
         doneButton = new javax.swing.JButton();
         idTextField = new javax.swing.JTextField();
         idTFLabel = new javax.swing.JLabel();
         attendanceTableScrollPane = new javax.swing.JScrollPane();
         attendanceTable = new javax.swing.JTable();
+        tLabel = new javax.swing.JLabel();
+
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         sDLabel.setText("Date");
-
-        sTLabel.setText("Time");
+        add(sDLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
 
         mTLabel.setText("Title");
+        add(mTLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         doneButton.setText("Done");
+        doneButton.setRequestFocusEnabled(false);
         doneButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 doneButtonMouseReleased(evt);
             }
         });
+        add(doneButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 530, -1, -1));
 
+        idTextField.setNextFocusableComponent(idTextField);
         idTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 idTextFieldKeyReleased(evt);
             }
         });
+        add(idTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 530, 119, -1));
 
         idTFLabel.setText("Maually Enter ID Number");
+        add(idTFLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 160, -1));
 
         attendanceTable.setModel(aTableModel);
-        attendanceTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        attendanceTable.setRowSelectionAllowed(false);
+        attendanceTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        attendanceTable.setRequestFocusEnabled(false);
         attendanceTable.getTableHeader().setResizingAllowed(false);
         attendanceTable.getTableHeader().setReorderingAllowed(false);
         attendanceTableScrollPane.setViewportView(attendanceTable);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(attendanceTableScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(idTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(idTFLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(198, 198, 198)
-                        .addComponent(doneButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(352, 352, 352)
-                        .addComponent(sDLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(mTLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(sTLabel)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(sDLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(mTLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sTLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(attendanceTableScrollPane)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(idTFLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(idTextField))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(doneButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
+        add(attendanceTableScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 73, 380, -1));
+
+        tLabel.setText("Time");
+        add(tLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 50, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void doneButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_doneButtonMouseReleased
-        FrameController.setCurrentPanel("emp");
+        if(javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to finish this meeting?", "", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE, null, new Object[]{"Yes", "Cancel"}, 1)==0){
+            currentMeeting.setMeatHeld(true);
+            new Thread(new Runnable(){
+                @Override
+                public void run(){
+                    Start.d.editMeeting(FrameController.getSmgp().getCurrentGroup(), currentMeeting.getName(), currentMeeting.getVaules());
+                    saveStudents(FrameController.getSmgp().getCurrentGroup());
+                }
+            }).start();
+            FrameController.setCurrentPanel("emp");
+            clearTable();
+        }
     }//GEN-LAST:event_doneButtonMouseReleased
 
     private void idTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_idTextFieldKeyReleased
         if(evt.getKeyChar()=='\n'){
-            ArrayList<Student> temp=stews;
+            idTextField.setFocusable(false);
             Collections.sort(stews, new Comparator<Student>(){
                 @Override
                 public int compare(Student s1, Student s2){
@@ -156,52 +146,154 @@ public class MeetingPanel extends javax.swing.JPanel {
                     return i1.compareTo(i2);
                 }
             });
-            int id=0;
+            int id=-1;
             try{
                 id=new Integer(idTextField.getText());
+                int loc=0;
                 boolean found=false;
-                while(!found&&temp.size()>1){
-                    if(temp.get(temp.size()/2).getID()<id){
-                        temp=(ArrayList)temp.subList(temp.size()/2, temp.size());
-                    }else if(temp.get(temp.size()/2).getID()>id){
-                        temp=(ArrayList)temp.subList(0,temp.size()/2);
-                    }else{
+                for(int i=0;i<stews.size();i++) {
+                    System.out.println(stews.get(i).getID());
+                    if(stews.get(i).getID()==id){
                         found=true;
+                        loc=i;
+                        break;
                     }
                 }
                 if(!found){
-                    AutoDismiss.showMessageDialog(this, "You are not in this Group! Please check that you typed your ID number correctly");
+                    AutoDismiss.showMessageDialog(this, "You are not in this Group! Please check that you typed your ID number correctly.");
                 }else{
-                    scanInStudent(temp.get(temp.size()/2));
+                    if(isHere(stews.get(loc).getName())){
+                        AutoDismiss.showMessageDialog(this, "You have already signed in for this Meeting!");
+                    }else{
+                        if(currentMeeting.getrPoints()>0){
+                            if(stews.get(loc).getPoints()<currentMeeting.getrPoints()){
+                                AutoDismiss.showMessageDialog(this, "You do not have enough points to attend this meeting!");
+                            }else{
+                                scanInStudent(stews.get(loc));
+                                idNums.add(stews.get(loc).getID());
+                            }
+                        }else{
+                            scanInStudent(stews.get(loc));
+                            idNums.add(stews.get(loc).getID());
+                        }
+                    }
                 }
             }catch(NumberFormatException e){
                 AutoDismiss.showMessageDialog(this, "That ID Number is Invalid!");
             }
+            idTextField.setText("");
+            idTextField.setFocusable(true);
+            idTextField.requestFocus();
+        }else{
+            System.out.println(evt.getKeyChar());
         }
     }//GEN-LAST:event_idTextFieldKeyReleased
 
     private void scanInStudent(Student s){
-        aTableModel.addRow(new Object[]{s.getName(),});
+        String[] time=getScanInTime();
+        s.addPoints(getPointsAdded(time[0]));
+        Integer points=s.getPoints();
+        s.incrementMeetingsAttended();
+        aTableModel.addRow(new Object[]{s.getName(), time[0], points});
     }
     
-    public void populateStudents(ArrayList<Student> ss){
+    public void initMeeting(Meeting m, ArrayList<Student> ss){
+        setTitle(m.getName());
+        setStartDate(m.getDate());
+        setStartTime(m.getStartTime());
+        setEndTime(m.getEndTime());
+        currentMeeting=m;
         stews=ss;
+        idNums=new ArrayList<>();
+        idTextField.requestFocus();
     }
     
-    public void setTitle(String title) {
+    private void setTitle(String title) {
         mTLabel.setText(title);
     }
     
-    public void setStartDate(String date) {
-        mTLabel.setText(date);
+    private void setStartDate(String date) {
+        sDLabel.setText(date);
     }
     
-    public void setStartTime(String time) {
-        mTLabel.setText(time);
+    private void setStartTime(String time){
+        tLabel.setText(time);
     }
     
-    private DefaultTableModel aTableModel;
+    private void setEndTime(String time) {
+        if(!(time==null||time.equals(""))){
+            tLabel.setText(tLabel.getText()+" - "+time);
+        }
+    }
+    
+    private int getPointsAdded(String time) {
+        if(Validator.isLate(Validator.timeToInt(currentMeeting.getStartTime()), Validator.timeToInt(time))){
+            return currentMeeting.getlPoints();
+        }
+        return currentMeeting.getgPoints();
+    }
+
+    private String[] getScanInTime() {
+        Calendar c=Calendar.getInstance(TimeZone.getTimeZone("CST"));
+        String[] time=new String[2];
+        time[0]="";
+        time[1]="y";
+        String period=" PM";
+        if(c.get(Calendar.AM_PM)==0){
+            period=" AM";
+        }
+        if(c.get(Calendar.MINUTE)<10){
+            time[0]=c.get(Calendar.HOUR_OF_DAY)+":0"+c.get(Calendar.MINUTE)+period;
+        }else{
+            time[0]=c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+period;
+        }
+        if(Validator.isLate(Validator.timeToInt(FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getMeeting(FrameController.getSmgp().getCurrentMeeting()).getStartTime()), Validator.timeToInt(time[0]))){
+            time[1]="n";
+        }
+        return time;
+    }
+    
+    private void clearTable(){
+        for(int i=attendanceTable.getRowCount()-1;i>=0;i--) {
+            aTableModel.removeRow(i);
+        }
+    }
+    
+    private boolean isHere(String text) {
+        for(int i=0;i<attendanceTable.getRowCount();i++){
+            if(attendanceTable.getValueAt(i, NAME_COLUMN).equals(text)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void saveStudents(String clubName){
+        for(Student s:stews){
+            if(attended(s.getID())){
+                Start.d.editStudent(clubName, s.getValues());
+            }
+        }
+    }
+    
+    private boolean attended(int id){
+        for(int x:idNums){
+            if(x==id){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private ATableModel aTableModel;
     private ArrayList<Student> stews;
+    private ArrayList<Integer> idNums;
+    private Meeting currentMeeting;
+    private ColorRenderer cRenderer;
+    
+    public static final int NAME_COLUMN=0;
+    public static final int TIME_COLUMN=1;
+    public static final int POINTS_COLUMN=2;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable attendanceTable;
     private javax.swing.JScrollPane attendanceTableScrollPane;
@@ -210,6 +302,6 @@ public class MeetingPanel extends javax.swing.JPanel {
     private javax.swing.JTextField idTextField;
     private javax.swing.JLabel mTLabel;
     private javax.swing.JLabel sDLabel;
-    private javax.swing.JLabel sTLabel;
+    private javax.swing.JLabel tLabel;
     // End of variables declaration//GEN-END:variables
 }

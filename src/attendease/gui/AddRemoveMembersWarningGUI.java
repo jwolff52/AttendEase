@@ -6,19 +6,24 @@ package attendease.gui;
 
 import attendease.util.FrameController;
 import attendease.util.Start;
+import attendease.util.Student;
+import java.util.ArrayList;
+import java.util.Collections;
+import javax.swing.DefaultListModel;
 
 /**
  *
  * @author james.wolff
  */
-public class AddMembersWarningGUI extends javax.swing.JFrame {
+public class AddRemoveMembersWarningGUI extends javax.swing.JFrame {
 
     /**
      * Creates new form RemoveAddMembersWarning
      */
-    public AddMembersWarningGUI() {
+    public AddRemoveMembersWarningGUI() {
         preInit();
         initComponents();
+        postInit();
     }
 
     private void preInit(){
@@ -32,6 +37,12 @@ public class AddMembersWarningGUI extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
+        aListModel=new DefaultListModel();
+        approved=false;
+    }
+    
+    private void postInit(){
+        addedList.setModel(aListModel);
     }
     
     /**
@@ -44,7 +55,7 @@ public class AddMembersWarningGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
-        addedLabel = new javax.swing.JLabel();
+        titleLabel = new javax.swing.JLabel();
         addedListScrollPane = new javax.swing.JScrollPane();
         addedList = new javax.swing.JList();
         okButton = new javax.swing.JButton();
@@ -59,7 +70,7 @@ public class AddMembersWarningGUI extends javax.swing.JFrame {
         setTitle("WARNING!");
         setResizable(false);
 
-        addedLabel.setText("Students to be added:");
+        titleLabel.setText("Students to be added:");
 
         addedList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -92,7 +103,7 @@ public class AddMembersWarningGUI extends javax.swing.JFrame {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(addedLabel)
+                            .addComponent(titleLabel)
                             .addComponent(addedListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
@@ -105,7 +116,7 @@ public class AddMembersWarningGUI extends javax.swing.JFrame {
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(addedLabel)
+                .addComponent(titleLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addedListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -124,12 +135,12 @@ public class AddMembersWarningGUI extends javax.swing.JFrame {
             }
         });
         homeMenuItem.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
-            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
-                homeMenuItemMenuKeyTyped(evt);
-            }
             public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
             }
             public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
+            }
+            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
+                homeMenuItemMenuKeyTyped(evt);
             }
         });
         fileMenu.add(homeMenuItem);
@@ -164,18 +175,22 @@ public class AddMembersWarningGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void okButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_okButtonMouseReleased
+        approved=true;
+        FrameController.changeFrameState("mf");
+        FrameController.changeFrameState("armwg");
         FrameController.changeFrameState("umg");
-        FrameController.changeFrameState("amwg");
+        FrameController.getUmg().clear();
     }//GEN-LAST:event_okButtonMouseReleased
 
     private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
-        FrameController.changeFrameState("amwg");
+        approved=false;
+        FrameController.changeFrameState("armwg");
     }//GEN-LAST:event_cancelButtonMouseReleased
 
     private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
         FrameController.getSmgp().setState("Group");
         FrameController.setCurrentPanel("smgp");
-        FrameController.changeFrameState("amwg");
+        FrameController.changeFrameState("armwg");
         FrameController.changeFrameState("umg");
     }//GEN-LAST:event_homeMenuItemMouseReleased
 
@@ -187,33 +202,33 @@ public class AddMembersWarningGUI extends javax.swing.JFrame {
     private void exitMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMenuItemMouseReleased
         FrameController.dispose();
     }//GEN-LAST:event_exitMenuItemMouseReleased
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(AddMembersWarningGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new AddMembersWarningGUI().setVisible(true);
-//            }
-//        });
-//    }
+    
+    public void fillNameList(ArrayList<Student> tempStudents) {
+        aListModel=new DefaultListModel();
+        Collections.sort(tempStudents);
+        for(Student student:tempStudents){
+            aListModel.addElement(student.getName());
+        }
+        addedList.setModel(aListModel);
+    }
+    
+    public boolean approved() {
+        return approved;
+    }
+    
+    public void setWarningString(boolean add){
+        if(add){
+            titleLabel.setText(addString);
+        }else{
+            titleLabel.setText(remString);
+        }
+    }
+    
+    private DefaultListModel aListModel;
+    private boolean approved;
+    private final String addString="Students to be added:";
+    private final String remString="Students to be removed:";
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel addedLabel;
     private javax.swing.JList addedList;
     private javax.swing.JScrollPane addedListScrollPane;
     private javax.swing.JButton cancelButton;
@@ -224,5 +239,6 @@ public class AddMembersWarningGUI extends javax.swing.JFrame {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton okButton;
+    private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 }

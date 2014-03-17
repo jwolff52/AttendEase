@@ -4,6 +4,7 @@
  */
 package attendease.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -16,6 +17,7 @@ public class Group {
     
     private final String name;
     private EFile excel;
+    private FileUtilities f;
     
     private final boolean usePoints;
     
@@ -39,8 +41,37 @@ public class Group {
         usePoints=p;
     }
     
+    public void populateStudents(){
+        try {
+            f = EFileReader.readFile(excel);
+        } catch (IOException ex) {
+            Start.createLog(ex, "Error reading Students File located at: "+excel.getPath());
+        }
+        for (int i=0;i<f.getNames().size();i++) {
+            stews.add(new Student(f.getNames().get(i),f.getIdNums().get(i).intValue()));
+        }
+    }
+    
+    public void populateStudents(FileUtilities f){
+        Student temp;
+        for (int i=0;i<f.getNames().size();i++) {
+            temp=new Student(f.getNames().get(i),f.getIdNums().get(i).intValue());
+            if(!isMember(temp)){
+                stews.add(temp);
+            }
+        }
+    }
+    
     public void addMeeting(Meeting m){
         meats.add(m);
+    }
+    
+    public void removeMeeting(String name){
+        for(int x=0;x<meats.size();x++){
+            if(meats.get(x).getName().equals(name)){
+                meats.remove(x);
+            }
+        }
     }
     
     public String getName(){
@@ -82,5 +113,52 @@ public class Group {
     
     public boolean usesPoints() {
         return usePoints;
+    }
+
+    public boolean isMember(Student s) {
+        for(Student m:stews){
+            if(s.equals(m)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public ArrayList<Student> getNonMembers(ArrayList<Student> ss){
+        ArrayList<Student> temp=new ArrayList<>();
+        for(Student s : ss){
+            if(!isMember(s)){
+                temp.add(s);
+            }
+        }
+        return temp;
+    }
+    
+    public void updateStudents(ArrayList<Student> s, boolean add){
+        if(add){
+            stews.addAll(s);
+        }else{
+            stews.removeAll(s);
+        }
+    }
+    
+    public void updateStudents(Student s, boolean add){
+        if(add){
+            stews.add(s);
+        }else{
+            stews.remove(s);
+        }
+    }
+    
+    public ArrayList<Student> getStudentsFromName(ArrayList<String> names){
+        ArrayList<Student> temp=new ArrayList<>();
+        for (String name : names) {
+            for (Student student : stews) {
+                if(student.getName().equals(name)){
+                    temp.add(student);
+                }
+            }
+        }
+        return temp;
     }
 }
