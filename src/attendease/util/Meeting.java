@@ -1,37 +1,37 @@
 package attendease.util;
 /*@author timothy.chandler*/
 public class Meeting {
+    private String identifier;
     private String name;
     private String date;
     private String startTime;
     private String endTime;
     private int attendance;
-    private int reocurringDays;
     private int gPoints;
     private int rPoints;
     private int lPoints;
     private boolean meatHeld;
     
-    public Meeting(String d, String sTime, String eTime, int a, String rD, int g, int r, int l, boolean m){
+    public Meeting(String i, String d, String sTime, String eTime, int a, int g, int r, int l, boolean m){
+        identifier=i;
         name=d+" @ "+sTime;
         date=d;
         startTime=sTime;
         endTime=eTime;
         attendance=a;
-        reocurringDays=new Integer(rD);
         gPoints=g;
         rPoints=r;
         lPoints=l;
         meatHeld=m;
     }
     
-    public Meeting(String n, String d, String sTime, String eTime, int a, String rD, int g, int r, int l, boolean m){
+    public Meeting(String i, String n, String d, String sTime, String eTime, int a, int g, int r, int l, boolean m){
+        identifier=i;
         name=n;
         date=d;
         startTime=sTime;
         endTime=eTime;
         attendance=a;
-        reocurringDays=new Integer(rD);
         gPoints=g;
         rPoints=r;
         lPoints=l;
@@ -39,12 +39,12 @@ public class Meeting {
     }
     
     public Meeting(String[] v){
-        name=v[0];
-        date=v[1];
-        startTime=v[2];
-        endTime=v[3];
-        attendance=new Integer(v[4]);
-        reocurringDays=new Integer(v[5]);
+        identifier=v[0];
+        name=v[1];
+        date=v[2];
+        startTime=v[3];
+        endTime=v[4];
+        attendance=new Integer(v[5]);
         gPoints=new Integer(v[6]);
         rPoints=new Integer(v[7]);
         lPoints=new Integer(v[8]);
@@ -107,14 +107,6 @@ public class Meeting {
         this.lPoints = lPoints;
     }
 
-    public int getReocurringDays() {
-        return reocurringDays;
-    }
-
-    public void setReocurringDays(int reocurringDays) {
-        this.reocurringDays = reocurringDays;
-    }
-
     public boolean isMeatHeld() {
         return meatHeld;
     }
@@ -124,7 +116,7 @@ public class Meeting {
     }
 
     public String[] getVaules() {
-        return new String[]{name,date,startTime,endTime,reocurringDays+"",gPoints+"",rPoints+"",lPoints+"",meatHeld+""};
+        return new String[]{identifier,name,date,startTime,endTime,attendance+"",gPoints+"",rPoints+"",lPoints+"",meatHeld+""};
     }
 
     public int getAttendance() {
@@ -133,5 +125,13 @@ public class Meeting {
 
     public void setAttendance(int attendance) {
         this.attendance = attendance;
+    }
+    
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier=identifier;
     }
 }

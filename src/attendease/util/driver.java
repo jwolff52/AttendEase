@@ -1,10 +1,6 @@
 package attendease.util;
 
-import attendease.database.Database;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Random;
 
 /**
  * @author James
@@ -12,6 +8,17 @@ import java.util.logging.Logger;
  */
 public class driver {
     public static void main(String[] args){
-        System.out.println(System.getProperty("HomeDirectory"));
+        Random rand=new Random();
+        int j;
+        for (int i = 0; i < 10; i++) {
+            j=rand.nextInt(9999)+1;
+            System.out.println(j);
+            System.out.println(MiscUtils.thirtySixTo10(MiscUtils.tenTo36(j)));
+            System.out.println("");
+            System.out.println("\n\n");
+        }
+        System.out.println(3%3);
+        System.out.println(MiscUtils.thirtySixTo10(MiscUtils.tenTo36(10)));
+        
     }
 }

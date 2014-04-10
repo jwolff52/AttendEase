@@ -20,7 +20,6 @@ public class FrameController {
     
     private static AddRemoveMembersWarningGUI armwg;
     private static DeleteMeetingWarningGUI dmwg;
-    private static EndMeetingPanel emp;
     private static GroupGUI gg;
     private static GroupOptionsPanel gop;
     private static MeetingEditPanel mep;
@@ -43,7 +42,6 @@ public class FrameController {
     }
     
     private static void initPanelsAndFrames(){
-        emp=new EndMeetingPanel();
         gop=new GroupOptionsPanel();
         mep=new MeetingEditPanel();
         mp=new MeetingPanel();
@@ -112,11 +110,11 @@ public class FrameController {
         String club;
         try {
             while(crs.next()){
-                club=crs.getString("clubName");
+                club=crs.getString("CLUBNAME");
                 ResultSet mrs=Start.d.readMeetingsTable(club);
                 ArrayList<Meeting> meats=new ArrayList<>();
                 while(mrs.next()){
-                    String name=mrs.getString("name");
+                    String name=mrs.getString("NAME");
                     String date=mrs.getString("DATE");
                     try{
                         if(name.substring(0, date.length()).equals(date)){
@@ -124,12 +122,12 @@ public class FrameController {
                         }
                     }catch(StringIndexOutOfBoundsException e){
                     }
-                    meats.add(new Meeting(name, date, Validator.replaceSpaces(mrs.getString("STARTTIME")), Validator.replaceSpaces(mrs.getString("ENDTIME")), mrs.getInt("ATTENDANCE"),mrs.getString("REOCURRINGDAYS"), mrs.getInt("POINTSGIVEN"), mrs.getInt("POINTSREQUIRED"), mrs.getInt("LATEPOINTS"), mrs.getBoolean("MEETINGHELD")));
+                    meats.add(new Meeting(mrs.getString("IDENTIFIER"),name, date, MiscUtils.replaceSpaces(mrs.getString("STARTTIME")), MiscUtils.replaceSpaces(mrs.getString("ENDTIME")), mrs.getInt("ATTENDANCE"), mrs.getInt("POINTSGIVEN"), mrs.getInt("POINTSREQUIRED"), mrs.getInt("LATEPOINTS"), mrs.getBoolean("MEETINGHELD")));
                 }
                 ResultSet srs=Start.d.readStudentsTable(club);
                 ArrayList<Student> stews=new ArrayList<>();
                 while(srs.next()){
-                    stews.add(new Student(srs.getString(2), srs.getInt(1), srs.getInt(4), srs.getInt(3)));
+                    stews.add(new Student(srs.getString("NAME"), srs.getInt("ID"), srs.getInt("POINTS"), srs.getString("MEETINGS")));
                 }
                 String eFile=crs.getString(2);
                 boolean usePoints=crs.getBoolean(3);
@@ -148,7 +146,7 @@ public class FrameController {
                 }
                 
             }
-        } catch (SQLException ex) {
+        } catch (NullPointerException | SQLException ex) {
             Start.createLog(ex, "Error retreiving existing Groups!");
         }
     }
@@ -157,17 +155,6 @@ public class FrameController {
         GroupLayout layout;
         mf.getContentPane().removeAll();
         switch(p){
-            case "emp":
-                layout=new GroupLayout(mf.getContentPane());
-                layout.setHorizontalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(emp)
-                );
-                layout.setVerticalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(emp)
-                );
-                mf.setLayout(layout);
-                mf.setBounds(new Rectangle(808,636));
-                break;
             case "gop":
                 layout=new GroupLayout(mf.getContentPane());
                 layout.setHorizontalGroup(
@@ -178,7 +165,7 @@ public class FrameController {
                 );
                 mf.setLayout(layout);
                 mf.setBounds(new Rectangle(808,636));
-                gop.setCurrentGroup(smgp.getCurrentGroup());
+                gop.setCurrentGroup(smgp.getCurrentGroupName());
                 break;
             case "mep":
                 layout=new GroupLayout(mf.getContentPane());
@@ -201,7 +188,7 @@ public class FrameController {
                 );
                 mf.setLayout(layout);
                 mf.setBounds(new Rectangle(402,625));
-                mp.initMeeting(inv.getGroup(smgp.getCurrentGroup()).getMeeting(smgp.getCurrentMeeting()),inv.getGroup(smgp.getCurrentGroup()).getStudents());
+                mp.initMeeting(inv.getGroup(smgp.getCurrentGroupName()).getMeeting(smgp.getCurrentMeetingName()),inv.getGroup(smgp.getCurrentGroupName()).getStudents());
                 break;
             case "smgp":
                 layout=new GroupLayout(mf.getContentPane());
@@ -253,14 +240,8 @@ public class FrameController {
     public static String chooseFile(){
         int returnVal;
         returnVal = fc.showOpenDialog(mf);
-        try{
-            fc.setCurrentDirectory(new File(Start.d.getLastUsedDirectory(getSmgp().getCurrentGroup())));
-        }catch(NullPointerException e){
-            fc.setCurrentDirectory(null);
-        }
         if(returnVal==JFileChooser.APPROVE_OPTION){
             InputOutput.readFile(fc.getSelectedFile());
-            Start.d.setLastUsedDirectory(getSmgp().getCurrentGroup(), fc.getSelectedFile().getParent());
             return fc.getSelectedFile().getPath();
         }
         return null;
@@ -278,6 +259,14 @@ public class FrameController {
         return inv.getGroup(s);
     }
     
+    public static void removeGroup(String s){
+        inv.delete(inv.getGroup(s));
+    }
+    
+    public static void removeGroup(int i){
+        inv.delete(inv.getGroup(i));
+    }
+    
     public static void dispose(){
         Start.d.closeConnection();
         System.exit(1);
@@ -289,10 +278,6 @@ public class FrameController {
 
     public static DeleteMeetingWarningGUI getDmwg() {
         return dmwg;
-    }
-
-    public static EndMeetingPanel getEmp() {
-        return emp;
     }
 
     public static GroupGUI getGg() {

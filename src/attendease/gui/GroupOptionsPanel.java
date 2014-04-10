@@ -58,7 +58,7 @@ public class GroupOptionsPanel extends javax.swing.JPanel {
             }
         });
 
-        viewMembersButton.setText("View Attendence");
+        viewMembersButton.setText("View Students");
         viewMembersButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 viewMembersButtonMouseReleased(evt);

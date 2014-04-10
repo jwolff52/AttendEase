@@ -1,13 +1,13 @@
 package attendease.gui;
 
-/*
- * SplashDemo.java
- *
- */
-
 import attendease.util.Start;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Graphics2D;
+import java.awt.SplashScreen;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Splash extends Frame implements ActionListener {
     

@@ -7,6 +7,7 @@ package attendease.util;
 import attendease.database.Database;
 import attendease.gui.Splash;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,7 +57,7 @@ public class Start {
         FrameController.changeFrameState("mf");
         try{
             p.start();
-        }catch(IOException ex){}
+        }catch(NullPointerException | IOException ex){}
     }
     
     public static void removeSplash(){
@@ -139,6 +140,19 @@ public class Start {
                 s.updateString(nextString);
             }
         }).start();
+    }
+    
+    public static void firstRunSetup(){
+        try {
+            final String HOME_DIR=new JFileChooser().getFileSystemView().getDefaultDirectory().getPath();
+            TFileWriter.writeFile(new File(HOME_DIR+"/AttendEase/README.md"), TFileReader.readFile(new File("README.md")));
+            EFileWriter.writeFile(new EFile(HOME_DIR+"/AttendEase/XLSExample.xls"), EFileReader.readFile(new EFile("XLSExample.xls")));
+            EFileWriter.writeFile(new EFile(HOME_DIR+"/AttendEase/XLSXExample.xls"), EFileReader.readFile(new EFile("XLSXExample.xlsx")));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Start.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Start.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public static void showReadMe(){

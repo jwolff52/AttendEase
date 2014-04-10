@@ -7,7 +7,7 @@ package attendease.gui;
 import attendease.util.FrameController;
 import attendease.util.Meeting;
 import attendease.util.Start;
-import attendease.util.Validator;
+import attendease.util.MiscUtils;
 
 /**
  *
@@ -35,17 +35,17 @@ public class MeetingGUI extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
-        meatName="";
+        isEditing=false;
     }
     
     private void postInit(){
         javax.swing.GroupLayout layout=new javax.swing.GroupLayout(getContentPane());
         setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(mep)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(mep)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(mep)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(mep)
         );
     }
     
@@ -162,47 +162,49 @@ public class MeetingGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonMouseReleased
 
     private void createButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createButtonMouseReleased
-        if(FrameController.getSmgp().isEditing()){
-            if(Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&Validator.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
+        if(isEditing){
+            if(MiscUtils.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&MiscUtils.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
                 String[] values=FrameController.getMep().getValues();
+                values[0]=FrameController.getInv().getIdentifier(FrameController.getMep().getOldName(), 0);
                 String[] localValues=values;
                 try{
-                    if(localValues[0].substring(0, localValues[1].length()).equals(localValues[1])){
-                        localValues[0]=localValues[1]+localValues[0].substring(localValues[1].length(), localValues[0].length()-6)+":"+localValues[0].substring(localValues[0].length()-5);
+                    if(localValues[1].substring(0, localValues[2].length()).equals(localValues[2])){
+                        localValues[1]=localValues[2]+localValues[1].substring(localValues[2].length(), localValues[1].length()-6)+":"+localValues[1].substring(localValues[1].length()-5);
                     }
                 }catch(StringIndexOutOfBoundsException e){
                 }
-                FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).removeMeeting(localValues[0]);
-                FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).addMeeting(new Meeting(localValues));
+                FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroupName()).removeMeeting(FrameController.getMep().getOldName());
+                FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroupName()).addMeeting(new Meeting(localValues));
                 FrameController.getSmgp().setState("meeting");
                 dispose();
-                Start.d.editMeeting(FrameController.getSmgp().getCurrentGroup(), meatName, values);
+                Start.d.editMeeting(FrameController.getSmgp().getCurrentGroupName(), values);
             }else if(!mep.isStartTimeGiven()){
                 javax.swing.JOptionPane.showMessageDialog(this, "There was no start time provided!", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-            }else if(!Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())){
+            }else if(!MiscUtils.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())){
                 javax.swing.JOptionPane.showMessageDialog(this, "The start time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-            }else if(!Validator.isValidTime(mep.getEndHour(),mep.getEndMinute(), false, mep.is24Hour())){
+            }else if(!MiscUtils.isValidTime(mep.getEndHour(),mep.getEndMinute(), false, mep.is24Hour())){
                 javax.swing.JOptionPane.showMessageDialog(this, "The end time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
             }
         }else{
-            if(Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&Validator.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
+            if(MiscUtils.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&MiscUtils.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
                 String[] values=FrameController.getMep().getValues();
+                values[0]=MiscUtils.getNextIdentifier();
                 String[] localValues=values;
                 try{
-                    if(localValues[0].substring(0, localValues[1].length()).equals(localValues[1])){
-                        localValues[0]=localValues[1]+localValues[0].substring(localValues[1].length(), localValues[0].length()-6)+":"+localValues[0].substring(localValues[0].length()-5);
+                    if(localValues[1].substring(0, localValues[2].length()).equals(localValues[2])){
+                        localValues[1]=localValues[2]+localValues[1].substring(localValues[2].length(), localValues[1].length()-6)+":"+localValues[1].substring(localValues[1].length()-5);
                     }
                 }catch(StringIndexOutOfBoundsException e){
                 }
-                FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroup()).addMeeting(new Meeting(localValues));
+                FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroupName()).addMeeting(new Meeting(localValues));
                 FrameController.getSmgp().setState("meeting");
                 dispose();
-                Start.d.addMeeting(FrameController.getSmgp().getCurrentGroup(), values);
+                Start.d.addMeeting(FrameController.getSmgp().getCurrentGroupName(), values);
             }else if(!mep.isStartTimeGiven()){
                 javax.swing.JOptionPane.showMessageDialog(this, "There was no start time provided!", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-            }else if(!Validator.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())){
+            }else if(!MiscUtils.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())){
                 javax.swing.JOptionPane.showMessageDialog(this, "The start time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-            }else if(!Validator.isValidTime(mep.getEndHour(),mep.getEndMinute(), false, mep.is24Hour())){
+            }else if(!MiscUtils.isValidTime(mep.getEndHour(),mep.getEndMinute(), false, mep.is24Hour())){
                 javax.swing.JOptionPane.showMessageDialog(this, "The end time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
             }
         }
@@ -236,15 +238,19 @@ public class MeetingGUI extends javax.swing.JFrame {
         createButton.setText(text);
     }
     
-    public void setMeatName(String name){
-        meatName=name;
+    public void setIsEditing(boolean ie){
+        isEditing=ie;
+    }
+    
+    public boolean getIsEditing(){
+        return isEditing;
     }
     
     private final MeetingEditPanel mep=FrameController.getMep();
     
-    private String meatName;
     private final String CREATE_BUTTON="Create";
     private final String FINISH_BUTTON="Finish";
+    private boolean isEditing;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton createButton;

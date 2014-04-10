@@ -7,6 +7,8 @@ package attendease.util;
 import attendease.gui.MeetingPanel;
 import java.awt.Color;
 import java.awt.Component;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -32,7 +34,7 @@ public class ColorRenderer extends DefaultTableCellRenderer{
         table.setRowSelectionAllowed(false);
         table.setCellSelectionEnabled(true);
         Component comp=super.getTableCellRendererComponent(table, o, isSelected, hasFocus, row, col);
-        if(Validator.isLate(Validator.timeToInt(FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getMeeting(FrameController.getSmgp().getCurrentMeeting()).getStartTime()), Validator.timeToInt((String)table.getValueAt(table.getRowCount()-1, 1)))){
+        if(MiscUtils.isLate(MiscUtils.timeToInt(FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeeting(FrameController.getSmgp().getCurrentMeetingName()).getStartTime()), MiscUtils.timeToInt((String)table.getValueAt(table.getRowCount()-1, 1)), FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeeting(FrameController.getSmgp().getCurrentMeetingName()).getDate(), new SimpleDateFormat("MMMM/dd/yyyy").format(Calendar.getInstance().getTime()))){
             setBackground(Color.RED);
         }else{
             setBackground(Color.GREEN);

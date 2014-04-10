@@ -405,31 +405,32 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
     private void updateButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateButtonMouseReleased
         if(tabbedPane.getSelectedIndex()==0){
             FrameController.getArmwg().setWarningString(true);
-            Group tempGroup=new Group("temp"+FrameController.getSmgp().getCurrentGroup());
+            Group tempGroup=new Group("temp"+FrameController.getSmgp().getCurrentGroupName());
             try {
                 tempGroup.populateStudents(EFileReader.readFile(new EFile(importTextBox.getText())));
             } catch (IOException ex) {
-                Start.createLog(ex, "Unable to add students to group "+FrameController.getSmgp().getCurrentGroup());
+                Start.createLog(ex, "Unable to add students to group "+FrameController.getSmgp().getCurrentGroupName());
             }
-            updateStews=FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getNonMembers(tempGroup.getStudents());
+            updateStews=FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getNonMembers(tempGroup.getStudents());
             FrameController.getArmwg().fillNameList(updateStews);
             FrameController.changeFrameState("armwg");
             new Thread(new Runnable(){
                 @SuppressWarnings("empty-statement")
+                @Override
                 public void run(){
                     while(FrameController.getArmwg().isVisible());
                     if(FrameController.getArmwg().approved()){
-                        FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).updateStudents(getUpdateStudents(), true);
-                        FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).setEPath(importTextBox.getText());
-                        Start.d.addStudents(FrameController.getSmgp().getCurrentGroup(), updateStews);
+                        FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).updateStudents(getUpdateStudents(), true);
+                        FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).setEPath(importTextBox.getText());
+                        Start.d.addStudents(FrameController.getSmgp().getCurrentGroupName(), updateStews);
                     }
                 }
             }).start();
         }else if(tabbedPane.getSelectedIndex()==1){
-            Student tempStudent=new Student(studentNameTextBox.getText(), Integer.valueOf(idNumberTextBox.getText()), Integer.valueOf(pointsTextBox.getText()), 0);
-            if(!FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).isMember(tempStudent)){
-                FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).updateStudents(tempStudent, true);
-                Start.d.addStudent(FrameController.getSmgp().getCurrentGroup(), tempStudent);
+            Student tempStudent=new Student(studentNameTextBox.getText(), Integer.valueOf(idNumberTextBox.getText()), Integer.valueOf(pointsTextBox.getText()), "");
+            if(!FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).isMember(tempStudent)){
+                FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).updateStudents(tempStudent, true);
+                Start.d.addStudent(FrameController.getSmgp().getCurrentGroupName(), tempStudent);
                 clear();
             }
         }else if(tabbedPane.getSelectedIndex()==2){
@@ -439,16 +440,17 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
             for(int x:selected){
                 temp.add((String)studentTable.getValueAt(x, 1));
             }
-            updateStews=FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getStudentsFromName(temp);
+            updateStews=FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getStudentsFromName(temp);
             FrameController.getArmwg().fillNameList(updateStews);
             FrameController.changeFrameState("armwg");
             new Thread(new Runnable(){
                 @SuppressWarnings("empty-statement")
+                @Override
                 public void run(){
                     while(FrameController.getArmwg().isVisible());
                     if(FrameController.getArmwg().approved()){
-                        FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).updateStudents(getUpdateStudents(), false);
-                        Start.d.deleteStudents(FrameController.getSmgp().getCurrentGroup(), updateStews);
+                        FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).updateStudents(getUpdateStudents(), false);
+                        Start.d.deleteStudents(FrameController.getSmgp().getCurrentGroupName(), updateStews);
                     }
                 }
             }).start();
@@ -500,7 +502,7 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
     
     public void fillStudentTable(){
         initTable();
-        currentList=FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getStudents();
+        currentList=FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getStudents();
         Collections.sort(currentList, new Comparator<Student>(){
                 @Override
                 public int compare(Student s1, Student s2){

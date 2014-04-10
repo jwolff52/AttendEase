@@ -11,7 +11,8 @@ import attendease.util.FrameController;
 import attendease.util.Meeting;
 import attendease.util.Start;
 import attendease.util.Student;
-import attendease.util.Validator;
+import attendease.util.MiscUtils;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -121,16 +122,16 @@ public class MeetingPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void doneButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_doneButtonMouseReleased
-        if(javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to finish this meeting?", "", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE, null, new Object[]{"Yes", "Cancel"}, 1)==0){
+        if(javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to finish this meeting?", "AttendEase", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE, null, new Object[]{"Yes", "Cancel"}, 1)==0){
             currentMeeting.setMeatHeld(true);
             new Thread(new Runnable(){
                 @Override
                 public void run(){
-                    Start.d.editMeeting(FrameController.getSmgp().getCurrentGroup(), currentMeeting.getName(), currentMeeting.getVaules());
-                    saveStudents(FrameController.getSmgp().getCurrentGroup());
+                    Start.d.editMeeting(FrameController.getSmgp().getCurrentGroupName(), currentMeeting.getVaules());
+                    saveStudents(FrameController.getSmgp().getCurrentGroupName());
                 }
             }).start();
-            FrameController.setCurrentPanel("emp");
+            FrameController.setCurrentPanel("gop");
             clearTable();
         }
     }//GEN-LAST:event_doneButtonMouseReleased
@@ -152,7 +153,6 @@ public class MeetingPanel extends javax.swing.JPanel {
                 int loc=0;
                 boolean found=false;
                 for(int i=0;i<stews.size();i++) {
-                    System.out.println(stews.get(i).getID());
                     if(stews.get(i).getID()==id){
                         found=true;
                         loc=i;
@@ -184,16 +184,14 @@ public class MeetingPanel extends javax.swing.JPanel {
             idTextField.setText("");
             idTextField.setFocusable(true);
             idTextField.requestFocus();
-        }else{
-            System.out.println(evt.getKeyChar());
         }
     }//GEN-LAST:event_idTextFieldKeyReleased
 
     private void scanInStudent(Student s){
         String[] time=getScanInTime();
         s.addPoints(getPointsAdded(time[0]));
+        s.addMeetingsAttended(currentMeeting.getIdentifier());
         Integer points=s.getPoints();
-        s.incrementMeetingsAttended();
         aTableModel.addRow(new Object[]{s.getName(), time[0], points});
     }
     
@@ -227,7 +225,7 @@ public class MeetingPanel extends javax.swing.JPanel {
     }
     
     private int getPointsAdded(String time) {
-        if(Validator.isLate(Validator.timeToInt(currentMeeting.getStartTime()), Validator.timeToInt(time))){
+        if(MiscUtils.isLate(MiscUtils.timeToInt(currentMeeting.getStartTime()), MiscUtils.timeToInt(time), FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeeting(FrameController.getSmgp().getCurrentMeetingName()).getDate(), new SimpleDateFormat("MMMM/dd/yyyy").format(Calendar.getInstance().getTime()))){
             return currentMeeting.getlPoints();
         }
         return currentMeeting.getgPoints();
@@ -247,7 +245,7 @@ public class MeetingPanel extends javax.swing.JPanel {
         }else{
             time[0]=c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+period;
         }
-        if(Validator.isLate(Validator.timeToInt(FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getMeeting(FrameController.getSmgp().getCurrentMeeting()).getStartTime()), Validator.timeToInt(time[0]))){
+        if(MiscUtils.isLate(MiscUtils.timeToInt(FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeeting(FrameController.getSmgp().getCurrentMeetingName()).getStartTime()), MiscUtils.timeToInt(time[0]), FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeeting(FrameController.getSmgp().getCurrentMeetingName()).getDate(), new SimpleDateFormat("MMMM/dd/yyyy").format(Calendar.getInstance().getTime()))){
             time[1]="n";
         }
         return time;

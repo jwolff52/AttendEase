@@ -37,6 +37,8 @@ public class GroupGUI extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
+        isEditing=false;
+        oldName="";
     }
     
     
@@ -244,32 +246,56 @@ public class GroupGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createButtonMouseReleased
-        if(groupNameTextField.getText()!=null&&!groupNameTextField.getText().equals("")){
-            if(groupNameTextField.getText().toUpperCase().charAt(0)==groupNameTextField.getText().toLowerCase().charAt(0)){
-                javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "The first character of the Group Name must be a letter. (A-Z, a-z)");
-                return;
-            }
-            if(Start.d.addGroup(groupNameTextField.getText(), locationTextField.getText(), pointsCheckBox.isSelected())){
-                FrameController.changeFrameState("gg");
+        if(isEditing){
+            if(groupNameTextField.getText()!=null&&!groupNameTextField.getText().equals("")){
+                if(groupNameTextField.getText().toUpperCase().charAt(0)==groupNameTextField.getText().toLowerCase().charAt(0)){
+                    javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "The first character of the Group Name must be a letter. (A-Z, a-z)");
+                    return;
+                }
+                FrameController.removeGroup(oldName);
                 FrameController.addGroup(new Group(groupNameTextField.getText(),new ArrayList<Meeting>(),new ArrayList<Student>(), locationTextField.getText(), pointsCheckBox.isSelected()));
                 FrameController.getGroup(groupNameTextField.getText()).populateStudents();
                 FrameController.getSmgp().setState("Group");
-                new Thread(new Runnable(){
-                    @Override
-                    public void run(){
-                        String groupName=getGroupName();
-                        clearData();
-                        Start.d.addStudents(groupName, FrameController.getGroup(groupName).getStudents());
-                    }
-                }).start();
+                FrameController.changeFrameState("gg");
+                clearData();
+                Start.d.editGroup(oldName, groupNameTextField.getText(), locationTextField.getText(), pointsCheckBox.isSelected());
             }else{
-                javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), groupNameTextField.getText()+" already exists!");
+                javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "Group Name cannot be blank!");
+            }
+            if(meetingIsHidden){
+                toggleMeetingTab();
             }
         }else{
-            javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "Group Name cannot be blank!");
-        }
-        if(meetingIsHidden){
-            toggleMeetingTab();
+            if(groupNameTextField.getText()!=null&&!groupNameTextField.getText().equals("")){
+                if(groupNameTextField.getText().toUpperCase().charAt(0)==groupNameTextField.getText().toLowerCase().charAt(0)){
+                    javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "The first character of the Group Name must be a letter. (A-Z, a-z)");
+                    return;
+                }
+                if(Start.d.addGroup(groupNameTextField.getText(), locationTextField.getText(), pointsCheckBox.isSelected())){
+                    FrameController.addGroup(new Group(groupNameTextField.getText(),new ArrayList<Meeting>(),new ArrayList<Student>(), locationTextField.getText(), pointsCheckBox.isSelected()));
+                    FrameController.getGroup(groupNameTextField.getText()).populateStudents();
+                    FrameController.getSmgp().setState("Group");
+                    FrameController.changeFrameState("gg");
+                    new Thread(new Runnable(){
+                        @Override
+                        public void run(){
+                            String groupName=getGroupName();
+                            clearData();
+                            Start.d.addStudents(groupName, FrameController.getGroup(groupName).getStudents());
+                        }
+                    }).start();
+                    if(!(mep.getMeetingName()==null||mep.getMeetingName().equals(""))){
+                        
+                    }
+                }else{
+                    javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), groupNameTextField.getText()+" already exists!");
+                }
+            }else{
+                javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "Group Name cannot be blank!");
+            }
+            if(meetingIsHidden){
+                toggleMeetingTab();
+            }
         }
     }//GEN-LAST:event_createButtonMouseReleased
 
@@ -316,6 +342,7 @@ public class GroupGUI extends javax.swing.JFrame {
         groupNameTextField.setText(g.getName());
         locationTextField.setText(g.getEPath());
         pointsCheckBox.setSelected(g.usesPoints());
+        oldName=g.getName();
     }
 
     public void toggleMeetingTab(){
@@ -331,10 +358,20 @@ public class GroupGUI extends javax.swing.JFrame {
         return groupNameTextField.getText();
     }
     
+    public void setIsEditing(boolean ie){
+        isEditing=ie;
+    }
+    
+    public void setCreateButtonText(String label) {
+        createButton.setText(label);
+    }
+    
     private javax.swing.JPanel meetingTabPanel;
     private javax.swing.JTabbedPane meetingTab;
     private MeetingEditPanel mep;
     private boolean meetingIsHidden;
+    private boolean isEditing;
+    private String oldName;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;

@@ -55,7 +55,6 @@ public class StudentPanel extends javax.swing.JPanel {
         sTableModel.addColumn("ID Number");
         sTableModel.addColumn("Name");
         sTableModel.addColumn("Points");
-        sTableModel.addColumn("Meetings Attended");
     }
     
     
@@ -186,6 +185,9 @@ public class StudentPanel extends javax.swing.JPanel {
         javax.swing.JOptionPane.showMessageDialog(this, "Please choose a location to export attendance to.", "AttendEase", javax.swing.JOptionPane.INFORMATION_MESSAGE);
         String loc=FrameController.chooseFile();
         EFile newFile=new EFile(loc);
+        if(newFile.getType().equalsIgnoreCase("xls")){
+            newFile=new EFile(loc.substring(0, loc.lastIndexOf("."))+".xlsx");
+        }
         if(!newFile.exists()){
             try {
                 newFile.createNewFile();
@@ -193,12 +195,12 @@ public class StudentPanel extends javax.swing.JPanel {
                 Start.createLog(ex, "Unable to create attendance file at "+loc.substring(loc.lastIndexOf(File.separatorChar)+1));
             }
         }
-        EFileWriter.writeAttendanceFile(newFile, FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getStudents(), getMeetingNames(), getMeetingAttendance());
+        EFileWriter.writeAttendanceFile(newFile, FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getStudents(), getMeetingNames(), getMeetingAttendance());
     }//GEN-LAST:event_exportButtonMouseReleased
     
     public void fillStudentTable(){
         initTable();
-        currentList=FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getStudents();
+        currentList=FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getStudents();
         Collections.sort(currentList, new Comparator<Student>(){
                 @Override
                 public int compare(Student s1, Student s2){
@@ -232,7 +234,7 @@ public class StudentPanel extends javax.swing.JPanel {
     
     private ArrayList<String> getMeetingNames(){
         ArrayList<String> mNames=new ArrayList<>();
-        for(Meeting m:FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getMeetings()){
+        for(Meeting m:FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeetings()){
             mNames.add(m.getName());
         }
         return mNames;
@@ -240,7 +242,7 @@ public class StudentPanel extends javax.swing.JPanel {
     
     private ArrayList<Integer> getMeetingAttendance(){
         ArrayList<Integer> mAttendance=new ArrayList<>();
-        for(Meeting m:FrameController.getGroup(FrameController.getSmgp().getCurrentGroup()).getMeetings()){
+        for(Meeting m:FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeetings()){
             mAttendance.add(m.getAttendance());
         }
         return mAttendance;

@@ -17,7 +17,7 @@ public class Group {
     
     private final String name;
     private EFile excel;
-    private FileUtilities f;
+    private EFileUtilities f;
     
     private final boolean usePoints;
     
@@ -52,7 +52,7 @@ public class Group {
         }
     }
     
-    public void populateStudents(FileUtilities f){
+    public void populateStudents(EFileUtilities f){
         Student temp;
         for (int i=0;i<f.getNames().size();i++) {
             temp=new Student(f.getNames().get(i),f.getIdNums().get(i).intValue());
@@ -72,6 +72,10 @@ public class Group {
                 meats.remove(x);
             }
         }
+    }
+    
+    public void removeMeeting(int i){
+        meats.remove(i);
     }
     
     public String getName(){
@@ -160,5 +164,9 @@ public class Group {
             }
         }
         return temp;
+    }
+    
+    public int getNumberOfMeetings(){
+        return meats.size();
     }
 }

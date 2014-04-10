@@ -12,16 +12,16 @@ public class Student implements Comparable{
     private final String name;
     private final int ID;
     private int points;
-    private int meetingsAttended;
+    private String meetingsAttended;
     
     public Student(String n,int id){
         name=n;
         ID=id;
         points=0;
-        meetingsAttended=0;
+        meetingsAttended="";
     }
     
-    public Student(String n, int id, int p, int ma){
+    public Student(String n, int id, int p, String ma){
         name=n;
         ID=id;
         points=p;
@@ -48,7 +48,7 @@ public class Student implements Comparable{
         return points;
     }
     
-    public int getMeetingsAttended(){
+    public String getMeetingsAttended(){
         return meetingsAttended;
     }
     
@@ -56,12 +56,35 @@ public class Student implements Comparable{
         points+=p;
     }
     
-    public void addMeetingsAttended(int i){
+    public void addMeetingsAttended(String i){
         meetingsAttended+=i;
     }
     
-    public void incrementMeetingsAttended(){
-        addMeetingsAttended(1);
+    public int[] getMeetingsAttendedAsIntArray(){
+        int[] ia=new int[getMeetingsAttendedAsInt()];
+        char[] ca=meetingsAttended.toCharArray();
+        String temp="";
+        int count=0;
+        for(int i=0;i<ca.length;i++){
+            if(ca[i]!=','){
+                temp+=ca[i];
+            }else{
+                ia[count]=MiscUtils.thirtySixTo10(temp);
+                temp="";
+                count++;
+            }
+        }
+        return ia;
+    }
+    
+    private int getMeetingsAttendedAsInt(){
+        int i=0;
+        for (char c : meetingsAttended.toCharArray()) {
+            if(c==','){
+                i++;
+            }
+        }
+        return i;
     }
 
     public String[] getValues() {

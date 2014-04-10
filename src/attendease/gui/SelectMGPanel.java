@@ -43,8 +43,8 @@ public class SelectMGPanel extends javax.swing.JPanel {
         }
         isGroup=true;
         buttonsEnabled=false;
-        setCurrentGroup("");
-        setCurrentMeeting("");
+        setCurrentGroupName("");
+        setCurrentMeetingName("");
         groupList=new DefaultListModel();
         meetingList=new DefaultListModel();
         fillList("Clubs");
@@ -170,10 +170,17 @@ public class SelectMGPanel extends javax.swing.JPanel {
                 FrameController.getGg().putData(FrameController.getGroup(gmList.getSelectedIndex()));
                 FrameController.getGg().toggleMeetingTab();
                 FrameController.changeFrameState("gg");
+                FrameController.getGg().setIsEditing(true);
+                FrameController.getGg().setCreateButtonText("Save");
             }else{
-                FrameController.getMep().putData(FrameController.getGroup(getCurrentGroup()).getMeeting(gmList.getSelectedIndex()));
-                FrameController.getMg().setButtonText(FrameController.getMg().getFinishButton());
-                FrameController.changeFrameState("mg");
+                if(!FrameController.getGroup(getCurrentGroupName()).getMeeting(gmList.getSelectedIndex()).isMeatHeld()){
+                    FrameController.getMep().putData(FrameController.getGroup(getCurrentGroupName()).getMeeting(gmList.getSelectedIndex()));
+                    FrameController.getMg().setButtonText(FrameController.getMg().getFinishButton());
+                    FrameController.changeFrameState("mg");
+                    FrameController.getMg().setIsEditing(true);
+                }else{
+                    javax.swing.JOptionPane.showMessageDialog(this, "This meeting has already been held and cannot be edited.", "AttendEase", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                }
             }
             setIsEditing(true);
         }
@@ -182,11 +189,13 @@ public class SelectMGPanel extends javax.swing.JPanel {
     private void addButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMouseReleased
         if(isGroup){
             FrameController.changeFrameState("gg");
+            FrameController.getGg().setIsEditing(false);
+            FrameController.getGg().setCreateButtonText("Create");
         }else{
             FrameController.getMg().setButtonText(FrameController.getMg().getCreateButton());
             FrameController.changeFrameState("mg");
+            FrameController.getMg().setIsEditing(false);
         }
-        setIsEditing(false);
     }//GEN-LAST:event_addButtonMouseReleased
 
     private void selectButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectButtonMouseReleased
@@ -194,8 +203,12 @@ public class SelectMGPanel extends javax.swing.JPanel {
             if(isGroup){
                 FrameController.setCurrentPanel("gop");
             }else{
-                setCurrentMeeting(gmList.getSelectedValue().toString());
-                FrameController.setCurrentPanel("mp");
+                if(!FrameController.getGroup(getCurrentGroupName()).getMeeting(gmList.getSelectedIndex()).isMeatHeld()){
+                    setCurrentMeetingName(gmList.getSelectedValue().toString());
+                    FrameController.setCurrentPanel("mp");
+                }else{
+                    javax.swing.JOptionPane.showMessageDialog(this, "This meeting has already been held and cannot be restarted.", "AttendEase", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                }
             }
             gmList.clearSelection();
         }
@@ -213,12 +226,14 @@ public class SelectMGPanel extends javax.swing.JPanel {
                     if(multipleSelected()){
                         int[] nums=gmList.getSelectedIndices();
                         for(int i=m.size();i>=0;i--){
-                            Start.d.deleteMeeting(getCurrentGroup(),(String)m.get(i));
+                            Start.d.deleteMeeting(getCurrentGroupName(),(String)m.get(i));
                             meetingList.remove(nums[i]);
+                            FrameController.getGroup(getCurrentGroupName()).removeMeeting(nums[i]);
                         }
                     }else{
-                        Start.d.deleteMeeting(getCurrentGroup(),(String)gmList.getSelectedValue());
+                        Start.d.deleteMeeting(getCurrentGroupName(),(String)gmList.getSelectedValue());
                         meetingList.remove(gmList.getSelectedIndex());
+                        FrameController.getGroup(getCurrentGroupName()).removeMeeting(gmList.getSelectedIndex());
                     }
                 }
             }else{
@@ -233,10 +248,12 @@ public class SelectMGPanel extends javax.swing.JPanel {
                         for(int i=g.size()-1;i>=0;i--){
                             Start.d.deleteGroup((String)g.get(i));
                             groupList.remove(nums[i]);
+                            FrameController.removeGroup(nums[i]);
                         }
                     }else{
                         Start.d.deleteGroup((String)gmList.getSelectedValue());
                         groupList.remove(gmList.getSelectedIndex());
+                        FrameController.removeGroup(gmList.getSelectedIndex());
                     }
                     gmList.repaint();
                     gmList.clearSelection();
@@ -249,7 +266,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
     private void gmListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_gmListValueChanged
         if(gmList.getSelectedIndex()>-1){
             if(isGroup){
-                setCurrentGroup(gmList.getSelectedValue().toString());
+                setCurrentGroupName(gmList.getSelectedValue().toString());
             }
             if(multipleSelected()){
                 changeButtons(true);
@@ -267,10 +284,9 @@ public class SelectMGPanel extends javax.swing.JPanel {
     }
     
     public void setState(String state){
-        state=state.toLowerCase();
         gmList.clearSelection();
         toggleButtons(false);
-        switch(state){
+        switch(state.toLowerCase()){
             case "group":
                 selectAddLabel.setText(GROUP_TITLE);
                 qeButton.setText("Quit");
@@ -291,7 +307,7 @@ public class SelectMGPanel extends javax.swing.JPanel {
                 deleteButton.setText("Delete Meeting");
                 selectButton.setText("Start Meeting");
                 isGroup=false;
-                fillList(getCurrentGroup());
+                fillList(getCurrentGroupName());
                 reInitMList();
                 gmList.repaint();
         }
@@ -350,21 +366,21 @@ public class SelectMGPanel extends javax.swing.JPanel {
         return gmList.getSelectedIndices().length>1;
     }
     
-    public String getCurrentGroup() {
+    public String getCurrentGroupName() {
         return currentGroup;
     }
 
-    public void setCurrentGroup(String cg) {
+    public void setCurrentGroupName(String cg) {
         if(cg!=null){
             currentGroup = cg;
         }
     }
     
-    public String getCurrentMeeting() {
+    public String getCurrentMeetingName() {
         return currentMeeting;
     }
 
-    public void setCurrentMeeting(String cm) {
+    public void setCurrentMeetingName(String cm) {
         if(cm!=null){
             currentMeeting = cm;
         }

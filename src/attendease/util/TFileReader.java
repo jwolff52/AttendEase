@@ -11,23 +11,8 @@ import java.util.Scanner;
  * @date Sep 16, 2013
  */
 public class TFileReader {
-    private File file;
-    public TFileReader(){}
-    public TFileReader(File f){
-        this.file=f;
-    }
-    public ArrayList readFile(File f) throws FileNotFoundException{
+    public static ArrayList readFile(File f) throws FileNotFoundException{
         FileInputStream fis=new FileInputStream(f);
-        ArrayList<String> buffer=new ArrayList<>();
-        try(Scanner scanner = new Scanner(fis)) {
-            while(scanner.hasNext()){
-                buffer.add(scanner.nextLine());
-            }
-        }
-        return buffer;
-    }
-    public ArrayList readFile() throws FileNotFoundException{
-        FileInputStream fis=new FileInputStream(file);
         ArrayList<String> buffer=new ArrayList<>();
         try(Scanner scanner = new Scanner(fis)) {
             while(scanner.hasNext()){

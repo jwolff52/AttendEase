@@ -37,7 +37,7 @@ public class Database {
                 }
                 try {
                     conn=DriverManager.getConnection("jdbc:derby:"+URLDecoder.decode(Start.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8").substring(1)+"/Database/AttendEase;create=true;");
-                    Start.showReadMe();
+                    Start.firstRunSetup();
                 } catch (SQLException | UnsupportedEncodingException ex) {
                     Start.createLog(ex, "An Internal Communication Error Occurred With the Database");
                 }
@@ -68,7 +68,7 @@ public class Database {
             try{
                 stmt2=conn.createStatement();
                 stmt2.closeOnCompletion();
-                stmt2.executeUpdate("CREATE TABLE "+DEFAULT_SCHEMA+".Clubs(clubName varchar(25), ePath varchar(255), points BOOLEAN, lastUsedDirectory varchar(225), PRIMARY KEY (clubName))");
+                stmt2.executeUpdate("CREATE TABLE "+DEFAULT_SCHEMA+".Clubs(clubName varchar(25), ePath varchar(255), points BOOLEAN, PRIMARY KEY (clubName))");
             }catch(SQLException ex){
                 Start.createLog(ex, "Unable to create table Clubs!");
             }
@@ -86,7 +86,7 @@ public class Database {
         try {
             stmt=conn.createStatement();
             stmt.closeOnCompletion();
-            stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+".CLUBS VALUES (\'"+clubName+"\',\'"+ePath+"\',"+points+",\'\')");
+            stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+".CLUBS VALUES (\'"+clubName+"\',\'"+ePath+"\',"+points+")");
             stmt.close();
         } catch (SQLException ex) {
             Start.createLog(ex, "Error creating Club!");
@@ -97,8 +97,8 @@ public class Database {
             stmt1.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+clubName+"Meetings");
             return false;
         }catch(SQLException e){
-            String ss="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Students(ID INTEGER, name varchar(50), meetings INTEGER, points INTEGER, PRIMARY KEY(ID))";
-            String ms="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Meetings(name varchar(255), date varchar(25), startTime varchar(10), endTime varchar(10), attendance INTEGER, reocurringDays INTEGER, pointsGiven INTEGER, pointsRequired INTEGER, latePoints INTEGER, meetingHeld BOOLEAN, PRIMARY KEY(name))";
+            String ss="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Students(ID INTEGER, name varchar(50), meetings varchar(225), points INTEGER, PRIMARY KEY(ID))";
+            String ms="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Meetings(identifier varchar(3), name varchar(255), date varchar(25), startTime varchar(10), endTime varchar(10), attendance INTEGER, pointsGiven INTEGER, pointsRequired INTEGER, latePoints INTEGER, meetingHeld BOOLEAN, PRIMARY KEY(name))";
             try {
                 stmt2=conn.createStatement();
                 stmt2.closeOnCompletion();
@@ -124,7 +124,7 @@ public class Database {
             stmt=conn.createStatement();
             stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+"."+clubName+
                     " VALUES (\'"+values[0]+"\',\'"+values[1]+"\',\'"+values[2]+"\',\'"
-                    +values[3]+"\',"+values[4]+","+values[5]+","+values[6]+","+values[7]+","+values[8]+")");
+                    +values[3]+"\',\'"+values[4]+"\',"+values[5]+","+values[6]+","+values[7]+","+values[8]+","+values[9]+")");
             stmt.close();
         } catch(SQLException ex) {
             Start.createLog(ex, "A Database Error Occurred");
@@ -149,23 +149,54 @@ public class Database {
         }
     }
     
-    public void editMeeting(String clubName, String oldName, String[] values){
+    public void editGroup(String oldName, String clubName, String ePath, boolean points){
+        Statement stmt;
+        Statement stmt1;
+        Statement stmt2;
+        try {
+            stmt=conn.createStatement();
+            stmt.closeOnCompletion();
+            stmt.executeUpdate("UPDATE "+DEFAULT_SCHEMA+".Clubs"+
+                    " SET clubName=\'"+clubName+"\',"
+                    + "ePath=\'"+ePath+"\',"
+                    + "points="+points
+                    + " WHERE clubName=\'"+oldName+"\'");
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Error editing Club!");
+        }
+        try {
+            stmt1=conn.createStatement();
+            stmt1.closeOnCompletion();
+            stmt1.executeUpdate("RENAME TABLE "+DEFAULT_SCHEMA+"."+(oldName+"Students")+" TO "+(clubName+"Students"));
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Error editing Club!");
+        }
+        try {
+            stmt2=conn.createStatement();
+            stmt2.closeOnCompletion();
+            stmt2.executeUpdate("RENAME TABLE "+DEFAULT_SCHEMA+"."+(oldName+"Meetings")+" TO "+(clubName+"Meetings"));
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Error editing Club!");
+        }
+    }
+    
+    public void editMeeting(String clubName, String[] values){
         clubName+="Meetings";
         Statement stmt;
         try {
             stmt=conn.createStatement();
             stmt.executeUpdate("UPDATE "+DEFAULT_SCHEMA+"."+clubName+
-                    " SET name=\'"+values[0]+"\',"
-                        + "date=\'"+values[1]+"\',"
-                        + "startTime=\'"+values[2]+"\',"
-                        + "endTime=\'"+values[3]+"\',"
-                        + "attendance="+values[4]+","
-                        + "reocurringDays="+values[5]+","
+                    " SET identifier=\'"+values[0]+"\',"
+                        + "name=\'"+values[1]+"\',"
+                        + "date=\'"+values[2]+"\',"
+                        + "startTime=\'"+values[3]+"\',"
+                        + "endTime=\'"+values[4]+"\',"
+                        + "attendance="+values[5]+","
                         + "pointsGiven="+values[6]+","
                         + "pointsRequired="+values[7]+","
                         + "latePoints="+values[8]+","
                         + "meetingHeld="+values[9]
-                    + " WHERE ID=\'"+oldName+"\'");
+                        + " WHERE identifier=\'"+values[0]+"\'");
             stmt.close();
         } catch(SQLException ex) {
             Start.createLog(ex, "A Database Error Occurred");
@@ -180,7 +211,7 @@ public class Database {
             stmt.executeUpdate("UPDATE "+DEFAULT_SCHEMA+"."+clubName+
                     " SET ID="+values[0]+","
                     + "name=\'"+values[1]+"\',"
-                    + "meetings="+values[2]+","
+                    + "meetings=\'"+values[2]+"\',"
                     + "POINTS="+values[3]
                     + " WHERE ID=\'"+values[0]+"\'");
             stmt.close();
@@ -283,32 +314,6 @@ public class Database {
             Start.createLog(ex, "Unable to read from table: "+clubName);
         }
         return rs;
-    }
-    
-    public void setLastUsedDirectory(String clubName, String dir){
-        Statement stmt;
-        try {
-            stmt=conn.createStatement();
-            stmt.executeUpdate("UPDATE "+DEFAULT_SCHEMA+".CLUBS"
-                    +" SET lastUsedDirectory=\'"+dir+"\'"
-                    +" WHERE clubName=\'"+clubName+"\'");
-        } catch (SQLException ex) {
-            Start.createLog(ex, "A Database Error Occurred.");
-        }
-    }
-    
-    public String getLastUsedDirectory(String clubName){
-        Statement stmt;
-        try {
-            stmt=conn.createStatement();
-            ResultSet rs=stmt.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+".CLUBS WHERE clubName=\'"+clubName+"\'");
-            rs.next();
-            return rs.getString("lastUsedDirectory");
-        } catch (SQLException ex) {
-            Start.createLog(ex, "A Database Error Occurred.");
-        }
-        return null;
-        
     }
     
     public void closeConnection(){
