@@ -18,6 +18,7 @@
 
 package attendease.gui;
 
+import attendease.util.APanel;
 import attendease.util.ATableModel;
 import attendease.util.EFile;
 import attendease.util.EFileWriter;
@@ -35,7 +36,7 @@ import java.util.Comparator;
  *
  * @author sterling.long
  */
-public class StudentPanel extends javax.swing.JPanel {
+public class StudentPanel extends APanel {
 
     public StudentPanel() {
         preInit();

@@ -18,6 +18,7 @@
 
 package attendease.gui;
 
+import attendease.util.APanel;
 import attendease.util.FrameController;
 import attendease.util.Meeting;
 import attendease.util.Start;
@@ -33,7 +34,7 @@ import javax.swing.JTabbedPane;
  *
  * @author timothy.chandler
  */
-public class MeetingEditPanel extends javax.swing.JPanel {
+public class MeetingEditPanel extends APanel {
 
     public MeetingEditPanel() {
         preInit();
@@ -778,7 +779,8 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         return meetingTabPane;
     }
     
-    public void clearData(){
+    @Override
+    public void clear(){
         eHTextBoxAdv.setText("");
         eMTextBoxAdv.setText("");
         sHTextBoxAdv.setText("");

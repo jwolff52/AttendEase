@@ -19,6 +19,7 @@
 package attendease.util;
 
 import attendease.gui.*;
+import java.awt.Component;
 import java.awt.Rectangle;
 import java.io.File;
 import java.sql.ResultSet;
@@ -26,6 +27,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.GroupLayout;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -33,8 +36,8 @@ import javax.swing.filechooser.FileFilter;
  */
 public class FrameController {
     
-    private static ArrayList<String> frames;
-    private static ArrayList<String> names;
+    private static ArrayList<JFrame> frames;
+    private static ArrayList<Component> guis;
     
     private static AddRemoveMembersWarningGUI armwg;
     private static DeleteMeetingWarningGUI dmwg;
@@ -66,10 +69,10 @@ public class FrameController {
         smgp=new SelectMGPanel();
         sp=new StudentPanel();
         
+        mf=new MainFrame();
         armwg=new AddRemoveMembersWarningGUI();
         dmwg=new DeleteMeetingWarningGUI();
         gg=new GroupGUI();
-        mf=new MainFrame();
         mg=new MeetingGUI();
         umg=new UpdateMembersGUI();
         
@@ -82,27 +85,26 @@ public class FrameController {
     }
     
     private static void initArrayLists(){
-        names=new ArrayList<>();
-        names.add("armwg");
-        names.add("dmwg");
-        names.add("emp");
-        names.add("gg");
-        names.add("gop");
-        names.add("mg");
-        names.add("mep");
-        names.add("mf");
-        names.add("smgp");
-        names.add("sp");
-        names.add("umg");
+        guis=new ArrayList<>();
+        guis.add(armwg);
+        guis.add(dmwg);
+        guis.add(gg);
+        guis.add(gop);
+        guis.add(mg);
+        guis.add(mep);
+        guis.add(mf);
+        guis.add(mg);
+        guis.add(smgp);
+        guis.add(sp);
+        guis.add(umg);
         
         frames=new ArrayList<>();
-        frames.add("armwg");
-        frames.add("dmwg");
-        frames.add("fb");
-        frames.add("gg");
-        frames.add("mf");
-        frames.add("mg");
-        frames.add("umg");
+        frames.add(armwg);
+        frames.add(dmwg);
+        frames.add(gg);
+        frames.add(mf);
+        frames.add(mg);
+        frames.add(umg);
     }
     
     private static void initFileChooser(){
@@ -169,10 +171,20 @@ public class FrameController {
         }
     }
     
+    public static void setCurrentFrame(String f){
+        for (JFrame frame : frames) {
+            if(!frame.getName().equalsIgnoreCase(f)){
+                frame.setVisible(false);
+            }else{
+                frame.setVisible(true);
+            }
+        }
+    }
+    
     public static void setCurrentPanel(String p){
         GroupLayout layout;
         mf.getContentPane().removeAll();
-        switch(p){
+        switch(p.toLowerCase()){
             case "gop":
                 layout=new GroupLayout(mf.getContentPane());
                 layout.setHorizontalGroup(
@@ -252,6 +264,16 @@ public class FrameController {
             case "umg":
                 umg.setVisible(!umg.isVisible());
                 break;
+        }
+    }
+    
+    public static void clearAll(){
+        for (Component c : guis) {
+            if(c instanceof AFrame){
+                ((AFrame)c).clear();
+            }else if(c instanceof APanel){
+                ((APanel)c).clear();
+            }
         }
     }
     

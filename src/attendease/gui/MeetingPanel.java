@@ -18,6 +18,7 @@
 
 package attendease.gui;
 
+import attendease.util.APanel;
 import attendease.util.ATableModel;
 import attendease.util.AutoDismiss;
 import attendease.util.ColorRenderer;
@@ -37,7 +38,7 @@ import java.util.TimeZone;
  *
  * @author timothy.chandler
  */
-public class MeetingPanel extends javax.swing.JPanel {
+public class MeetingPanel extends APanel {
 
     public MeetingPanel() {
         preInit();
@@ -143,7 +144,7 @@ public class MeetingPanel extends javax.swing.JPanel {
                 }
             }).start();
             FrameController.setCurrentPanel("gop");
-            clearTable();
+            clear();
         }
     }//GEN-LAST:event_doneButtonMouseReleased
 
@@ -262,7 +263,8 @@ public class MeetingPanel extends javax.swing.JPanel {
         return time;
     }
     
-    private void clearTable(){
+    @Override
+    public void clear(){
         for(int i=attendanceTable.getRowCount()-1;i>=0;i--) {
             aTableModel.removeRow(i);
         }

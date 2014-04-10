@@ -18,6 +18,7 @@
 
 package attendease.gui;
 
+import attendease.util.AFrame;
 import attendease.util.FrameController;
 import attendease.util.Start;
 
@@ -25,7 +26,7 @@ import attendease.util.Start;
  *
  * @author james.wolff
  */
-public class MainFrame extends javax.swing.JFrame {
+public class MainFrame extends AFrame {
 
     public MainFrame() {
         preInit();
@@ -59,9 +60,15 @@ public class MainFrame extends javax.swing.JFrame {
         homeMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
+        helpMenuItem = new javax.swing.JMenuItem();
+        readmeMenuItem = new javax.swing.JMenuItem();
+        liscenseMenuItem = new javax.swing.JMenuItem();
+        separator1 = new javax.swing.JPopupMenu.Separator();
+        aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("AttendEase");
+        setName("mf"); // NOI18N
         setResizable(false);
 
         fileMenu.setText("File");
@@ -73,12 +80,12 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         homeMenuItem.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
-            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
-                homeMenuItemMenuKeyTyped(evt);
-            }
             public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
             }
             public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
+            }
+            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
+                homeMenuItemMenuKeyTyped(evt);
             }
         });
         fileMenu.add(homeMenuItem);
@@ -94,6 +101,20 @@ public class MainFrame extends javax.swing.JFrame {
         menuBar.add(fileMenu);
 
         helpMenu.setText("Help");
+
+        helpMenuItem.setText("Show Help");
+        helpMenu.add(helpMenuItem);
+
+        readmeMenuItem.setText("Show README");
+        helpMenu.add(readmeMenuItem);
+
+        liscenseMenuItem.setText("Show LISCENSE");
+        helpMenu.add(liscenseMenuItem);
+        helpMenu.add(separator1);
+
+        aboutMenuItem.setText("About AttendEase");
+        helpMenu.add(aboutMenuItem);
+
         menuBar.add(helpMenu);
 
         setJMenuBar(menuBar);
@@ -117,6 +138,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemMouseReleased
 
     private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
+        FrameController.clearAll();
+        FrameController.setCurrentFrame("mf");
         FrameController.getSmgp().setState("Group");
         FrameController.setCurrentPanel("smgp");
     }//GEN-LAST:event_homeMenuItemMouseReleased
@@ -126,10 +149,15 @@ public class MainFrame extends javax.swing.JFrame {
         FrameController.setCurrentPanel("smgp");
     }//GEN-LAST:event_homeMenuItemMenuKeyTyped
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem helpMenuItem;
     private javax.swing.JMenuItem homeMenuItem;
+    private javax.swing.JMenuItem liscenseMenuItem;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem readmeMenuItem;
+    private javax.swing.JPopupMenu.Separator separator1;
     // End of variables declaration//GEN-END:variables
 }

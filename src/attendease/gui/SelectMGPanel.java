@@ -18,6 +18,7 @@
 
 package attendease.gui;
 
+import attendease.util.APanel;
 import attendease.util.FrameController;
 import attendease.util.Start;
 import java.awt.Font;
@@ -28,7 +29,7 @@ import javax.swing.DefaultListModel;
  *
  * @author sterling.long
  */
-public class SelectMGPanel extends javax.swing.JPanel {
+public class SelectMGPanel extends APanel {
 
     /** Creates new form SelectPanel */
     public SelectMGPanel() {

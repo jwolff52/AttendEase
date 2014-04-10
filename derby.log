@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
-Wed Apr 02 23:24:16 CDT 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instance a816c00e-0145-25d4-86fe-0000051a7798 
-on database directory C:\Users\James\Downloads\AttendEase\build\classes\Database\AttendEase  with class loader sun.misc.Launcher$AppClassLoader@6469cee6 
-Loaded from file:/C:/Users/James/Downloads/AttendEase/lib/derby.jar
+Thu Apr 10 01:03:18 CDT 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instance a816c00e-0145-4a3b-b514-00000512fa30 
+on database directory C:\Users\James\Dropbox\AttendEase\AttendEase_Java\build\classes\Database\AttendEase  with class loader sun.misc.Launcher$AppClassLoader@6469cee6 
+Loaded from file:/C:/Users/James/Dropbox/AttendEase/AttendEase_Java/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_21-b11
-user.dir=C:\Users\James\Downloads\AttendEase
+user.dir=C:\Users\James\Dropbox\AttendEase\AttendEase_Java
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''

@@ -18,6 +18,7 @@
 
 package attendease.gui;
 
+import attendease.util.AFrame;
 import attendease.util.FrameController;
 import attendease.util.Group;
 import attendease.util.Meeting;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
  *
  * @author timothy.chandler
  */
-public class GroupGUI extends javax.swing.JFrame {
+public class GroupGUI extends AFrame {
 
     /**
      * Creates new form GroupGUI
@@ -99,14 +100,10 @@ public class GroupGUI extends javax.swing.JFrame {
         pointsCheckBox = new javax.swing.JCheckBox();
         cancelButton = new javax.swing.JButton();
         createButton = new javax.swing.JButton();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        homeMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Group Settings");
+        setName("gg"); // NOI18N
         setResizable(false);
 
         mainPanel.setPreferredSize(new java.awt.Dimension(261, 384));
@@ -209,40 +206,6 @@ public class GroupGUI extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        fileMenu.setText("File");
-
-        homeMenuItem.setText("Home");
-        homeMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                homeMenuItemMouseReleased(evt);
-            }
-        });
-        homeMenuItem.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
-            public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
-            }
-            public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
-            }
-            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
-                homeMenuItemMenuKeyTyped(evt);
-            }
-        });
-        fileMenu.add(homeMenuItem);
-
-        exitMenuItem.setText("Quit");
-        exitMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                exitMenuItemMouseReleased(evt);
-            }
-        });
-        fileMenu.add(exitMenuItem);
-
-        menuBar.add(fileMenu);
-
-        helpMenu.setText("Help");
-        menuBar.add(helpMenu);
-
-        setJMenuBar(menuBar);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -253,8 +216,10 @@ public class GroupGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
+                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE))
         );
+
+        setJMenuBar(FrameController.getMf().getJMenuBar());
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -271,7 +236,7 @@ public class GroupGUI extends javax.swing.JFrame {
                 FrameController.getGroup(groupNameTextField.getText()).populateStudents();
                 FrameController.getSmgp().setState("Group");
                 FrameController.changeFrameState("gg");
-                clearData();
+                clear();
                 Start.d.editGroup(oldName, groupNameTextField.getText(), locationTextField.getText(), pointsCheckBox.isSelected());
             }else{
                 javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "Group Name cannot be blank!");
@@ -294,7 +259,7 @@ public class GroupGUI extends javax.swing.JFrame {
                         @Override
                         public void run(){
                             String groupName=getGroupName();
-                            clearData();
+                            clear();
                             Start.d.addStudents(groupName, FrameController.getGroup(groupName).getStudents());
                         }
                     }).start();
@@ -315,36 +280,22 @@ public class GroupGUI extends javax.swing.JFrame {
 
     private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
         FrameController.changeFrameState("gg");
-        clearData();
+        clear();
         if(meetingIsHidden){
             toggleMeetingTab();
         }
     }//GEN-LAST:event_cancelButtonMouseReleased
 
-    private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
-        FrameController.getSmgp().setState("Group");
-        FrameController.setCurrentPanel("smgp");
-        FrameController.changeFrameState("gg");
-    }//GEN-LAST:event_homeMenuItemMouseReleased
-
-    private void homeMenuItemMenuKeyTyped(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_homeMenuItemMenuKeyTyped
-        FrameController.getSmgp().setState("Group");
-        FrameController.setCurrentPanel("smgp");
-    }//GEN-LAST:event_homeMenuItemMenuKeyTyped
-
-    private void exitMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMenuItemMouseReleased
-        FrameController.dispose();
-    }//GEN-LAST:event_exitMenuItemMouseReleased
-
     private void browseButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_browseButtonMouseReleased
         locationTextField.setText(FrameController.chooseFile());
     }//GEN-LAST:event_browseButtonMouseReleased
 
-    public void clearData(){
+    @Override
+    public void clear(){
         groupNameTextField.setText("");
         locationTextField.setText("");
         pointsCheckBox.setSelected(false);
-        mep.clearData();
+        mep.clear();
         meetingTab.setSelectedIndex(0);
         if(!meetingIsHidden){
             mainTabbedPane.getComponent(1).repaint();
@@ -390,18 +341,13 @@ public class GroupGUI extends javax.swing.JFrame {
     private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton createButton;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenu fileMenu;
     private javax.swing.JLabel groupNameLabel;
     private javax.swing.JTextField groupNameTextField;
     private javax.swing.JPanel groupTab;
-    private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuItem homeMenuItem;
     private javax.swing.JLabel importLabel;
     private javax.swing.JTextField locationTextField;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTabbedPane mainTabbedPane;
-    private javax.swing.JMenuBar menuBar;
     private javax.swing.JCheckBox pointsCheckBox;
     // End of variables declaration//GEN-END:variables
 }

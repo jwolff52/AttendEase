@@ -18,6 +18,7 @@
 
 package attendease.gui;
 
+import attendease.util.AFrame;
 import attendease.util.FrameController;
 import attendease.util.Meeting;
 import attendease.util.Start;
@@ -27,7 +28,7 @@ import attendease.util.MiscUtils;
  *
  * @author timothy.chandler
  */
-public class MeetingGUI extends javax.swing.JFrame {
+public class MeetingGUI extends AFrame {
 
     public MeetingGUI() {
         preInit();
@@ -72,14 +73,10 @@ public class MeetingGUI extends javax.swing.JFrame {
         mainPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         createButton = new javax.swing.JButton();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        homeMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edit/Add Meeting");
+        setName("mg"); // NOI18N
         setResizable(false);
 
         cancelButton.setText("Cancel");
@@ -117,40 +114,6 @@ public class MeetingGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        fileMenu.setText("File");
-
-        homeMenuItem.setText("Home");
-        homeMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                homeMenuItemMouseReleased(evt);
-            }
-        });
-        homeMenuItem.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
-            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
-                homeMenuItemMenuKeyTyped(evt);
-            }
-            public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
-            }
-            public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
-            }
-        });
-        fileMenu.add(homeMenuItem);
-
-        exitMenuItem.setText("Quit");
-        exitMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                exitMenuItemMouseReleased(evt);
-            }
-        });
-        fileMenu.add(exitMenuItem);
-
-        menuBar.add(fileMenu);
-
-        helpMenu.setText("Help");
-        menuBar.add(helpMenu);
-
-        setJMenuBar(menuBar);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -160,16 +123,18 @@ public class MeetingGUI extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 288, Short.MAX_VALUE)
+                .addGap(0, 309, Short.MAX_VALUE)
                 .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        setJMenuBar(FrameController.getMf().getJMenuBar());
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
         FrameController.changeFrameState("mg");
-        FrameController.getMep().clearData();
+        FrameController.getMep().clear();
     }//GEN-LAST:event_cancelButtonMouseReleased
 
     private void createButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createButtonMouseReleased
@@ -219,23 +184,8 @@ public class MeetingGUI extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "The end time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
             }
         }
-        FrameController.getMep().clearData();
+        FrameController.getMep().clear();
     }//GEN-LAST:event_createButtonMouseReleased
-
-    private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
-        FrameController.getSmgp().setState("Group");
-        FrameController.setCurrentPanel("smgp");
-        FrameController.changeFrameState("mg");
-    }//GEN-LAST:event_homeMenuItemMouseReleased
-
-    private void homeMenuItemMenuKeyTyped(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_homeMenuItemMenuKeyTyped
-        FrameController.getSmgp().setState("Group");
-        FrameController.setCurrentPanel("smgp");
-    }//GEN-LAST:event_homeMenuItemMenuKeyTyped
-
-    private void exitMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMenuItemMouseReleased
-        FrameController.dispose();
-    }//GEN-LAST:event_exitMenuItemMouseReleased
     
     public String getCreateButton(){
         return CREATE_BUTTON;
@@ -265,11 +215,6 @@ public class MeetingGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton createButton;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuItem homeMenuItem;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 }

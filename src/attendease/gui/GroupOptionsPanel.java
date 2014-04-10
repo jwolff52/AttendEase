@@ -18,11 +18,12 @@
 
 package attendease.gui;
 
+import attendease.util.APanel;
 import attendease.util.FrameController;
 import attendease.util.Start;
 
 
-public class GroupOptionsPanel extends javax.swing.JPanel {
+public class GroupOptionsPanel extends APanel {
 
     public GroupOptionsPanel() {
         preInit();

@@ -18,6 +18,7 @@
 
 package attendease.gui;
 
+import attendease.util.AFrame;
 import attendease.util.ATableModel;
 import attendease.util.EFile;
 import attendease.util.EFileReader;
@@ -34,7 +35,7 @@ import java.util.Comparator;
  *
  * @author james.wolff
  */
-public class UpdateMembersGUI extends javax.swing.JFrame {
+public class UpdateMembersGUI extends AFrame {
 
     public UpdateMembersGUI() {
         preInit();
@@ -97,13 +98,9 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
         searchLabel = new javax.swing.JLabel();
         studentTableScrollPane = new javax.swing.JScrollPane();
         studentTable = new javax.swing.JTable();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        homeMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setName("umg"); // NOI18N
 
         mainPanel.setPreferredSize(new java.awt.Dimension(800, 600));
 
@@ -345,40 +342,6 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
                     .addComponent(updateButton)))
         );
 
-        fileMenu.setText("File");
-
-        homeMenuItem.setText("Home");
-        homeMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                homeMenuItemMouseReleased(evt);
-            }
-        });
-        homeMenuItem.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
-            public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
-            }
-            public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
-            }
-            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
-                homeMenuItemMenuKeyTyped(evt);
-            }
-        });
-        fileMenu.add(homeMenuItem);
-
-        exitMenuItem.setText("Quit");
-        exitMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                exitMenuItemMouseReleased(evt);
-            }
-        });
-        fileMenu.add(exitMenuItem);
-
-        menuBar.add(fileMenu);
-
-        helpMenu.setText("Help");
-        menuBar.add(helpMenu);
-
-        setJMenuBar(menuBar);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -392,24 +355,10 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        setJMenuBar(FrameController.getMf().getJMenuBar());
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
-        FrameController.getSmgp().setState("Group");
-        FrameController.setCurrentPanel("smgp");
-        FrameController.changeFrameState("mf");
-        FrameController.changeFrameState("umg");
-    }//GEN-LAST:event_homeMenuItemMouseReleased
-
-    private void homeMenuItemMenuKeyTyped(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_homeMenuItemMenuKeyTyped
-        FrameController.getSmgp().setState("Group");
-        FrameController.setCurrentPanel("smgp");
-    }//GEN-LAST:event_homeMenuItemMenuKeyTyped
-
-    private void exitMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMenuItemMouseReleased
-        FrameController.dispose();
-    }//GEN-LAST:event_exitMenuItemMouseReleased
 
     private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
         FrameController.changeFrameState("umg");
@@ -566,17 +515,12 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
     private javax.swing.JLabel asteriskLabel2;
     private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuItem homeMenuItem;
     private javax.swing.JLabel idNumberLabel;
     private javax.swing.JTextField idNumberTextBox;
     private javax.swing.JLabel importLabel;
     private javax.swing.JPanel importMembersPanel;
     private javax.swing.JTextField importTextBox;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JMenuBar menuBar;
     private javax.swing.JLabel pointsLabel;
     private javax.swing.JTextField pointsTextBox;
     private javax.swing.JPanel removeMemberPanel;
