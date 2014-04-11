@@ -1,24 +1,9 @@
-/************************************************************************
-    AttendEase - A simple, point-and-click attendance program.
-    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*************************************************************************/
-
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package attendease.gui;
 
-import attendease.util.AFrame;
 import attendease.util.FrameController;
 import attendease.util.Meeting;
 import attendease.util.Start;
@@ -28,8 +13,11 @@ import attendease.util.MiscUtils;
  *
  * @author timothy.chandler
  */
-public class MeetingGUI extends AFrame {
+public class MeetingGUI extends javax.swing.JFrame {
 
+    /**
+     * Creates new form MeetingGUI
+     */
     public MeetingGUI() {
         preInit();
         initComponents();
@@ -47,6 +35,7 @@ public class MeetingGUI extends AFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
+        meatName="";
         isEditing=false;
     }
     
@@ -54,10 +43,10 @@ public class MeetingGUI extends AFrame {
         javax.swing.GroupLayout layout=new javax.swing.GroupLayout(getContentPane());
         setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(mep)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(mep)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(mep)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(mep)
         );
     }
     
@@ -73,10 +62,14 @@ public class MeetingGUI extends AFrame {
         mainPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         createButton = new javax.swing.JButton();
+        menuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        homeMenuItem = new javax.swing.JMenuItem();
+        exitMenuItem = new javax.swing.JMenuItem();
+        helpMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edit/Add Meeting");
-        setName("mg"); // NOI18N
         setResizable(false);
 
         cancelButton.setText("Cancel");
@@ -114,6 +107,40 @@ public class MeetingGUI extends AFrame {
                 .addContainerGap())
         );
 
+        fileMenu.setText("File");
+
+        homeMenuItem.setText("Home");
+        homeMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                homeMenuItemMouseReleased(evt);
+            }
+        });
+        homeMenuItem.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
+            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
+                homeMenuItemMenuKeyTyped(evt);
+            }
+            public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
+            }
+            public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
+            }
+        });
+        fileMenu.add(homeMenuItem);
+
+        exitMenuItem.setText("Quit");
+        exitMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                exitMenuItemMouseReleased(evt);
+            }
+        });
+        fileMenu.add(exitMenuItem);
+
+        menuBar.add(fileMenu);
+
+        helpMenu.setText("Help");
+        menuBar.add(helpMenu);
+
+        setJMenuBar(menuBar);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,25 +150,22 @@ public class MeetingGUI extends AFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 309, Short.MAX_VALUE)
+                .addGap(0, 288, Short.MAX_VALUE)
                 .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        setJMenuBar(FrameController.getMf().getJMenuBar());
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
         FrameController.changeFrameState("mg");
-        FrameController.getMep().clear();
+        FrameController.getMep().clearData();
     }//GEN-LAST:event_cancelButtonMouseReleased
 
     private void createButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createButtonMouseReleased
         if(isEditing){
             if(MiscUtils.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&MiscUtils.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
                 String[] values=FrameController.getMep().getValues();
-                values[0]=FrameController.getInv().getIdentifier(FrameController.getMep().getOldName(), 0);
                 String[] localValues=values;
                 try{
                     if(localValues[1].substring(0, localValues[2].length()).equals(localValues[2])){
@@ -164,8 +188,8 @@ public class MeetingGUI extends AFrame {
         }else{
             if(MiscUtils.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&MiscUtils.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
                 String[] values=FrameController.getMep().getValues();
-                values[0]=MiscUtils.getNextIdentifier();
                 String[] localValues=values;
+                localValues[0]=MiscUtils.generateIdentifier(FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroupName()).getIdentifiers());
                 try{
                     if(localValues[1].substring(0, localValues[2].length()).equals(localValues[2])){
                         localValues[1]=localValues[2]+localValues[1].substring(localValues[2].length(), localValues[1].length()-6)+":"+localValues[1].substring(localValues[1].length()-5);
@@ -184,8 +208,23 @@ public class MeetingGUI extends AFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "The end time given is invalid, as indicated by the red box.", "Time Error", javax.swing.JOptionPane.WARNING_MESSAGE);
             }
         }
-        FrameController.getMep().clear();
+        FrameController.getMep().clearData();
     }//GEN-LAST:event_createButtonMouseReleased
+
+    private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
+        FrameController.getSmgp().setState("Group");
+        FrameController.setCurrentPanel("smgp");
+        FrameController.changeFrameState("mg");
+    }//GEN-LAST:event_homeMenuItemMouseReleased
+
+    private void homeMenuItemMenuKeyTyped(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_homeMenuItemMenuKeyTyped
+        FrameController.getSmgp().setState("Group");
+        FrameController.setCurrentPanel("smgp");
+    }//GEN-LAST:event_homeMenuItemMenuKeyTyped
+
+    private void exitMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMenuItemMouseReleased
+        FrameController.dispose();
+    }//GEN-LAST:event_exitMenuItemMouseReleased
     
     public String getCreateButton(){
         return CREATE_BUTTON;
@@ -199,6 +238,10 @@ public class MeetingGUI extends AFrame {
         createButton.setText(text);
     }
     
+    public void setMeatName(String name){
+        meatName=name;
+    }
+    
     public void setIsEditing(boolean ie){
         isEditing=ie;
     }
@@ -209,12 +252,18 @@ public class MeetingGUI extends AFrame {
     
     private final MeetingEditPanel mep=FrameController.getMep();
     
+    private String meatName;
     private final String CREATE_BUTTON="Create";
     private final String FINISH_BUTTON="Finish";
     private boolean isEditing;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton createButton;
+    private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem homeMenuItem;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 }

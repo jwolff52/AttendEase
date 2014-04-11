@@ -1,21 +1,7 @@
-/************************************************************************
-    AttendEase - A simple, point-and-click attendance program.
-    Copyright (C) 2013-2014  James Wolff, Timothy Chandler, Sterling Long, Cole Howe
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*************************************************************************/
-
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package attendease.util;
 
 import java.io.IOException;
@@ -28,10 +14,11 @@ import java.util.ArrayList;
 public class Group {
     private final ArrayList<Meeting> meats;
     private final ArrayList<Student> stews;
+    private final ArrayList<String> identifiers;
     
     private final String name;
     private EFile excel;
-    private EFileUtilities f;
+    private FileUtilities f;
     
     private final boolean usePoints;
     
@@ -41,6 +28,7 @@ public class Group {
         stews=new ArrayList<>();
         excel=new EFile("");
         usePoints=false;
+        identifiers=new ArrayList<>();
     }
     
     public Group(String n, ArrayList<Meeting> m, ArrayList<Student>s, String path, boolean p){
@@ -53,6 +41,12 @@ public class Group {
             excel=new EFile("");
         }
         usePoints=p;
+        identifiers=new ArrayList<>();
+        if(meats.size()>0){
+            for(Meeting meeting : meats) {
+                identifiers.add(meeting.getIdentifier());
+            }
+        }
     }
     
     public void populateStudents(){
@@ -66,7 +60,7 @@ public class Group {
         }
     }
     
-    public void populateStudents(EFileUtilities f){
+    public void populateStudents(FileUtilities f){
         Student temp;
         for (int i=0;i<f.getNames().size();i++) {
             temp=new Student(f.getNames().get(i),f.getIdNums().get(i).intValue());
@@ -78,18 +72,19 @@ public class Group {
     
     public void addMeeting(Meeting m){
         meats.add(m);
+        identifiers.add(m.getIdentifier());
     }
     
     public void removeMeeting(String name){
         for(int x=0;x<meats.size();x++){
             if(meats.get(x).getName().equals(name)){
-                meats.remove(x);
+                identifiers.remove(meats.remove(x).getIdentifier());
             }
         }
     }
     
     public void removeMeeting(int i){
-        meats.remove(i);
+        identifiers.remove(meats.remove(i).getIdentifier());
     }
     
     public String getName(){
@@ -111,6 +106,10 @@ public class Group {
     
     public ArrayList<Meeting> getMeetings(){
         return meats;
+    }
+    
+    public ArrayList<String> getIdentifiers(){
+        return identifiers;
     }
     
     public Student getStudent(int s){

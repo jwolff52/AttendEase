@@ -1,21 +1,7 @@
-/************************************************************************
-    AttendEase - A simple, point-and-click attendance program.
-    Copyright (C) 2013-2014  James Wolff, Timothy Chandler, Sterling Long, Cole Howe
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*************************************************************************/
-
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package attendease.util;
 
 /**
@@ -26,16 +12,16 @@ public class Student implements Comparable{
     private final String name;
     private final int ID;
     private int points;
-    private String meetingsAttended;
+    private int meetingsAttended;
     
     public Student(String n,int id){
         name=n;
         ID=id;
         points=0;
-        meetingsAttended="";
+        meetingsAttended=0;
     }
     
-    public Student(String n, int id, int p, String ma){
+    public Student(String n, int id, int p, int ma){
         name=n;
         ID=id;
         points=p;
@@ -62,7 +48,7 @@ public class Student implements Comparable{
         return points;
     }
     
-    public String getMeetingsAttended(){
+    public int getMeetingsAttended(){
         return meetingsAttended;
     }
     
@@ -70,35 +56,12 @@ public class Student implements Comparable{
         points+=p;
     }
     
-    public void addMeetingsAttended(String i){
+    public void addMeetingsAttended(int i){
         meetingsAttended+=i;
     }
     
-    public int[] getMeetingsAttendedAsIntArray(){
-        int[] ia=new int[getMeetingsAttendedAsInt()];
-        char[] ca=meetingsAttended.toCharArray();
-        String temp="";
-        int count=0;
-        for(int i=0;i<ca.length;i++){
-            if(ca[i]!=','){
-                temp+=ca[i];
-            }else{
-                ia[count]=MiscUtils.thirtySixTo10(temp);
-                temp="";
-                count++;
-            }
-        }
-        return ia;
-    }
-    
-    private int getMeetingsAttendedAsInt(){
-        int i=0;
-        for (char c : meetingsAttended.toCharArray()) {
-            if(c==','){
-                i++;
-            }
-        }
-        return i;
+    public void incrementMeetingsAttended(){
+        addMeetingsAttended(1);
     }
 
     public String[] getValues() {

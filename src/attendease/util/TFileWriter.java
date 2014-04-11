@@ -1,21 +1,7 @@
-/************************************************************************
-    AttendEase - A simple, point-and-click attendance program.
-    Copyright (C) 2013-2014  James Wolff, Timothy Chandler, Sterling Long, Cole Howe
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*************************************************************************/
-
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package attendease.util;
 
 import java.io.BufferedWriter;
@@ -31,12 +17,25 @@ import java.util.ArrayList;
  * @author timothy.chandler
  */
 public class TFileWriter {
+    private File file;
+    private TFileReader tfr;
     
-    public static void writeFile(File f, ArrayList<String> strings) throws FileNotFoundException, IOException{
+    public TFileWriter(){
+        tfr=new TFileReader();
+    }
+    
+    public TFileWriter(File f){
+        file=f;
+        tfr=new TFileReader();
+    }
+    
+    public void writeFile(File f, ArrayList<String> strings) throws FileNotFoundException, IOException{
+        ArrayList<String> temp=new ArrayList<>();
         if(!f.exists()){
             f.createNewFile();
         }else{
-            strings.addAll(0,TFileReader.readFile(f));
+            temp=tfr.readFile(f);
+            strings.addAll(0,temp);
         }
         try (BufferedWriter writer = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8)){
             for(String s : strings){
@@ -46,12 +45,12 @@ public class TFileWriter {
         }
     }
 
-    public static void writeFile(File f, String output) throws FileNotFoundException, IOException{;
+    public void writeFile(File f, String output) throws FileNotFoundException, IOException{;
         ArrayList<String> strings=new ArrayList<>();
         if(!f.exists()){
             f.createNewFile();
         }else{
-            strings=TFileReader.readFile(f);
+            strings=tfr.readFile(f);
         }
         strings.add(output);
         try (BufferedWriter writer = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8)){
@@ -62,13 +61,53 @@ public class TFileWriter {
         }
     }
     
-    public static void overWriteFile(File f, ArrayList<String> strings) throws IOException{
+    public void writeFile(String output) throws FileNotFoundException, IOException{
+        ArrayList<String> strings=new ArrayList<>();
+        if(!file.exists()){
+            file.createNewFile();
+        }else{
+            strings=tfr.readFile(file);
+        }
+        strings.add(output);
+        try (BufferedWriter writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)){
+            for(String s : strings){
+                writer.write(s);
+                writer.newLine();
+            }
+        }
+    }
+    
+    public void writeFile(ArrayList<String> strings) throws FileNotFoundException, IOException{
+        ArrayList<String> temp=new ArrayList<>();
+        if(!file.exists()){
+            file.createNewFile();
+        }else{
+            temp=tfr.readFile(file);
+            strings.addAll(0,temp);
+        }
+        try (BufferedWriter writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)){
+            for(String s : strings){
+                writer.write(s);
+                writer.newLine();
+            }
+        }
+    }
+    
+    public void overWriteFile(File f, ArrayList<String> strings) throws IOException{
         f.createNewFile();
         writeFile(f, strings);
     }
     
-    public static void overWriteFile(File f, String output) throws IOException{
+    public void overWriteFile(ArrayList<String> strings) throws IOException{
+        file.createNewFile();
+        writeFile(strings);
+    }
+    public void overWriteFile(File f, String output) throws IOException{
         f.createNewFile();
-        writeFile(f, output);
+        writeFile(output);
+    }
+    public void overWriteFile(String output) throws IOException{
+        file.createNewFile();
+        writeFile(output);
     }
 }

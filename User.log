@@ -147,24 +147,3 @@ Wed Apr 02 11:39:05 CDT 2014 : Error editing Club!
 Wed Apr 02 12:25:21 CDT 2014 : A Database Error Occurred
 Wed Apr 02 12:26:17 CDT 2014 : A Database Error Occurred
 Wed Apr 02 12:28:06 CDT 2014 : A Database Error Occurred
-Wed Apr 02 21:22:59 CDT 2014 : Failed to create table Army Corps of EngineersMeetings
-Wed Apr 02 21:22:59 CDT 2014 : Failed to create table Army Corps of EngineersStudents
-Wed Apr 02 21:24:00 CDT 2014 : A Database Error Occurred
-Wed Apr 02 21:27:49 CDT 2014 : Unable to read from table: Army Corps of EngineersMeetings
-Wed Apr 02 21:28:44 CDT 2014 : Failed to create table This is a testMeetings
-Wed Apr 02 21:28:44 CDT 2014 : Failed to create table This is a testStudents
-Wed Apr 02 21:29:34 CDT 2014 : Unable to read from table: This is a testMeetings
-Wed Apr 02 21:29:53 CDT 2014 : Failed to create table S P A C E SMeetings
-Wed Apr 02 21:29:53 CDT 2014 : Failed to create table S P A C E SStudents
-Wed Apr 02 21:30:18 CDT 2014 : Failed to create table S P A C E SMeetings
-Wed Apr 02 21:30:18 CDT 2014 : Failed to create table S P A C E SStudents
-Wed Apr 02 21:30:39 CDT 2014 : Failed to create table S P A C E SMeetings
-Wed Apr 02 21:30:39 CDT 2014 : Failed to create table S P A C E SStudents
-Wed Apr 02 21:30:59 CDT 2014 : Unable to read from table: S P A C E SMeetings
-Wed Apr 02 21:54:44 CDT 2014 : Unable to find excel file: XLSExample.xls
-Wed Apr 02 21:56:44 CDT 2014 : Failed to create table S P AC E SMeetings
-Wed Apr 02 21:56:44 CDT 2014 : Failed to create table S P AC E SStudents
-Wed Apr 02 22:04:51 CDT 2014 : Unable to read from table: S P A C E SMeetings
-Wed Apr 02 22:06:43 CDT 2014 : Unable to read from table: test0Meetings
-Wed Apr 02 22:13:07 CDT 2014 : A Database Error Occurred
-Wed Apr 02 22:14:37 CDT 2014 : A Database Error Occurred

@@ -3,7 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/James/Dropbox/AttendEase/AttendEase_Java/src/attendease/database/Database.java</file>
+            <file>file:/C:/Users/James/Downloads/AttendEase/src/attendease/util/EFileWriter.java</file>
+            <file>file:/C:/Users/James/Downloads/AttendEase/src/attendease/util/Start.java</file>
+            <file>file:/C:/Users/James/Downloads/AttendEase/Developer.log</file>
+            <file>file:/C:/Users/James/Downloads/AttendEase/src/attendease/gui/GroupGUI.java</file>
+            <file>file:/C:/Users/James/Downloads/AttendEase/src/attendease/gui/MeetingEditPanel.java</file>
+            <file>file:/C:/Users/James/Downloads/AttendEase/src/attendease/gui/SelectMGPanel.java</file>
+            <file>file:/C:/Users/James/Downloads/AttendEase/src/attendease/util/FrameController.java</file>
+            <file>file:/C:/Users/James/Downloads/AttendEase/src/attendease/gui/MeetingGUI.java</file>
+            <file>file:/C:/Users/James/Downloads/AttendEase/src/attendease/util/EFileReader.java</file>
+            <file>file:/C:/Users/James/Downloads/AttendEase/src/attendease/database/Database.java</file>
         </group>
     </open-files>
 </project-private>
