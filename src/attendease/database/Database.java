@@ -1,3 +1,21 @@
+/************************************************************************
+    AttendEase - A simple, point-and-click attendance program.
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*************************************************************************/
+
 package attendease.database;
 
 import attendease.util.Start;
@@ -20,13 +38,11 @@ public class Database {
     private static Connection conn;
     private static final String DEFAULT_SCHEMA="ATTENDEASE";
     
-    public Database() throws InstantiationException, ClassNotFoundException, IllegalAccessException, UnsupportedEncodingException{
+    public Database() throws InstantiationException, ClassNotFoundException, IllegalAccessException{
         Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
-        String loc=URLDecoder.decode(Start.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
-        loc=loc.substring(1, loc.lastIndexOf("/"));
         try{
-            conn=DriverManager.getConnection("jdbc:derby:"+loc+"/Database/AttendEase;");
-        }catch(SQLException e){
+            conn=DriverManager.getConnection("jdbc:derby:"+URLDecoder.decode(Start.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8").substring(1)+"/Database/AttendEase;");
+        }catch(SQLException | UnsupportedEncodingException e){
             if(e instanceof SQLException){
                 SQLException f=(SQLException) e;
                 while(f.getNextException()!=null){
@@ -38,11 +54,9 @@ public class Database {
                     System.exit(0);
                 }
                 try {
-                    System.out.println("\n\n\n\n\n"+loc);
-                    conn=DriverManager.getConnection("jdbc:derby:"+loc+"/Database/AttendEase;create=true;");
-                    System.out.println("\n\n\n\n\n"+loc);
+                    conn=DriverManager.getConnection("jdbc:derby:"+URLDecoder.decode(Start.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8").substring(1)+"/Database/AttendEase;create=true;");
                     Start.firstRunSetup();
-                } catch (SQLException ex) {
+                } catch (SQLException | UnsupportedEncodingException ex) {
                     Start.createLog(ex, "An Internal Communication Error Occurred With the Database");
                 }
             }else{
@@ -102,7 +116,7 @@ public class Database {
             return false;
         }catch(SQLException e){
             String ss="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Students(ID INTEGER, name varchar(50), meetings varchar(225), points INTEGER, PRIMARY KEY(ID))";
-            String ms="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Meetings(identifier varchar(3), name varchar(255), date varchar(25), startTime varchar(10), endTime varchar(10), attendance INTEGER, reocurringDays INTEGER, pointsGiven INTEGER, pointsRequired INTEGER, latePoints INTEGER, meetingHeld BOOLEAN, PRIMARY KEY(name))";
+            String ms="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Meetings(identifier varchar(3), name varchar(255), date varchar(25), startTime varchar(10), endTime varchar(10), attendance INTEGER, pointsGiven INTEGER, pointsRequired INTEGER, latePoints INTEGER, meetingHeld BOOLEAN, PRIMARY KEY(name))";
             try {
                 stmt2=conn.createStatement();
                 stmt2.closeOnCompletion();
@@ -128,7 +142,7 @@ public class Database {
             stmt=conn.createStatement();
             stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+"."+clubName+
                     " VALUES (\'"+values[0]+"\',\'"+values[1]+"\',\'"+values[2]+"\',\'"
-                    +values[3]+"\',"+values[4]+","+values[5]+","+values[6]+","+values[7]+","+values[8]+","+values[9]+")");
+                    +values[3]+"\',\'"+values[4]+"\',"+values[5]+","+values[6]+","+values[7]+","+values[8]+","+values[9]+")");
             stmt.close();
         } catch(SQLException ex) {
             Start.createLog(ex, "A Database Error Occurred");
@@ -196,11 +210,10 @@ public class Database {
                         + "startTime=\'"+values[3]+"\',"
                         + "endTime=\'"+values[4]+"\',"
                         + "attendance="+values[5]+","
-                        + "reocurringDays="+values[6]+","
-                        + "pointsGiven="+values[7]+","
-                        + "pointsRequired="+values[8]+","
-                        + "latePoints="+values[9]+","
-                        + "meetingHeld="+values[10]
+                        + "pointsGiven="+values[6]+","
+                        + "pointsRequired="+values[7]+","
+                        + "latePoints="+values[8]+","
+                        + "meetingHeld="+values[9]
                         + " WHERE identifier=\'"+values[0]+"\'");
             stmt.close();
         } catch(SQLException ex) {

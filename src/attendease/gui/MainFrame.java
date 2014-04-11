@@ -1,9 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/************************************************************************
+    AttendEase - A simple, point-and-click attendance program.
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*************************************************************************/
+
 package attendease.gui;
 
+import attendease.util.AFrame;
 import attendease.util.FrameController;
 import attendease.util.Start;
 
@@ -11,11 +26,8 @@ import attendease.util.Start;
  *
  * @author james.wolff
  */
-public class MainFrame extends javax.swing.JFrame {
+public class MainFrame extends AFrame {
 
-    /**
-     * Creates new form MainFrame
-     */
     public MainFrame() {
         preInit();
         initComponents();
@@ -48,9 +60,15 @@ public class MainFrame extends javax.swing.JFrame {
         homeMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
+        helpMenuItem = new javax.swing.JMenuItem();
+        readmeMenuItem = new javax.swing.JMenuItem();
+        liscenseMenuItem = new javax.swing.JMenuItem();
+        separator1 = new javax.swing.JPopupMenu.Separator();
+        aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("AttendEase");
+        setName("mf"); // NOI18N
         setResizable(false);
 
         fileMenu.setText("File");
@@ -62,12 +80,12 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         homeMenuItem.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
-            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
-                homeMenuItemMenuKeyTyped(evt);
-            }
             public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
             }
             public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
+            }
+            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
+                homeMenuItemMenuKeyTyped(evt);
             }
         });
         fileMenu.add(homeMenuItem);
@@ -83,6 +101,20 @@ public class MainFrame extends javax.swing.JFrame {
         menuBar.add(fileMenu);
 
         helpMenu.setText("Help");
+
+        helpMenuItem.setText("Show Help");
+        helpMenu.add(helpMenuItem);
+
+        readmeMenuItem.setText("Show README");
+        helpMenu.add(readmeMenuItem);
+
+        liscenseMenuItem.setText("Show LISCENSE");
+        helpMenu.add(liscenseMenuItem);
+        helpMenu.add(separator1);
+
+        aboutMenuItem.setText("About AttendEase");
+        helpMenu.add(aboutMenuItem);
+
         menuBar.add(helpMenu);
 
         setJMenuBar(menuBar);
@@ -106,6 +138,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemMouseReleased
 
     private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
+        FrameController.clearAll();
+        FrameController.setCurrentFrame("mf");
         FrameController.getSmgp().setState("Group");
         FrameController.setCurrentPanel("smgp");
     }//GEN-LAST:event_homeMenuItemMouseReleased
@@ -115,10 +149,15 @@ public class MainFrame extends javax.swing.JFrame {
         FrameController.setCurrentPanel("smgp");
     }//GEN-LAST:event_homeMenuItemMenuKeyTyped
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem helpMenuItem;
     private javax.swing.JMenuItem homeMenuItem;
+    private javax.swing.JMenuItem liscenseMenuItem;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem readmeMenuItem;
+    private javax.swing.JPopupMenu.Separator separator1;
     // End of variables declaration//GEN-END:variables
 }

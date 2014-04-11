@@ -1,6 +1,25 @@
+/************************************************************************
+    AttendEase - A simple, point-and-click attendance program.
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler, Sterling Long, Cole Howe
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*************************************************************************/
+
 package attendease.util;
 
 import attendease.gui.*;
+import java.awt.Component;
 import java.awt.Rectangle;
 import java.io.File;
 import java.sql.ResultSet;
@@ -8,6 +27,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.GroupLayout;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -15,12 +36,11 @@ import javax.swing.filechooser.FileFilter;
  */
 public class FrameController {
     
-    private static ArrayList<String> frames;
-    private static ArrayList<String> names;
+    private static ArrayList<JFrame> frames;
+    private static ArrayList<Component> guis;
     
     private static AddRemoveMembersWarningGUI armwg;
     private static DeleteMeetingWarningGUI dmwg;
-    private static EndMeetingPanel emp;
     private static GroupGUI gg;
     private static GroupOptionsPanel gop;
     private static MeetingEditPanel mep;
@@ -43,17 +63,16 @@ public class FrameController {
     }
     
     private static void initPanelsAndFrames(){
-        emp=new EndMeetingPanel();
         gop=new GroupOptionsPanel();
         mep=new MeetingEditPanel();
         mp=new MeetingPanel();
         smgp=new SelectMGPanel();
         sp=new StudentPanel();
         
+        mf=new MainFrame();
         armwg=new AddRemoveMembersWarningGUI();
         dmwg=new DeleteMeetingWarningGUI();
         gg=new GroupGUI();
-        mf=new MainFrame();
         mg=new MeetingGUI();
         umg=new UpdateMembersGUI();
         
@@ -66,27 +85,26 @@ public class FrameController {
     }
     
     private static void initArrayLists(){
-        names=new ArrayList<>();
-        names.add("armwg");
-        names.add("dmwg");
-        names.add("emp");
-        names.add("gg");
-        names.add("gop");
-        names.add("mg");
-        names.add("mep");
-        names.add("mf");
-        names.add("smgp");
-        names.add("sp");
-        names.add("umg");
+        guis=new ArrayList<>();
+        guis.add(armwg);
+        guis.add(dmwg);
+        guis.add(gg);
+        guis.add(gop);
+        guis.add(mg);
+        guis.add(mep);
+        guis.add(mf);
+        guis.add(mg);
+        guis.add(smgp);
+        guis.add(sp);
+        guis.add(umg);
         
         frames=new ArrayList<>();
-        frames.add("armwg");
-        frames.add("dmwg");
-        frames.add("fb");
-        frames.add("gg");
-        frames.add("mf");
-        frames.add("mg");
-        frames.add("umg");
+        frames.add(armwg);
+        frames.add(dmwg);
+        frames.add(gg);
+        frames.add(mf);
+        frames.add(mg);
+        frames.add(umg);
     }
     
     private static void initFileChooser(){
@@ -112,11 +130,11 @@ public class FrameController {
         String club;
         try {
             while(crs.next()){
-                club=crs.getString("clubName");
+                club=crs.getString("CLUBNAME");
                 ResultSet mrs=Start.d.readMeetingsTable(club);
                 ArrayList<Meeting> meats=new ArrayList<>();
                 while(mrs.next()){
-                    String name=mrs.getString("name");
+                    String name=mrs.getString("NAME");
                     String date=mrs.getString("DATE");
                     try{
                         if(name.substring(0, date.length()).equals(date)){
@@ -124,12 +142,12 @@ public class FrameController {
                         }
                     }catch(StringIndexOutOfBoundsException e){
                     }
-                    meats.add(new Meeting(name, date, MiscUtils.replaceSpaces(mrs.getString("STARTTIME")), MiscUtils.replaceSpaces(mrs.getString("ENDTIME")), mrs.getInt("ATTENDANCE"),mrs.getString("REOCURRINGDAYS"), mrs.getInt("POINTSGIVEN"), mrs.getInt("POINTSREQUIRED"), mrs.getInt("LATEPOINTS"), mrs.getBoolean("MEETINGHELD")));
+                    meats.add(new Meeting(mrs.getString("IDENTIFIER"),name, date, MiscUtils.replaceSpaces(mrs.getString("STARTTIME")), MiscUtils.replaceSpaces(mrs.getString("ENDTIME")), mrs.getInt("ATTENDANCE"), mrs.getInt("POINTSGIVEN"), mrs.getInt("POINTSREQUIRED"), mrs.getInt("LATEPOINTS"), mrs.getBoolean("MEETINGHELD")));
                 }
                 ResultSet srs=Start.d.readStudentsTable(club);
                 ArrayList<Student> stews=new ArrayList<>();
                 while(srs.next()){
-                    stews.add(new Student(srs.getString(2), srs.getInt(1), srs.getInt(4), srs.getInt(3)));
+                    stews.add(new Student(srs.getString("NAME"), srs.getInt("ID"), srs.getInt("POINTS"), srs.getString("MEETINGS")));
                 }
                 String eFile=crs.getString(2);
                 boolean usePoints=crs.getBoolean(3);
@@ -148,26 +166,25 @@ public class FrameController {
                 }
                 
             }
-        } catch (SQLException ex) {
+        } catch (NullPointerException | SQLException ex) {
             Start.createLog(ex, "Error retreiving existing Groups!");
+        }
+    }
+    
+    public static void setCurrentFrame(String f){
+        for (JFrame frame : frames) {
+            if(!frame.getName().equalsIgnoreCase(f)){
+                frame.setVisible(false);
+            }else{
+                frame.setVisible(true);
+            }
         }
     }
     
     public static void setCurrentPanel(String p){
         GroupLayout layout;
         mf.getContentPane().removeAll();
-        switch(p){
-            case "emp":
-                layout=new GroupLayout(mf.getContentPane());
-                layout.setHorizontalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(emp)
-                );
-                layout.setVerticalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(emp)
-                );
-                mf.setLayout(layout);
-                mf.setBounds(new Rectangle(808,636));
-                break;
+        switch(p.toLowerCase()){
             case "gop":
                 layout=new GroupLayout(mf.getContentPane());
                 layout.setHorizontalGroup(
@@ -250,6 +267,16 @@ public class FrameController {
         }
     }
     
+    public static void clearAll(){
+        for (Component c : guis) {
+            if(c instanceof AFrame){
+                ((AFrame)c).clear();
+            }else if(c instanceof APanel){
+                ((APanel)c).clear();
+            }
+        }
+    }
+    
     public static String chooseFile(){
         int returnVal;
         returnVal = fc.showOpenDialog(mf);
@@ -291,10 +318,6 @@ public class FrameController {
 
     public static DeleteMeetingWarningGUI getDmwg() {
         return dmwg;
-    }
-
-    public static EndMeetingPanel getEmp() {
-        return emp;
     }
 
     public static GroupGUI getGg() {

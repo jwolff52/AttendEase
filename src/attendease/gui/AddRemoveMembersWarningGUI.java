@@ -1,9 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/************************************************************************
+    AttendEase - A simple, point-and-click attendance program.
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*************************************************************************/
+
 package attendease.gui;
 
+import attendease.util.AFrame;
 import attendease.util.FrameController;
 import attendease.util.Start;
 import attendease.util.Student;
@@ -15,7 +30,7 @@ import javax.swing.DefaultListModel;
  *
  * @author james.wolff
  */
-public class AddRemoveMembersWarningGUI extends javax.swing.JFrame {
+public class AddRemoveMembersWarningGUI extends AFrame {
 
     /**
      * Creates new form RemoveAddMembersWarning
@@ -60,14 +75,10 @@ public class AddRemoveMembersWarningGUI extends javax.swing.JFrame {
         addedList = new javax.swing.JList();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        homeMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("WARNING!");
+        setName("armwg"); // NOI18N
         setResizable(false);
 
         titleLabel.setText("Students to be added:");
@@ -126,40 +137,6 @@ public class AddRemoveMembersWarningGUI extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        fileMenu.setText("File");
-
-        homeMenuItem.setText("Home");
-        homeMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                homeMenuItemMouseReleased(evt);
-            }
-        });
-        homeMenuItem.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
-            public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
-            }
-            public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
-            }
-            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
-                homeMenuItemMenuKeyTyped(evt);
-            }
-        });
-        fileMenu.add(homeMenuItem);
-
-        exitMenuItem.setText("Quit");
-        exitMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                exitMenuItemMouseReleased(evt);
-            }
-        });
-        fileMenu.add(exitMenuItem);
-
-        menuBar.add(fileMenu);
-
-        helpMenu.setText("Help");
-        menuBar.add(helpMenu);
-
-        setJMenuBar(menuBar);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -170,6 +147,8 @@ public class AddRemoveMembersWarningGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        setJMenuBar(FrameController.getMf().getJMenuBar());
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -186,22 +165,6 @@ public class AddRemoveMembersWarningGUI extends javax.swing.JFrame {
         approved=false;
         FrameController.changeFrameState("armwg");
     }//GEN-LAST:event_cancelButtonMouseReleased
-
-    private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
-        FrameController.getSmgp().setState("Group");
-        FrameController.setCurrentPanel("smgp");
-        FrameController.changeFrameState("armwg");
-        FrameController.changeFrameState("umg");
-    }//GEN-LAST:event_homeMenuItemMouseReleased
-
-    private void homeMenuItemMenuKeyTyped(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_homeMenuItemMenuKeyTyped
-        FrameController.getSmgp().setState("Group");
-        FrameController.setCurrentPanel("smgp");
-    }//GEN-LAST:event_homeMenuItemMenuKeyTyped
-
-    private void exitMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMenuItemMouseReleased
-        FrameController.dispose();
-    }//GEN-LAST:event_exitMenuItemMouseReleased
     
     public void fillNameList(ArrayList<Student> tempStudents) {
         aListModel=new DefaultListModel();
@@ -232,12 +195,7 @@ public class AddRemoveMembersWarningGUI extends javax.swing.JFrame {
     private javax.swing.JList addedList;
     private javax.swing.JScrollPane addedListScrollPane;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuItem homeMenuItem;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton okButton;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables

@@ -1,15 +1,30 @@
+/************************************************************************
+    AttendEase - A simple, point-and-click attendance program.
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*************************************************************************/
 
 package attendease.gui;
 
+import attendease.util.APanel;
 import attendease.util.FrameController;
 import attendease.util.Start;
 
 
-public class GroupOptionsPanel extends javax.swing.JPanel {
+public class GroupOptionsPanel extends APanel {
 
-    /**
-     * Creates new form GroupOptions
-     */
     public GroupOptionsPanel() {
         preInit();
         initComponents();
@@ -58,7 +73,7 @@ public class GroupOptionsPanel extends javax.swing.JPanel {
             }
         });
 
-        viewMembersButton.setText("View Attendence");
+        viewMembersButton.setText("View Students");
         viewMembersButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 viewMembersButtonMouseReleased(evt);

@@ -78,7 +78,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="viewMembersButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="View Attendence"/>
+        <Property name="text" type="java.lang.String" value="View Students"/>
       </Properties>
       <Events>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="viewMembersButtonMouseReleased"/>

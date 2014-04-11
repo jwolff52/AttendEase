@@ -1,9 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/************************************************************************
+    AttendEase - A simple, point-and-click attendance program.
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*************************************************************************/
+
 package attendease.gui;
 
+import attendease.util.AFrame;
 import attendease.util.ATableModel;
 import attendease.util.EFile;
 import attendease.util.EFileReader;
@@ -20,7 +35,7 @@ import java.util.Comparator;
  *
  * @author james.wolff
  */
-public class UpdateMembersGUI extends javax.swing.JFrame {
+public class UpdateMembersGUI extends AFrame {
 
     public UpdateMembersGUI() {
         preInit();
@@ -83,13 +98,9 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
         searchLabel = new javax.swing.JLabel();
         studentTableScrollPane = new javax.swing.JScrollPane();
         studentTable = new javax.swing.JTable();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        homeMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setName("umg"); // NOI18N
 
         mainPanel.setPreferredSize(new java.awt.Dimension(800, 600));
 
@@ -331,40 +342,6 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
                     .addComponent(updateButton)))
         );
 
-        fileMenu.setText("File");
-
-        homeMenuItem.setText("Home");
-        homeMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                homeMenuItemMouseReleased(evt);
-            }
-        });
-        homeMenuItem.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
-            public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
-            }
-            public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
-            }
-            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
-                homeMenuItemMenuKeyTyped(evt);
-            }
-        });
-        fileMenu.add(homeMenuItem);
-
-        exitMenuItem.setText("Quit");
-        exitMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                exitMenuItemMouseReleased(evt);
-            }
-        });
-        fileMenu.add(exitMenuItem);
-
-        menuBar.add(fileMenu);
-
-        helpMenu.setText("Help");
-        menuBar.add(helpMenu);
-
-        setJMenuBar(menuBar);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -378,24 +355,10 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        setJMenuBar(FrameController.getMf().getJMenuBar());
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void homeMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItemMouseReleased
-        FrameController.getSmgp().setState("Group");
-        FrameController.setCurrentPanel("smgp");
-        FrameController.changeFrameState("mf");
-        FrameController.changeFrameState("umg");
-    }//GEN-LAST:event_homeMenuItemMouseReleased
-
-    private void homeMenuItemMenuKeyTyped(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_homeMenuItemMenuKeyTyped
-        FrameController.getSmgp().setState("Group");
-        FrameController.setCurrentPanel("smgp");
-    }//GEN-LAST:event_homeMenuItemMenuKeyTyped
-
-    private void exitMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMenuItemMouseReleased
-        FrameController.dispose();
-    }//GEN-LAST:event_exitMenuItemMouseReleased
 
     private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
         FrameController.changeFrameState("umg");
@@ -416,6 +379,7 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
             FrameController.changeFrameState("armwg");
             new Thread(new Runnable(){
                 @SuppressWarnings("empty-statement")
+                @Override
                 public void run(){
                     while(FrameController.getArmwg().isVisible());
                     if(FrameController.getArmwg().approved()){
@@ -426,7 +390,7 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
                 }
             }).start();
         }else if(tabbedPane.getSelectedIndex()==1){
-            Student tempStudent=new Student(studentNameTextBox.getText(), Integer.valueOf(idNumberTextBox.getText()), Integer.valueOf(pointsTextBox.getText()), 0);
+            Student tempStudent=new Student(studentNameTextBox.getText(), Integer.valueOf(idNumberTextBox.getText()), Integer.valueOf(pointsTextBox.getText()), "");
             if(!FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).isMember(tempStudent)){
                 FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).updateStudents(tempStudent, true);
                 Start.d.addStudent(FrameController.getSmgp().getCurrentGroupName(), tempStudent);
@@ -444,6 +408,7 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
             FrameController.changeFrameState("armwg");
             new Thread(new Runnable(){
                 @SuppressWarnings("empty-statement")
+                @Override
                 public void run(){
                     while(FrameController.getArmwg().isVisible());
                     if(FrameController.getArmwg().approved()){
@@ -550,17 +515,12 @@ public class UpdateMembersGUI extends javax.swing.JFrame {
     private javax.swing.JLabel asteriskLabel2;
     private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuItem homeMenuItem;
     private javax.swing.JLabel idNumberLabel;
     private javax.swing.JTextField idNumberTextBox;
     private javax.swing.JLabel importLabel;
     private javax.swing.JPanel importMembersPanel;
     private javax.swing.JTextField importTextBox;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JMenuBar menuBar;
     private javax.swing.JLabel pointsLabel;
     private javax.swing.JTextField pointsTextBox;
     private javax.swing.JPanel removeMemberPanel;

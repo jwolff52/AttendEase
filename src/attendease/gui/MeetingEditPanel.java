@@ -1,9 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/************************************************************************
+    AttendEase - A simple, point-and-click attendance program.
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*************************************************************************/
+
 package attendease.gui;
 
+import attendease.util.APanel;
 import attendease.util.FrameController;
 import attendease.util.Meeting;
 import attendease.util.Start;
@@ -19,11 +34,8 @@ import javax.swing.JTabbedPane;
  *
  * @author timothy.chandler
  */
-public class MeetingEditPanel extends javax.swing.JPanel {
+public class MeetingEditPanel extends APanel {
 
-    /**
-     * Creates new form Meeting
-     */
     public MeetingEditPanel() {
         preInit();
         initComponents();
@@ -136,20 +148,6 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         sTPMRadioButtonBasic = new javax.swing.JRadioButton();
         sT24RadioButtonBasic = new javax.swing.JRadioButton();
         advancedTab = new javax.swing.JPanel();
-        sundayLabel = new javax.swing.JLabel();
-        mondayLabel = new javax.swing.JLabel();
-        tuesdayLabel = new javax.swing.JLabel();
-        wednesdayLabel = new javax.swing.JLabel();
-        thursdayLabel = new javax.swing.JLabel();
-        saturdayButton = new javax.swing.JRadioButton();
-        mondayButton = new javax.swing.JRadioButton();
-        tuesdayButton = new javax.swing.JRadioButton();
-        wednesdayButton = new javax.swing.JRadioButton();
-        sundayButton = new javax.swing.JRadioButton();
-        thursdayButton = new javax.swing.JRadioButton();
-        fridayButton = new javax.swing.JRadioButton();
-        fridayLabel = new javax.swing.JLabel();
-        saturdayLabel = new javax.swing.JLabel();
         sTLabelAdv = new javax.swing.JLabel();
         endTimeLabelAdv = new javax.swing.JLabel();
         invisibleHelper = new javax.swing.JLabel();
@@ -393,110 +391,29 @@ public class MeetingEditPanel extends javax.swing.JPanel {
 
         meetingTabPane.addTab("Basic", basicTab);
 
-        java.awt.GridBagLayout advancedTabLayout = new java.awt.GridBagLayout();
-        advancedTabLayout.columnWidths = new int[] {0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0};
-        advancedTabLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        advancedTab.setLayout(advancedTabLayout);
-
-        sundayLabel.setText("S");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        advancedTab.add(sundayLabel, gridBagConstraints);
-
-        mondayLabel.setText("M");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        advancedTab.add(mondayLabel, gridBagConstraints);
-
-        tuesdayLabel.setText("T");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 0;
-        advancedTab.add(tuesdayLabel, gridBagConstraints);
-
-        wednesdayLabel.setText("W");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 0;
-        advancedTab.add(wednesdayLabel, gridBagConstraints);
-
-        thursdayLabel.setText("Th");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 14);
-        advancedTab.add(thursdayLabel, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 10;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        advancedTab.add(saturdayButton, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        advancedTab.add(mondayButton, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
-        advancedTab.add(tuesdayButton, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 2;
-        advancedTab.add(wednesdayButton, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        advancedTab.add(sundayButton, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 13);
-        advancedTab.add(thursdayButton, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.insets = new java.awt.Insets(0, 26, 0, 0);
-        advancedTab.add(fridayButton, gridBagConstraints);
-
-        fridayLabel.setText("F");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 59, 0, 0);
-        advancedTab.add(fridayLabel, gridBagConstraints);
-
-        saturdayLabel.setText("S");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 39, 0, 0);
-        advancedTab.add(saturdayLabel, gridBagConstraints);
+        advancedTab.setLayout(new java.awt.GridBagLayout());
 
         sTLabelAdv.setText("Start Time");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 9, 0, 0);
         advancedTab.add(sTLabelAdv, gridBagConstraints);
 
         endTimeLabelAdv.setText("End Time");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 8);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 9, 0, 0);
         advancedTab.add(endTimeLabelAdv, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.ipady = 125;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         advancedTab.add(invisibleHelper, gridBagConstraints);
 
         eHTextBoxAdv.setBackground(new java.awt.Color(0, 255, 0));
@@ -507,12 +424,12 @@ public class MeetingEditPanel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 26;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(2, 8, 0, 0);
         advancedTab.add(eHTextBoxAdv, gridBagConstraints);
 
         eMTextBoxAdv.setBackground(new java.awt.Color(0, 255, 0));
@@ -522,20 +439,22 @@ public class MeetingEditPanel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 26;
-        gridBagConstraints.insets = new java.awt.Insets(2, 3, 0, 0);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 45, 0, 0);
         advancedTab.add(eMTextBoxAdv, gridBagConstraints);
 
         eTCLabelAdv.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         eTCLabelAdv.setText(":");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.insets = new java.awt.Insets(2, 19, 4, 0);
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 40, 0, 0);
         advancedTab.add(eTCLabelAdv, gridBagConstraints);
 
         sHTextBoxAdv.setBackground(new java.awt.Color(255, 0, 0));
@@ -546,21 +465,21 @@ public class MeetingEditPanel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 26;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 0);
         advancedTab.add(sHTextBoxAdv, gridBagConstraints);
 
         sTCLabelAdv.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         sTCLabelAdv.setText(":");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.insets = new java.awt.Insets(2, 19, 4, 0);
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 40, 0, 0);
         advancedTab.add(sTCLabelAdv, gridBagConstraints);
 
         sMTextBoxAdv.setBackground(new java.awt.Color(255, 0, 0));
@@ -570,11 +489,13 @@ public class MeetingEditPanel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 26;
-        gridBagConstraints.insets = new java.awt.Insets(2, 3, 0, 0);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 45, 0, 0);
         advancedTab.add(sMTextBoxAdv, gridBagConstraints);
 
         sTimeAdvGroup.add(sTAMRadioButtonAdv);
@@ -587,9 +508,10 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 11, 0, 29);
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 23, 0, 0);
         advancedTab.add(sTAMRadioButtonAdv, gridBagConstraints);
 
         sTimeAdvGroup.add(sTPMRadioButtonAdv);
@@ -600,10 +522,12 @@ public class MeetingEditPanel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 27, 0, 8);
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 65, 0, 0);
         advancedTab.add(sTPMRadioButtonAdv, gridBagConstraints);
 
         sTimeAdvGroup.add(sT24RadioButtonAdv);
@@ -614,10 +538,12 @@ public class MeetingEditPanel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 39, 0, 0);
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 55);
         advancedTab.add(sT24RadioButtonAdv, gridBagConstraints);
 
         eTimeAdvGroup.add(eTAMRadioButtonAdv);
@@ -625,18 +551,21 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         eTAMRadioButtonAdv.setText("AM");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 11, 0, 29);
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 22, 149, 0);
         advancedTab.add(eTAMRadioButtonAdv, gridBagConstraints);
 
         eTimeAdvGroup.add(eTPMRadioButtonAdv);
         eTPMRadioButtonAdv.setText("PM");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 27, 0, 8);
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 65, 149, 0);
         advancedTab.add(eTPMRadioButtonAdv, gridBagConstraints);
 
         eTimeAdvGroup.add(iET24RadioButtonAdv);
@@ -646,10 +575,12 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         iET24RadioButtonAdv.setRequestFocusEnabled(false);
         iET24RadioButtonAdv.setRolloverEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 47, 0, 0);
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 7, 149, 0);
         advancedTab.add(iET24RadioButtonAdv, gridBagConstraints);
 
         meetingTabPane.addTab("Advanced", advancedTab);
@@ -848,28 +779,22 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         return meetingTabPane;
     }
     
-    public void clearData(){
+    @Override
+    public void clear(){
         eHTextBoxAdv.setText("");
         eMTextBoxAdv.setText("");
         sHTextBoxAdv.setText("");
         sMTextBoxAdv.setText("");
         sHTextBoxBasic.setText("");
         sMTextBoxBasic.setText("");
-        fridayButton.setSelected(false);
         givenTextBoxBasic.setText("0");
         givenTextBoxPoints.setText("0");
         lateTextBoxPoints.setText("0");
-        mondayButton.setSelected(false);
         requiredTextBoxBasic.setText("0");
         requiredTextBoxPoints.setText("0");
         initModels();
-        saturdayButton.setSelected(false);
-        sundayButton.setSelected(false);
-        thursdayButton.setSelected(false);
         sHTextBoxBasic.setText("");
         titleTextBox.setText("");
-        tuesdayButton.setSelected(false);
-        wednesdayButton.setSelected(false);
         sTAMRadioButtonBasic.setSelected(true);
         sTAMRadioButtonBasic.setSelected(false);
         sTAMRadioButtonAdv.setSelected(true);
@@ -885,7 +810,6 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         ArrayList<Object> p=parseMeetingData(m);
         titleTextBox.setText((String)p.get(0));
         oldName=(String)p.get(0);
-        FrameController.getMg().setMeatName((String)p.get(0));
         sDYear.setSelectedItem(Integer.parseInt((String)p.get(1)));
         refreshMonths();
         sDMonth.setSelectedIndex(MiscUtils.getMonthNumber((String)p.get(2))-getBeginningMonth());
@@ -919,14 +843,6 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         colorTimes("startBasic");
         colorTimes("startAdvanced");
         colorTimes("end");
-        String r=(Integer)p.get(10)+"";
-        sundayButton.setSelected(r.contains("1"));
-        mondayButton.setSelected(r.contains("2"));
-        tuesdayButton.setSelected(r.contains("3"));
-        wednesdayButton.setSelected(r.contains("4"));
-        thursdayButton.setSelected(r.contains("5"));
-        fridayButton.setSelected(r.contains("6"));
-        saturdayButton.setSelected(r.contains("7"));
         givenTextBoxBasic.setText((Integer)p.get(11)+"");
         givenTextBoxPoints.setText((Integer)p.get(11)+"");
         requiredTextBoxBasic.setText((Integer)p.get(12)+"");
@@ -939,7 +855,6 @@ public class MeetingEditPanel extends javax.swing.JPanel {
         p.add(meat.getName());
         p.addAll(parseDateData(meat));
         p.addAll(parseTimeData(meat));
-        p.add(meat.getReocurringDays());
         p.add(meat.getgPoints());
         p.add(meat.getrPoints());
         p.add(meat.getlPoints());
@@ -1028,9 +943,15 @@ public class MeetingEditPanel extends javax.swing.JPanel {
             ep="";
         }else{
             et=meat.getEndTime().substring(0, meat.getEndTime().length()-3);
-            eh=et.substring(0,et.indexOf(':'));
-            em=et.substring(et.indexOf(':')+1);
-            ep=et.substring(meat.getEndTime().length()-2);
+            try{
+                eh=et.substring(0,et.indexOf(':'));
+                em=et.substring(et.indexOf(':')+1);
+                ep=et.substring(meat.getEndTime().length()-2);
+            }catch(StringIndexOutOfBoundsException e){
+                eh=et.substring(0,et.indexOf(' '));
+                em=et.substring(et.indexOf(' ')+1);
+                ep=et.substring(meat.getEndTime().length()-2);
+            }
         }
         p.add(eh);
         p.add(em);
@@ -1088,11 +1009,9 @@ public class MeetingEditPanel extends javax.swing.JPanel {
     }
     
     public String[] getValues() {
-        String[] values=new String[11];
+        String[] values=new String[10];
         if(FrameController.getMg().getIsEditing()){
             values[0]=FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeeting(titleTextBox.getText()).getIdentifier();
-        }else{
-            values[0]=null;
         }
         if(MiscUtils.isValidName(titleTextBox.getText())){
             values[1]=titleTextBox.getText();
@@ -1107,43 +1026,13 @@ public class MeetingEditPanel extends javax.swing.JPanel {
             values[4]="";
         }
         values[5]=0+"";
-        values[6]=getReocurring();
         if(areValidPoints("all")){ 
-            values[7]=givenTextBoxBasic.getText();
-            values[8]=requiredTextBoxBasic.getText();
-            values[9]=lateTextBoxPoints.getText();
+            values[6]=givenTextBoxBasic.getText();
+            values[7]=requiredTextBoxBasic.getText();
+            values[8]=lateTextBoxPoints.getText();
         }
-        values[10]="false";
+        values[9]="false";
         return values;
-    }
-    
-    public String getReocurring(){
-        String temp="";
-        if(sundayButton.isSelected()){
-            temp+=1;
-        }
-        if(mondayButton.isSelected()){
-            temp+=2;
-        }
-        if(tuesdayButton.isSelected()){
-            temp+=3;
-        }
-        if(wednesdayButton.isSelected()){
-            temp+=4;
-        }
-        if(thursdayButton.isSelected()){
-            temp+=5;
-        }
-        if(fridayButton.isSelected()){
-            temp+=6;
-        }
-        if(saturdayButton.isSelected()){
-            temp+=7;
-        }
-        if(temp.equals("")){
-            return 0+"";
-        }
-        return temp;
     }
     
     public boolean is24Hour(){
@@ -1309,8 +1198,6 @@ public class MeetingEditPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton eTPMRadioButtonAdv;
     private javax.swing.ButtonGroup eTimeAdvGroup;
     private javax.swing.JLabel endTimeLabelAdv;
-    private javax.swing.JRadioButton fridayButton;
-    private javax.swing.JLabel fridayLabel;
     private javax.swing.JLabel givenLabelBasic;
     private javax.swing.JLabel givenLabelPoints;
     private javax.swing.JTextField givenTextBoxBasic;
@@ -1320,8 +1207,6 @@ public class MeetingEditPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lateLabelPoints;
     private javax.swing.JTextField lateTextBoxPoints;
     private javax.swing.JTabbedPane meetingTabPane;
-    private javax.swing.JRadioButton mondayButton;
-    private javax.swing.JLabel mondayLabel;
     private javax.swing.JLabel pointsLabel;
     private javax.swing.JLabel requiredLabel;
     private javax.swing.JLabel requiredLabelBasic;
@@ -1346,19 +1231,9 @@ public class MeetingEditPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton sTPMRadioButtonBasic;
     private javax.swing.ButtonGroup sTimeAdvGroup;
     private javax.swing.ButtonGroup sTimeBasicGroup;
-    private javax.swing.JRadioButton saturdayButton;
-    private javax.swing.JLabel saturdayLabel;
     private javax.swing.JLabel startDateLabel;
     private javax.swing.JLabel startTimeLabel;
-    private javax.swing.JRadioButton sundayButton;
-    private javax.swing.JLabel sundayLabel;
-    private javax.swing.JRadioButton thursdayButton;
-    private javax.swing.JLabel thursdayLabel;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JTextField titleTextBox;
-    private javax.swing.JRadioButton tuesdayButton;
-    private javax.swing.JLabel tuesdayLabel;
-    private javax.swing.JRadioButton wednesdayButton;
-    private javax.swing.JLabel wednesdayLabel;
     // End of variables declaration//GEN-END:variables
 }

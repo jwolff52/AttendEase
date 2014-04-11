@@ -1,9 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/************************************************************************
+    AttendEase - A simple, point-and-click attendance program.
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*************************************************************************/
+
 package attendease.gui;
 
+import attendease.util.APanel;
 import attendease.util.ATableModel;
 import attendease.util.AutoDismiss;
 import attendease.util.ColorRenderer;
@@ -23,11 +38,8 @@ import java.util.TimeZone;
  *
  * @author timothy.chandler
  */
-public class MeetingPanel extends javax.swing.JPanel {
+public class MeetingPanel extends APanel {
 
-    /**
-     * Creates new form MeetingPanel
-     */
     public MeetingPanel() {
         preInit();
         initComponents();
@@ -131,8 +143,8 @@ public class MeetingPanel extends javax.swing.JPanel {
                     saveStudents(FrameController.getSmgp().getCurrentGroupName());
                 }
             }).start();
-            FrameController.setCurrentPanel("emp");
-            clearTable();
+            FrameController.setCurrentPanel("gop");
+            clear();
         }
     }//GEN-LAST:event_doneButtonMouseReleased
 
@@ -190,8 +202,8 @@ public class MeetingPanel extends javax.swing.JPanel {
     private void scanInStudent(Student s){
         String[] time=getScanInTime();
         s.addPoints(getPointsAdded(time[0]));
+        s.addMeetingsAttended(currentMeeting.getIdentifier());
         Integer points=s.getPoints();
-        s.incrementMeetingsAttended();
         aTableModel.addRow(new Object[]{s.getName(), time[0], points});
     }
     
@@ -251,7 +263,8 @@ public class MeetingPanel extends javax.swing.JPanel {
         return time;
     }
     
-    private void clearTable(){
+    @Override
+    public void clear(){
         for(int i=attendanceTable.getRowCount()-1;i>=0;i--) {
             aTableModel.removeRow(i);
         }

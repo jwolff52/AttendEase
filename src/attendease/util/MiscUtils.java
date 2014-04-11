@@ -1,12 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/************************************************************************
+    AttendEase - A simple, point-and-click attendance program.
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler, Sterling Long, Cole Howe
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*************************************************************************/
+
 package attendease.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.math.BigInteger;
 
 /**
  *
@@ -270,47 +282,27 @@ public class MiscUtils {
         }
     }
     
+    public static String getNextIdentifier(){
+        int i=0;
+        int limit=(int)Math.pow(37, 3)-1;
+        while(FrameController.getInv().identifierExisits(tenTo36(i))&&i<limit){
+            i++;
+        }
+        return tenTo36(i);
+    }
+    
+    public static int thirtySixTo10(String b36){
+        return Integer.valueOf(new BigInteger(b36, 36).toString());
+    }
+    
+    public static String tenTo36(int i){
+        return Integer.toString(i, 36);
+    }
+    
     private static boolean isLeapYear(int y){
         if(y%4==0){
             return y%100 != 0 || y%400 == 0;
         }
         return false;
-    }
-    
-    public static String generateIdentifier(ArrayList<String> identifiers){
-        identifiers=sortIdentifiers(identifiers);
-        String identifier="";
-        for(int i=0;i<50653;i++){
-            boolean unique=false;
-            identifier=Integer.toString(i, 36);
-            for(String string:identifiers){
-                if(!string.equals(identifier)){
-                    unique=true;
-                    break;
-                }
-            }
-            if(unique){
-                break;
-            }
-        }
-        return identifier;
-    }
-    
-    private static ArrayList<String> sortIdentifiers(ArrayList<String> identifiers){
-        ArrayList<Integer> base10=new ArrayList<>();
-        for(String identifier:identifiers){
-            base10.add(Integer.valueOf(identifier,36));
-        }
-        Collections.sort(base10, new Comparator<Integer>(){
-            @Override
-            public int compare(Integer t, Integer t1) {
-                return t.compareTo(t1);
-            }
-        });
-        identifiers.clear();
-        for (Integer integer : base10) {
-            identifiers.add(Integer.toString(integer, 36));
-        }
-        return identifiers;
     }
 }
