@@ -1,21 +1,7 @@
-/************************************************************************
-    AttendEase - A simple, point-and-click attendance program.
-    Copyright (C) 2013-2014  James Wolff, Timothy Chandler, Sterling Long, Cole Howe
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*************************************************************************/
-
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package attendease.util;
 
 import attendease.database.Database;
@@ -23,6 +9,8 @@ import attendease.gui.Splash;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -117,7 +105,7 @@ public class Start {
     private static void initDatabase() {
         try{
             d=new Database();
-        }catch(ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+        }catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedEncodingException ex) {
             createLog(ex, "A Database Error occurred!");
         }
         d.getDb();
@@ -158,10 +146,11 @@ public class Start {
     
     public static void firstRunSetup(){
         try {
-            final String HOME_DIR=new JFileChooser().getFileSystemView().getDefaultDirectory().getPath();
-            TFileWriter.writeFile(new File(HOME_DIR+"/AttendEase/README.md"), TFileReader.readFile(new File("README.md")));
-            EFileWriter.writeFile(new EFile(HOME_DIR+"/AttendEase/XLSExample.xls"), EFileReader.readFile(new EFile("XLSExample.xls")));
-            EFileWriter.writeFile(new EFile(HOME_DIR+"/AttendEase/XLSXExample.xls"), EFileReader.readFile(new EFile("XLSXExample.xlsx")));
+            String jarLoc=URLDecoder.decode(Start.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8").substring(1);
+//            JarResources jar = new JarResources ("Images.jar");
+            new TFileWriter().writeFile(new File(new JFileChooser().getFileSystemView().getDefaultDirectory().getPath()+"/AttendEase/README.md"), new TFileReader().readFile(new File("README.md")));
+            new TFileWriter().writeFile(new File(new JFileChooser().getFileSystemView().getDefaultDirectory().getPath()+"/AttendEase/XLSExample.xls"), new TFileReader().readFile(new File("XLSExample.xls")));
+            new TFileWriter().writeFile(new File(new JFileChooser().getFileSystemView().getDefaultDirectory().getPath()+"/AttendEase/XLSXExample.xlsx"), new TFileReader().readFile(new File("XLSXExample.xlsx")));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Start.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

@@ -1,24 +1,9 @@
-/************************************************************************
-    AttendEase - A simple, point-and-click attendance program.
-    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*************************************************************************/
-
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package attendease.gui;
 
-import attendease.util.AFrame;
 import attendease.util.FrameController;
 import attendease.util.Start;
 
@@ -26,7 +11,7 @@ import attendease.util.Start;
  *
  * @author james.wolff
  */
-public class DeleteMeetingWarningGUI extends AFrame {
+public class DeleteMeetingWarningGUI extends javax.swing.JFrame {
 
     /**
      * Creates new form DeleteMeetingWarning
@@ -62,10 +47,14 @@ public class DeleteMeetingWarningGUI extends AFrame {
         questionLabel = new javax.swing.JLabel();
         yesButton = new javax.swing.JButton();
         noButton = new javax.swing.JButton();
+        menuBar2 = new javax.swing.JMenuBar();
+        fileMenu2 = new javax.swing.JMenu();
+        homeMenuItem2 = new javax.swing.JMenuItem();
+        exitMenuItem = new javax.swing.JMenuItem();
+        helpMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("WARNING!");
-        setName("dmwg"); // NOI18N
         setResizable(false);
 
         questionLabel.setText("Delete all repeated events associated with this one?");
@@ -110,6 +99,40 @@ public class DeleteMeetingWarningGUI extends AFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        fileMenu2.setText("File");
+
+        homeMenuItem2.setText("Home");
+        homeMenuItem2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                homeMenuItem2MouseReleased(evt);
+            }
+        });
+        homeMenuItem2.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
+            public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
+            }
+            public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
+            }
+            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
+                homeMenuItem2MenuKeyTyped(evt);
+            }
+        });
+        fileMenu2.add(homeMenuItem2);
+
+        exitMenuItem.setText("Quit");
+        exitMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                exitMenuItemMouseReleased(evt);
+            }
+        });
+        fileMenu2.add(exitMenuItem);
+
+        menuBar2.add(fileMenu2);
+
+        helpMenu.setText("Help");
+        menuBar2.add(helpMenu);
+
+        setJMenuBar(menuBar2);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -121,8 +144,6 @@ public class DeleteMeetingWarningGUI extends AFrame {
             .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setJMenuBar(FrameController.getMf().getJMenuBar());
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -133,6 +154,21 @@ public class DeleteMeetingWarningGUI extends AFrame {
     private void yesButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yesButtonMouseReleased
         this.dispose();
     }//GEN-LAST:event_yesButtonMouseReleased
+
+    private void homeMenuItem2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMenuItem2MouseReleased
+        FrameController.getSmgp().setState("Group");
+        FrameController.setCurrentPanel("smgp");
+        FrameController.changeFrameState("dmwg");
+    }//GEN-LAST:event_homeMenuItem2MouseReleased
+
+    private void homeMenuItem2MenuKeyTyped(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_homeMenuItem2MenuKeyTyped
+        FrameController.getSmgp().setState("Group");
+        FrameController.setCurrentPanel("smgp");
+    }//GEN-LAST:event_homeMenuItem2MenuKeyTyped
+
+    private void exitMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMenuItemMouseReleased
+        FrameController.dispose();
+    }//GEN-LAST:event_exitMenuItemMouseReleased
 
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
@@ -160,7 +196,18 @@ public class DeleteMeetingWarningGUI extends AFrame {
 //        });
 //    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenu fileMenu1;
+    private javax.swing.JMenu fileMenu2;
+    private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem homeMenuItem;
+    private javax.swing.JMenuItem homeMenuItem1;
+    private javax.swing.JMenuItem homeMenuItem2;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuBar menuBar1;
+    private javax.swing.JMenuBar menuBar2;
     private javax.swing.JButton noButton;
     private javax.swing.JLabel questionLabel;
     private javax.swing.JButton yesButton;

@@ -1,24 +1,16 @@
-/************************************************************************
-    AttendEase - A simple, point-and-click attendance program.
-    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*************************************************************************/
+/*
+ * StudentPanel.java
+ *
+ * Created on Oct 11, 2013, 11:30:47 AM
+ */
 
 package attendease.gui;
 
-import attendease.util.APanel;
 import attendease.util.ATableModel;
 import attendease.util.EFile;
 import attendease.util.EFileWriter;
@@ -36,7 +28,7 @@ import java.util.Comparator;
  *
  * @author sterling.long
  */
-public class StudentPanel extends APanel {
+public class StudentPanel extends javax.swing.JPanel {
 
     public StudentPanel() {
         preInit();
@@ -63,6 +55,7 @@ public class StudentPanel extends APanel {
         sTableModel.addColumn("ID Number");
         sTableModel.addColumn("Name");
         sTableModel.addColumn("Points");
+        sTableModel.addColumn("Meetings Attended");
     }
     
     
@@ -193,9 +186,6 @@ public class StudentPanel extends APanel {
         javax.swing.JOptionPane.showMessageDialog(this, "Please choose a location to export attendance to.", "AttendEase", javax.swing.JOptionPane.INFORMATION_MESSAGE);
         String loc=FrameController.chooseFile();
         EFile newFile=new EFile(loc);
-        if(newFile.getType().equalsIgnoreCase("xls")){
-            newFile=new EFile(loc.substring(0, loc.lastIndexOf("."))+".xlsx");
-        }
         if(!newFile.exists()){
             try {
                 newFile.createNewFile();

@@ -1,26 +1,5 @@
-/************************************************************************
-    AttendEase - A simple, point-and-click attendance program.
-    Copyright (C) 2013-2014  James Wolff, Timothy Chandler, Sterling Long, Cole Howe
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*************************************************************************/
-
 package attendease.util;
-/**
- * 
- *@author timothy.chandler
- */
+/*@author timothy.chandler*/
 public class Meeting {
     private String identifier;
     private String name;
@@ -28,31 +7,34 @@ public class Meeting {
     private String startTime;
     private String endTime;
     private int attendance;
+    private int reocurringDays;
     private int gPoints;
     private int rPoints;
     private int lPoints;
     private boolean meatHeld;
     
-    public Meeting(String i, String d, String sTime, String eTime, int a, int g, int r, int l, boolean m){
+    public Meeting(String i, String d, String sTime, String eTime, int a, String rD, int g, int r, int l, boolean m){
         identifier=i;
         name=d+" @ "+sTime;
         date=d;
         startTime=sTime;
         endTime=eTime;
         attendance=a;
+        reocurringDays=new Integer(rD);
         gPoints=g;
         rPoints=r;
         lPoints=l;
         meatHeld=m;
     }
     
-    public Meeting(String i, String n, String d, String sTime, String eTime, int a, int g, int r, int l, boolean m){
+    public Meeting(String i, String n, String d, String sTime, String eTime, int a, String rD, int g, int r, int l, boolean m){
         identifier=i;
         name=n;
         date=d;
         startTime=sTime;
         endTime=eTime;
         attendance=a;
+        reocurringDays=new Integer(rD);
         gPoints=g;
         rPoints=r;
         lPoints=l;
@@ -66,10 +48,11 @@ public class Meeting {
         startTime=v[3];
         endTime=v[4];
         attendance=new Integer(v[5]);
-        gPoints=new Integer(v[6]);
-        rPoints=new Integer(v[7]);
-        lPoints=new Integer(v[8]);
-        meatHeld=Boolean.valueOf(v[9]);
+        reocurringDays=new Integer(v[6]);
+        gPoints=new Integer(v[7]);
+        rPoints=new Integer(v[8]);
+        lPoints=new Integer(v[9]);
+        meatHeld=Boolean.valueOf(v[10]);
     }
 
     public String getName() {
@@ -128,6 +111,14 @@ public class Meeting {
         this.lPoints = lPoints;
     }
 
+    public int getReocurringDays() {
+        return reocurringDays;
+    }
+
+    public void setReocurringDays(int reocurringDays) {
+        this.reocurringDays = reocurringDays;
+    }
+
     public boolean isMeatHeld() {
         return meatHeld;
     }
@@ -137,7 +128,7 @@ public class Meeting {
     }
 
     public String[] getVaules() {
-        return new String[]{identifier,name,date,startTime,endTime,attendance+"",gPoints+"",rPoints+"",lPoints+"",meatHeld+""};
+        return new String[]{identifier,name,date,startTime,endTime,attendance+"",reocurringDays+"",gPoints+"",rPoints+"",lPoints+"",meatHeld+""};
     }
 
     public int getAttendance() {

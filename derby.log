@@ -1,10 +1,58 @@
+Tue Apr 08 10:27:00 CDT 2014 Thread[main,5,main] Cleanup action starting
+java.sql.SQLException: Database 'C:/Users/james.wolff/Documents/NetBeansProjects/AttendEase/build/classes//Database/AttendEase' not found.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection30.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection40.<init>(Unknown Source)
+	at org.apache.derby.jdbc.Driver40.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(DriverManager.java:579)
+	at java.sql.DriverManager.getConnection(DriverManager.java:243)
+	at attendease.database.Database.<init>(Database.java:26)
+	at attendease.util.Start.initDatabase(Start.java:105)
+	at attendease.util.Start.initVariables(Start.java:86)
+	at attendease.util.Start.main(Start.java:49)
+Caused by: java.sql.SQLException: Database 'C:/Users/james.wolff/Documents/NetBeansProjects/AttendEase/build/classes//Database/AttendEase' not found.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	... 18 more
+============= begin nested exception, level (1) ===========
+java.sql.SQLException: Database 'C:/Users/james.wolff/Documents/NetBeansProjects/AttendEase/build/classes//Database/AttendEase' not found.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection30.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection40.<init>(Unknown Source)
+	at org.apache.derby.jdbc.Driver40.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(DriverManager.java:579)
+	at java.sql.DriverManager.getConnection(DriverManager.java:243)
+	at attendease.database.Database.<init>(Database.java:26)
+	at attendease.util.Start.initDatabase(Start.java:105)
+	at attendease.util.Start.initVariables(Start.java:86)
+	at attendease.util.Start.main(Start.java:49)
+============= end nested exception, level (1) ===========
+Cleanup action completed
 ----------------------------------------------------------------
-Thu Apr 10 01:03:18 CDT 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instance a816c00e-0145-4a3b-b514-00000512fa30 
-on database directory C:\Users\James\Dropbox\AttendEase\AttendEase_Java\build\classes\Database\AttendEase  with class loader sun.misc.Launcher$AppClassLoader@6469cee6 
-Loaded from file:/C:/Users/James/Dropbox/AttendEase/AttendEase_Java/lib/derby.jar
+Tue Apr 08 10:27:00 CDT 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instance a816c00e-0145-41f3-12b0-000000ab04b8 
+on database directory C:\Users\james.wolff\Documents\NetBeansProjects\AttendEase\build\classes\Database\AttendEase  with class loader sun.misc.Launcher$AppClassLoader@7ced01 
+Loaded from file:/C:/Users/james.wolff/Documents/NetBeansProjects/AttendEase/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_21-b11
-user.dir=C:\Users\James\Dropbox\AttendEase\AttendEase_Java
+user.dir=C:\Users\james.wolff\Documents\NetBeansProjects\AttendEase
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
