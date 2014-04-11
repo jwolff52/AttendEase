@@ -22,7 +22,6 @@ location as this README, most likely "C:\Users\{YOUR_USER_NAME}\Documents\Attend
 
 **To-Do**
 → Ability to create meetings that occur, for example, every Monday.
-→ Ability to export Database for use on multiple Machines
 → Ability to relocate Database for use with DropBox, Google Drive, etc.
 → Other Minor Bug Fixes
 
