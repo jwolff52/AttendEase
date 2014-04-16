@@ -1,6 +1,6 @@
 /************************************************************************
     AttendEase - A simple, point-and-click attendance program.
-    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler, Sterling Long, Cole Howe
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ package attendease.gui;
 import attendease.util.Start;
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.SplashScreen;
@@ -29,6 +30,7 @@ import java.awt.event.ActionListener;
 
 public class Splash extends Frame implements ActionListener {
     
+    private static final String VERSION=Start.getVersion();;
     private static String loading;
     private static boolean doneLoading;
     private static SplashScreen splash;
@@ -36,21 +38,23 @@ public class Splash extends Frame implements ActionListener {
     
     private static void renderSplashFrame(Graphics2D g)throws NullPointerException {
             g.setComposite(AlphaComposite.Clear);
-            g.fillRect(112,360,500,100);
+            g.fillRect(75, 360, 500, 300);
             g.setPaintMode();
             g.setColor(Color.RED);
-            g.drawString(loading+"...", 112, 400);
+            g.setFont(new Font("Tahoma", Font.BOLD, 16));
+            g.drawString(VERSION+"     "+loading+"...", 75, 400);
     }
     @SuppressWarnings({"SleepWhileInLoop", "LeakingThisInConstructor"})
     public Splash(String l) {
         super("SplashScreen demo");
-            loading=l;
-            doneLoading=false;
-            try{
-                splash = SplashScreen.getSplashScreen();
-                g = splash.createGraphics();
-            }catch(NullPointerException e){
-            }
+        loading=l;
+        doneLoading=false;
+        try{
+            splash = SplashScreen.getSplashScreen();
+            g = splash.createGraphics();
+        }catch(NullPointerException e){
+        }
+        renderSplashFrame(g);
     }
     
     @Override

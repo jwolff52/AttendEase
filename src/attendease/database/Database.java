@@ -1,6 +1,6 @@
 /************************************************************************
     AttendEase - A simple, point-and-click attendance program.
-    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler, Sterling Long, Cole Howe
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,8 +20,6 @@ package attendease.database;
 
 import attendease.util.Start;
 import attendease.util.Student;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -41,8 +39,8 @@ public class Database {
     public Database() throws InstantiationException, ClassNotFoundException, IllegalAccessException{
         Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
         try{
-            conn=DriverManager.getConnection("jdbc:derby:"+URLDecoder.decode(Start.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8").substring(1)+"/Database/AttendEase;");
-        }catch(SQLException | UnsupportedEncodingException e){
+            conn=DriverManager.getConnection("jdbc:derby:"+System.getenv("ATTENDEASE_HOME")+"/Database/AttendEase;");
+        }catch(SQLException e){
             if(e instanceof SQLException){
                 SQLException f=(SQLException) e;
                 while(f.getNextException()!=null){
@@ -54,9 +52,8 @@ public class Database {
                     System.exit(0);
                 }
                 try {
-                    conn=DriverManager.getConnection("jdbc:derby:"+URLDecoder.decode(Start.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8").substring(1)+"/Database/AttendEase;create=true;");
-                    Start.firstRunSetup();
-                } catch (SQLException | UnsupportedEncodingException ex) {
+                    conn=DriverManager.getConnection("jdbc:derby:"+System.getenv("ATTENDEASE_HOME")+"/Database/AttendEase;create=true;");
+                } catch (SQLException ex) {
                     Start.createLog(ex, "An Internal Communication Error Occurred With the Database");
                 }
             }else{

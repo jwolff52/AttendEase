@@ -1,6 +1,6 @@
 /************************************************************************
     AttendEase - A simple, point-and-click attendance program.
-    Copyright (C) 2013-2014  James Wolff, Timothy Chandler
+    Copyright (C) 2013-2014  James Wolff, Timothy Chandler, Sterling Long, Cole Howe
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

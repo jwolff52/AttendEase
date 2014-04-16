@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import javax.swing.GroupLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -309,7 +308,7 @@ public class FrameController {
     
     public static void dispose(){
         Start.d.closeConnection();
-        System.exit(1);
+        System.exit(100);
     }
     
     public static AddRemoveMembersWarningGUI getArmwg() {
