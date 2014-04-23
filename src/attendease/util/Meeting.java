@@ -17,11 +17,15 @@
 *************************************************************************/
 
 package attendease.util;
+
+import java.util.ArrayList;
+
 /**
  * 
  *@author timothy.chandler
  */
 public class Meeting {
+    
     private String identifier;
     private String name;
     private String date;
@@ -70,6 +74,19 @@ public class Meeting {
         rPoints=new Integer(v[7]);
         lPoints=new Integer(v[8]);
         meatHeld=Boolean.valueOf(v[9]);
+    }
+    
+    public Meeting(Meeting m){
+        identifier=m.getIdentifier();
+        name=m.getName();
+        date=m.getDate();
+        startTime=m.getStartTime();
+        endTime=m.getEndTime();
+        attendance=m.getAttendance();
+        gPoints=m.getgPoints();
+        rPoints=m.getrPoints();
+        lPoints=m.getlPoints();
+        meatHeld=m.isMeatHeld();
     }
 
     public String getName() {

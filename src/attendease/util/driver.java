@@ -1,26 +1,14 @@
 package attendease.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * @author James
  * @date Feb 9, 2014
  */
 public class driver {
     public static void main(String[] args){
-        String s=Integer.toString(27, 36);
-        String s1=Integer.toString(400, 36);
-        System.out.println(s);
-        System.out.println(Integer.valueOf(s,36));
-        System.out.println(s1);
-        System.out.println(Integer.valueOf(s1,36));
-        try {
-            System.out.println(URLDecoder.decode(Start.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8").substring(1));
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(driver.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Meeting m=new Meeting("a", "test", "April 6, 2013", "13:30", "14:30", 0, 0 ,0, 0, false);
+        System.out.println(MiscUtils.getArrivalTime(m.getStartTime(), "+0"));
+        System.out.println(MiscUtils.getTimeDiff("12:00", "13:30"));
     }
+        
 }

@@ -190,8 +190,8 @@ public class StudentPanel extends APanel {
     }//GEN-LAST:event_searchTextFieldKeyReleased
 
     private void exportButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportButtonMouseReleased
-        javax.swing.JOptionPane.showMessageDialog(this, "Please choose a location to export attendance to.", "AttendEase", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-        String loc=FrameController.chooseFile();
+        javax.swing.JOptionPane.showMessageDialog(this, "Please choose a location to export the attendance files to.", "AttendEase", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        String loc=FrameController.chooseFolder();
         EFile newFile=new EFile(loc);
         if(newFile.getType().equalsIgnoreCase("xls")){
             newFile=new EFile(loc.substring(0, loc.lastIndexOf("."))+".xlsx");
@@ -203,7 +203,7 @@ public class StudentPanel extends APanel {
                 Start.createLog(ex, "Unable to create attendance file at "+loc.substring(loc.lastIndexOf(File.separatorChar)+1));
             }
         }
-        EFileWriter.writeAttendanceFile(newFile, FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getStudents(), getMeetingNames(), getMeetingAttendance());
+        EFileWriter.writeAttendanceFiles(newFile, FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getStudents(), FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeetings());
     }//GEN-LAST:event_exportButtonMouseReleased
     
     public void fillStudentTable(){

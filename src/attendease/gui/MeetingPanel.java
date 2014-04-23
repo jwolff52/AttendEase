@@ -20,6 +20,7 @@ package attendease.gui;
 
 import attendease.util.APanel;
 import attendease.util.ATableModel;
+import attendease.util.AttendedMeeting;
 import attendease.util.AutoDismiss;
 import attendease.util.ColorRenderer;
 import attendease.util.FrameController;
@@ -202,7 +203,7 @@ public class MeetingPanel extends APanel {
     private void scanInStudent(Student s){
         String[] time=getScanInTime();
         s.addPoints(getPointsAdded(time[0]));
-        s.addMeetingsAttended(currentMeeting.getIdentifier());
+        s.addAttendedMeeting(new AttendedMeeting(currentMeeting, time[0]));
         Integer points=s.getPoints();
         aTableModel.addRow(new Object[]{s.getName(), time[0], points});
     }

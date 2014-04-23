@@ -18,36 +18,66 @@
 
 package attendease.util;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author timothy.chandler
  */
 public class Student implements Comparable{
     private final String name;
+    private final String group;
     private final int ID;
     private int points;
-    private String meetingsAttended;
+    private ArrayList<AttendedMeeting> meetingsAttended;
     
-    public Student(String n,int id){
+    public Student(String n,String g,int id){
         name=n;
+        group=g;
         ID=id;
         points=0;
-        meetingsAttended="";
+        meetingsAttended=null;
     }
     
-    public Student(String n, int id, int p, String ma){
+    public Student(String n, String g, int id, int p, String ma){
         name=n;
+        group=g;
         ID=id;
         points=p;
-        meetingsAttended=ma;
+        fillMeetingsAttended(ma);
     }
     
     public Student(Object s){
         Student temp=(Student)s;
         name=temp.getName();
+        group=temp.getGroup();
         ID=temp.getID();
         points=temp.getPoints();
         meetingsAttended=temp.getMeetingsAttended();
+    }
+    
+    private void fillMeetingsAttended(String ma){
+        String temp;
+        String identifier;
+        String timeDiff;
+        int[] delineators=MiscUtils.getDelineatorIndicies(ma, '~');
+        int prev=0;
+        for(int i=0;i<delineators.length; i++) {
+            temp=ma.substring(prev, delineators[i]);
+            try{
+                timeDiff=temp.substring(temp.lastIndexOf('+'));
+                identifier=temp.substring(0,temp.lastIndexOf('+'));
+            }catch(StringIndexOutOfBoundsException e){
+                timeDiff=temp.substring(temp.lastIndexOf('-'));
+                identifier=temp.substring(0,temp.lastIndexOf('-'));
+            }
+            for (Meeting m : FrameController.getInv().getGroup(group).getMeetings()) {
+                if(identifier.equals(m.getIdentifier())){
+                    meetingsAttended.add(new AttendedMeeting(m, timeDiff));
+                    break;
+                }
+            }
+        }
     }
     
     public String getName() {
@@ -62,43 +92,25 @@ public class Student implements Comparable{
         return points;
     }
     
-    public String getMeetingsAttended(){
+    public ArrayList<AttendedMeeting> getMeetingsAttended(){
         return meetingsAttended;
+    }
+    
+    public AttendedMeeting getAttendedMeeting(Meeting m){
+        for (AttendedMeeting attendedMeeting : meetingsAttended) {
+            if(m.getIdentifier().equals(attendedMeeting.getIdentifier())){
+                return attendedMeeting;
+            }
+        }
+        return null;
+    }
+    
+    public void addAttendedMeeting(AttendedMeeting am){
+        meetingsAttended.add(am);
     }
     
     public void addPoints(int p){
         points+=p;
-    }
-    
-    public void addMeetingsAttended(String i){
-        meetingsAttended+=i;
-    }
-    
-    public int[] getMeetingsAttendedAsIntArray(){
-        int[] ia=new int[getMeetingsAttendedAsInt()];
-        char[] ca=meetingsAttended.toCharArray();
-        String temp="";
-        int count=0;
-        for(int i=0;i<ca.length;i++){
-            if(ca[i]!=','){
-                temp+=ca[i];
-            }else{
-                ia[count]=MiscUtils.thirtySixTo10(temp);
-                temp="";
-                count++;
-            }
-        }
-        return ia;
-    }
-    
-    private int getMeetingsAttendedAsInt(){
-        int i=0;
-        for (char c : meetingsAttended.toCharArray()) {
-            if(c==','){
-                i++;
-            }
-        }
-        return i;
     }
 
     public String[] getValues() {
@@ -122,5 +134,9 @@ public class Student implements Comparable{
     @Override
     public int compareTo(Object other){
         return this.name.compareTo(((Student)other).getName());
+    }
+    
+    public String getGroup() {
+        return group;
     }
 }

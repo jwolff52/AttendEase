@@ -390,7 +390,7 @@ public class UpdateMembersGUI extends AFrame {
                 }
             }).start();
         }else if(tabbedPane.getSelectedIndex()==1){
-            Student tempStudent=new Student(studentNameTextBox.getText(), Integer.valueOf(idNumberTextBox.getText()), Integer.valueOf(pointsTextBox.getText()), "");
+            Student tempStudent=new Student(studentNameTextBox.getText(), FrameController.getSmgp().getCurrentGroupName(), Integer.valueOf(idNumberTextBox.getText()), Integer.valueOf(pointsTextBox.getText()), "");
             if(!FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).isMember(tempStudent)){
                 FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).updateStudents(tempStudent, true);
                 Start.d.addStudent(FrameController.getSmgp().getCurrentGroupName(), tempStudent);

@@ -147,3 +147,10 @@ Wed Apr 02 11:39:05 CDT 2014 : Error editing Club!
 Wed Apr 02 12:25:21 CDT 2014 : A Database Error Occurred
 Wed Apr 02 12:26:17 CDT 2014 : A Database Error Occurred
 Wed Apr 02 12:28:06 CDT 2014 : A Database Error Occurred
+Tue Apr 22 18:42:07 CDT 2014 : Failed to create table Test GroupMeetings
+Tue Apr 22 18:42:07 CDT 2014 : Failed to create table Test GroupStudents
+Tue Apr 22 18:43:37 CDT 2014 : Unable to read from table: Test GroupMeetings
+Tue Apr 22 18:43:37 CDT 2014 : Error retreiving existing Groups!
+Tue Apr 22 18:45:25 CDT 2014 : Unable to read from table: Test GroupMeetings
+Tue Apr 22 18:45:25 CDT 2014 : Error retreiving existing Groups!
+Tue Apr 22 18:54:22 CDT 2014 : Could not find file: C:\Users\James\Documents\AttendEase\Examples\test.xlsx

@@ -69,16 +69,17 @@ public class EFileReader {
                     while(cells.hasNext()){ 
                         cell = (HSSFCell) cells.next();
                         i++;
-                        if(i%3==1&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC) {
-                            f.getIdNums().add(cell.getNumericCellValue());
-                        }else if(i%3==2&&cell.getCellType()==Cell.CELL_TYPE_STRING){
+                        if(i==1&&cell.getCellType()==Cell.CELL_TYPE_STRING) {
                             f.getNames().add(cell.getStringCellValue());
-                        }else if(i%3==0&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                        }else if(i==2&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                            f.getIdNums().add(cell.getNumericCellValue());
+                        }else if(i==3&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
                             f.getPoints().add(cell.getNumericCellValue());
                         }else{
                             javax.swing.JOptionPane.showConfirmDialog(FrameController.getMf(), "The excel file you provided contains an invalid value in cell: "+cell.getStringCellValue(), "Student File Error", javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE);
                         }
                     }
+                    i=0;
                 }
                 return f;
             case "xlsx":
@@ -98,16 +99,17 @@ public class EFileReader {
                     while (cells.hasNext()) {
                         cell = (XSSFCell) cells.next();
                         i++;
-                        if(i%3==1&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC) {
-                            f.getIdNums().add(cell.getNumericCellValue());
-                        }else if(i%3==2&&cell.getCellType()==Cell.CELL_TYPE_STRING){
+                        if(i==1&&cell.getCellType()==Cell.CELL_TYPE_STRING) {
                             f.getNames().add(cell.getStringCellValue());
-                        }else if(i%3==0&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                        }else if(i==2&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                            f.getIdNums().add(cell.getNumericCellValue());
+                        }else if(i==3&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
                             f.getPoints().add(cell.getNumericCellValue());
                         }else{
                             javax.swing.JOptionPane.showConfirmDialog(FrameController.getMf(), "The excel file you provided contains an invalid value in cell: "+cell.getStringCellValue(), "Student File Error", javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE);
                         }
                     }
+                    i=0;
                 }
                 return f;
             default:

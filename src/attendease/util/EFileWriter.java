@@ -26,8 +26,6 @@ import java.util.Random;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -39,56 +37,89 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class EFileWriter {
     
-    public static void writeAttendanceFile(EFile e, ArrayList<Student> stews, ArrayList<String> meetingNames, ArrayList<Integer> numberOfStudents){
+    public static void writeAttendanceFiles(EFile folder, ArrayList<Student> stews, ArrayList<Meeting> meats){
+        writeStudentAttendanceFile(folder, stews, meats);
+        writeMeetingAttendanceFile(folder, meats);
+    }
+    
+    private static void writeStudentAttendanceFile(EFile folder, ArrayList<Student> stews, ArrayList<Meeting> meats){
+        EFile sFile=new EFile(folder.getPath()+"/Student Attendance.xlsx");
         Workbook newWb=new XSSFWorkbook();
-        CellStyle present=newWb.createCellStyle();
-        present.setFillBackgroundColor(HSSFColor.GREEN.index);
-        Sheet sheet1=newWb.createSheet("Student Attendance");
-        Row row0=sheet1.createRow(0);
-        row0.createCell(0).setCellValue("Name (Last, First)");
-        row0.createCell(1).setCellValue("ID Number");
-        row0.createCell(2).setCellValue("Points (Optional)");
-        for(int i=3;i<meetingNames.size();i++) {
-            row0.createCell(i).setCellValue(meetingNames.get(i-3));
-        }
+        Sheet sheet=newWb.createSheet("Student Attendance");
+        Row row=sheet.createRow(0);
+        row.createCell(0).setCellValue("Name (Last, First)");
+        row.createCell(1).setCellValue("ID Number");
+        row.createCell(2).setCellValue("Points (Optional)");
         for(int i=1;i<stews.size();i++) {
-            Row row1=sheet1.createRow(i);
-            row1.createCell(0).setCellValue(stews.get(i).getName());
-            row1.createCell(1).setCellValue(stews.get(i).getID());
-            row1.createCell(2).setCellValue(stews.get(i).getPoints());
-            int[] ia=stews.get(i).getMeetingsAttendedAsIntArray();
-            int iacount=0;
-            for(int j=3;j<meetingNames.size();j++) {
-                if(j-3==ia[iacount]){
-                    row1.createCell(j).setCellStyle(present);
-                    iacount++;
-                }
+            row=sheet.createRow(i);
+            row.createCell(0).setCellValue(stews.get(i).getName());
+            row.createCell(1).setCellValue(stews.get(i).getID());
+            row.createCell(2).setCellValue(stews.get(i).getPoints());
+        }
+        for(int i=0;i<3;i++){
+            sheet.setColumnWidth(i, 7500);
+        }
+        int cellcount=2;
+        Row nameRow;
+        Row timeRow;
+        for (Student s : stews) {
+            sheet=newWb.createSheet(s.getName());
+            nameRow=sheet.createRow(0);
+            timeRow=sheet.createRow(1);
+            for(int i=0;i<meats.size();i++) {
+                nameRow.createCell(cellcount).setCellValue(meats.get(i).getName());
+                timeRow.createCell(cellcount).setCellValue(s.getMeetingsAttended().get(i).getArrivalTime());
+                cellcount++;
+            }
+            sheet.createRow(2).createCell(0).setCellValue("Name: "+s.getName());
+            sheet.createRow(3).createCell(0).setCellValue("ID Number: "+s.getID());
+            sheet.createRow(4).createCell(0).setCellValue("Points: "+s.getPoints());
+            for(int i=0;i<cellcount;i++){
+                sheet.setColumnWidth(i, 7500);
             }
         }
-        
-        Sheet sheet2=newWb.createSheet("Meetings Attendance");
-        Row row3=sheet2.createRow(0);
-        row3.createCell(0).setCellValue("Meeting Name");
-        row3.createCell(1).setCellValue("Number of Students");
+        try (FileOutputStream fos = new FileOutputStream(sFile.getPath())) {
+                newWb.write(fos);
+        } catch (IOException ex) {
+            Start.createLog(ex, "Unable to create attendance file: "+sFile.getPath().substring(sFile.getPath().lastIndexOf(File.separatorChar)+1));
+        }
+    }
+    
+    public static void writeMeetingAttendanceFile(EFile folder, ArrayList<Meeting> meats){
+        EFile mFile=new EFile(folder.getPath()+"/Meeting Attendance.xlsx");
+        Workbook newWb=new XSSFWorkbook();
+        Sheet sheet=newWb.createSheet("Meetings Attendance");
+        Row row=sheet.createRow(0);
+        row.createCell(0).setCellValue("Meeting Name");
+        row.createCell(1).setCellValue("Number of Students");
         try{
-            for(int i=1;i<meetingNames.size();i++) {
-                Row row4=sheet2.createRow(i);
-                row4.createCell(0).setCellValue(meetingNames.get(i-1));
-                row4.createCell(1).setCellValue(numberOfStudents.get(i-1));
+            for(int i=1;i<meats.size();i++) {
+                row=sheet.createRow(i);
+                row.createCell(0).setCellValue(meats.get(i-1).getName());
+                row.createCell(1).setCellValue(meats.get(i-1).getAttendance());
             }
         }catch(ArrayIndexOutOfBoundsException ex){
             Start.createLog(ex, "Unable to Export Students, An Internal Error Occurred");
         }
-        Row row5=sheet1.createRow(stews.size());
-        row5.createCell(0).setCellValue("Total Attendance for all meetings");
-        row5.createCell(1).setCellFormula("SUM(B1:B"+(stews.size()-1)+")");
-        
-        try {
-            try (FileOutputStream fos = new FileOutputStream(e.getPath())) {
-                newWb.write(fos);
+        ArrayList<Student> stews;
+        for (Meeting m : meats) {
+            stews=m.getAttendedStudents();
+            sheet=newWb.createSheet(m.getName());
+            row=sheet.createRow(0);
+            row.createCell(0).setCellValue("Student Name");
+            row.createCell(1).setCellValue("Arrival Time");
+            row.createCell(2).setCellValue("Student Points");
+            for(int i=1;i<stews.size();i++){
+                row=sheet.createRow(i);
+                row.createCell(0).setCellValue(stews.get(i).getName());
+                row.createCell(1).setCellValue(stews.get(i).getAttendedMeeting(m).getArrivalTime());
+                row.createCell(2).setCellValue(stews.get(i).getPoints());
             }
+        }
+        try (FileOutputStream fos = new FileOutputStream(mFile.getPath())) {
+                newWb.write(fos);
         } catch (IOException ex) {
-            Start.createLog(ex, "Unable to create attendance file: "+e.getPath().substring(e.getPath().lastIndexOf(File.separatorChar)+1));
+            Start.createLog(ex, "Unable to create attendance file: "+mFile.getPath().substring(mFile.getPath().lastIndexOf(File.separatorChar)+1));
         }
     }
     

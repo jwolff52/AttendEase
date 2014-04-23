@@ -52,9 +52,9 @@ public class Splash extends Frame implements ActionListener {
         try{
             splash = SplashScreen.getSplashScreen();
             g = splash.createGraphics();
+            renderSplashFrame(g);
         }catch(NullPointerException e){
         }
-        renderSplashFrame(g);
     }
     
     @Override
@@ -74,6 +74,7 @@ public class Splash extends Frame implements ActionListener {
             }
         }
         splash.close();
+        dispose();
     }
     
     public void updateString(String s){

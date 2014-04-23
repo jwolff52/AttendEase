@@ -158,7 +158,7 @@ public class Database {
         try {
             stmt=conn.createStatement();
             stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+"."+clubName+
-                    " VALUES ("+s.getID()+",\'"+s.getName()+"\',"+s.getMeetingsAttended()+","+s.getPoints()+")");
+                    " VALUES ("+s.getID()+",\'"+s.getName()+"\',\'"+s.getMeetingsAttended()+"\',"+s.getPoints()+")");
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }

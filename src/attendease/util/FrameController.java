@@ -50,14 +50,15 @@ public class FrameController {
     private static StudentPanel sp;
     private static UpdateMembersGUI umg;
     
-    private static JFileChooser fc;
+    private static JFileChooser filec;
+    private static JFileChooser folderc;
     private static Inventory inv;
     
     public FrameController(){   
         initInventory(); 
         initPanelsAndFrames();
         initArrayLists();
-        initFileChooser();
+        initFileChoosers();
         setCurrentPanel("smgp");
     }
     
@@ -106,10 +107,10 @@ public class FrameController {
         frames.add(umg);
     }
     
-    private static void initFileChooser(){
-        fc=new JFileChooser();
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setFileFilter(new FileFilter(){
+    private static void initFileChoosers(){
+        filec=new JFileChooser();
+        filec.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        filec.setFileFilter(new FileFilter(){
 
             @Override
             public boolean accept(File file) {
@@ -119,6 +120,21 @@ public class FrameController {
             @Override
             public String getDescription() {
                 return "Excel files (*.xls;*.xlsx)";
+            }
+        });
+        
+        folderc=new JFileChooser();
+        folderc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        folderc.setFileFilter(new FileFilter(){
+
+            @Override
+            public boolean accept(File file) {
+                return file.isDirectory();
+            }
+
+            @Override
+            public String getDescription() {
+                return "Directories";
             }
         });
     }
@@ -146,7 +162,7 @@ public class FrameController {
                 ResultSet srs=Start.d.readStudentsTable(club);
                 ArrayList<Student> stews=new ArrayList<>();
                 while(srs.next()){
-                    stews.add(new Student(srs.getString("NAME"), srs.getInt("ID"), srs.getInt("POINTS"), srs.getString("MEETINGS")));
+                    stews.add(new Student(srs.getString("NAME"), club, srs.getInt("ID"), srs.getInt("POINTS"), srs.getString("MEETINGS")));
                 }
                 String eFile=crs.getString(2);
                 boolean usePoints=crs.getBoolean(3);
@@ -278,10 +294,19 @@ public class FrameController {
     
     public static String chooseFile(){
         int returnVal;
-        returnVal = fc.showOpenDialog(mf);
+        returnVal = filec.showOpenDialog(mf);
         if(returnVal==JFileChooser.APPROVE_OPTION){
-            InputOutput.readFile(fc.getSelectedFile());
-            return fc.getSelectedFile().getPath();
+            InputOutput.readFile(filec.getSelectedFile());
+            return filec.getSelectedFile().getPath();
+        }
+        return null;
+    }
+    
+    public static String chooseFolder(){
+        int returnVal;
+        returnVal=folderc.showSaveDialog(mf);
+        if(returnVal==JFileChooser.APPROVE_OPTION){
+            return folderc.getSelectedFile().getPath();
         }
         return null;
     }

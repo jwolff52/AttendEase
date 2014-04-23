@@ -62,14 +62,14 @@ public class Group {
             Start.createLog(ex, "Error reading Students File located at: "+excel.getPath());
         }
         for (int i=0;i<f.getNames().size();i++) {
-            stews.add(new Student(f.getNames().get(i),f.getIdNums().get(i).intValue()));
+            stews.add(new Student(f.getNames().get(i),name,f.getIdNums().get(i).intValue()));
         }
     }
     
     public void populateStudents(EFileUtilities f){
         Student temp;
         for (int i=0;i<f.getNames().size();i++) {
-            temp=new Student(f.getNames().get(i),f.getIdNums().get(i).intValue());
+            temp=new Student(f.getNames().get(i),name,f.getIdNums().get(i).intValue());
             if(!isMember(temp)){
                 stews.add(temp);
             }

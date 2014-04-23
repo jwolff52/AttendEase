@@ -19,6 +19,7 @@
 package attendease.util;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 /**
  *
@@ -168,6 +169,18 @@ public class MiscUtils {
         }
         return x;
     }
+    
+    public static String intToTime(int t){
+        t%=2400;
+        String hour=t/100+":";
+        String minutes=""+t%100;
+        if(minutes.length()==1&&minutes.charAt(minutes.length()-1)=='0'){
+            minutes+="0";
+        }else if(minutes.length()==1){
+            minutes="0"+minutes;
+        }
+        return hour+minutes;
+    }
 
     private static int compareDates(String start, String current) {
         String testStart=start.substring(start.lastIndexOf("/")+1);
@@ -304,5 +317,37 @@ public class MiscUtils {
             return y%100 != 0 || y%400 == 0;
         }
         return false;
+    }
+    
+    public static int[] getDelineatorIndicies(String string, char delineator){
+        ArrayList<Integer> ia=new ArrayList<>();
+        char[] ca=string.toCharArray();
+        int i=0;
+        for (char c : ca) {
+            if(c==delineator){
+                ia.add(i);
+            }
+            i++;
+        }
+        int[] indicies=new int[ia.size()];
+        for(int j=0; j < 10; j++) {
+            try{
+                indicies[j]=ia.get(j);
+            }catch(IndexOutOfBoundsException e){}
+        }
+        return indicies;
+    }
+    
+    public static String getArrivalTime(String startTime, String timeDiff){
+        return intToTime(timeToInt(startTime)+Integer.valueOf(timeDiff));
+    }
+    
+    public static String getTimeDiff(String startTime, String arrivalTime){
+        int temp=timeToInt(startTime)-timeToInt(arrivalTime);
+        int timeDiff=(temp/100)*60+temp%100;
+        if(timeDiff<0){
+            return "+"+Math.abs(timeDiff);
+        }
+        return "-"+timeDiff;
     }
 }
