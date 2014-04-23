@@ -203,7 +203,7 @@ public class StudentPanel extends APanel {
                 Start.createLog(ex, "Unable to create attendance file at "+loc.substring(loc.lastIndexOf(File.separatorChar)+1));
             }
         }
-        EFileWriter.writeAttendanceFiles(newFile, FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getStudents(), FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeetings());
+        EFileWriter.writeAttendanceFiles(FrameController.getSmgp().getCurrentGroupName(), newFile, FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getStudents(), FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeetings());
     }//GEN-LAST:event_exportButtonMouseReleased
     
     public void fillStudentTable(){

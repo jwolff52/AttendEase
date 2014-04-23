@@ -164,7 +164,7 @@ public class MeetingGUI extends AFrame {
         }else{
             if(MiscUtils.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&MiscUtils.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
                 String[] values=FrameController.getMep().getValues();
-                values[0]=MiscUtils.getNextIdentifier();
+                values[0]=MiscUtils.getNextMeetingIdentifier();
                 String[] localValues=values;
                 try{
                     if(localValues[1].substring(0, localValues[2].length()).equals(localValues[2])){

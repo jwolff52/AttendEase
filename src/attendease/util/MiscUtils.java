@@ -295,10 +295,19 @@ public class MiscUtils {
         }
     }
     
-    public static String getNextIdentifier(){
+    public static String getNextMeetingIdentifier(){
         int i=0;
         int limit=(int)Math.pow(37, 3)-1;
         while(FrameController.getInv().identifierExisits(tenTo36(i))&&i<limit){
+            i++;
+        }
+        return tenTo36(i);
+    }
+    
+    public static String getNextStudentIdentifier(Group g){
+        int i=0;
+        int limit=(int)Math.pow(37, 3)-1;
+        while(FrameController.getInv().getGroup(g).identifierExisits(tenTo36(i))&&i<limit){
             i++;
         }
         return tenTo36(i);

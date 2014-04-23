@@ -28,6 +28,7 @@ import java.util.ArrayList;
 public class Group {
     private final ArrayList<Meeting> meats;
     private final ArrayList<Student> stews;
+    private final ArrayList<String[]> studentIdentifiers;
     
     private final String name;
     private EFile excel;
@@ -36,6 +37,7 @@ public class Group {
     private final boolean usePoints;
     
     public Group(String n){
+        studentIdentifiers=new ArrayList<>();
         name=n;
         meats=new ArrayList<>();
         stews=new ArrayList<>();
@@ -44,6 +46,7 @@ public class Group {
     }
     
     public Group(String n, ArrayList<Meeting> m, ArrayList<Student>s, String path, boolean p){
+        studentIdentifiers=new ArrayList<>();
         name=n;
         meats=m;
         stews=s;
@@ -62,18 +65,22 @@ public class Group {
             Start.createLog(ex, "Error reading Students File located at: "+excel.getPath());
         }
         for (int i=0;i<f.getNames().size();i++) {
-            stews.add(new Student(f.getNames().get(i),name,f.getIdNums().get(i).intValue()));
+            stews.add(new Student(MiscUtils.getNextStudentIdentifier(this),f.getNames().get(i),name,f.getIdNums().get(i).intValue()));
         }
     }
     
     public void populateStudents(EFileUtilities f){
         Student temp;
         for (int i=0;i<f.getNames().size();i++) {
-            temp=new Student(f.getNames().get(i),name,f.getIdNums().get(i).intValue());
+            temp=new Student(MiscUtils.getNextStudentIdentifier(this),f.getNames().get(i),name,f.getIdNums().get(i).intValue());
             if(!isMember(temp)){
                 stews.add(temp);
             }
         }
+    }
+    
+    public void fillStudentIdentifiers(){
+        
     }
     
     public void addMeeting(Meeting m){

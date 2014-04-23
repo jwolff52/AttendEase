@@ -25,13 +25,15 @@ import java.util.ArrayList;
  * @author timothy.chandler
  */
 public class Student implements Comparable{
+    private final String groupID;
     private final String name;
     private final String group;
     private final int ID;
     private int points;
     private ArrayList<AttendedMeeting> meetingsAttended;
     
-    public Student(String n,String g,int id){
+    public Student(String gID, String n,String g,int id){
+        groupID=gID;
         name=n;
         group=g;
         ID=id;
@@ -39,7 +41,8 @@ public class Student implements Comparable{
         meetingsAttended=null;
     }
     
-    public Student(String n, String g, int id, int p, String ma){
+    public Student(String gID, String n, String g, int id, int p, String ma){
+        groupID=gID;
         name=n;
         group=g;
         ID=id;
@@ -49,6 +52,7 @@ public class Student implements Comparable{
     
     public Student(Object s){
         Student temp=(Student)s;
+        groupID=temp.getGroupID();
         name=temp.getName();
         group=temp.getGroup();
         ID=temp.getID();
@@ -139,4 +143,11 @@ public class Student implements Comparable{
     public String getGroup() {
         return group;
     }
+<<<<<<< HEAD
+=======
+    
+    public String getGroupID(){
+        return groupID;
+    }
+>>>>>>> Mid-Week Update
 }

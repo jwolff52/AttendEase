@@ -37,9 +37,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class EFileWriter {
     
-    public static void writeAttendanceFiles(EFile folder, ArrayList<Student> stews, ArrayList<Meeting> meats){
+    public static void writeAttendanceFiles(String group, EFile folder, ArrayList<Student> stews, ArrayList<Meeting> meats, ArrayList<AttendedMeeting> attendedMeats){
         writeStudentAttendanceFile(folder, stews, meats);
-        writeMeetingAttendanceFile(folder, meats);
+        writeMeetingAttendanceFile(group, folder, meats, attendedMeats);
     }
     
     private static void writeStudentAttendanceFile(EFile folder, ArrayList<Student> stews, ArrayList<Meeting> meats){
@@ -85,7 +85,7 @@ public class EFileWriter {
         }
     }
     
-    public static void writeMeetingAttendanceFile(EFile folder, ArrayList<Meeting> meats){
+    public static void writeMeetingAttendanceFile(String group, EFile folder, ArrayList<Meeting> meats, ArrayList<AttendedMeeting> attendedMeats){
         EFile mFile=new EFile(folder.getPath()+"/Meeting Attendance.xlsx");
         Workbook newWb=new XSSFWorkbook();
         Sheet sheet=newWb.createSheet("Meetings Attendance");
@@ -102,8 +102,8 @@ public class EFileWriter {
             Start.createLog(ex, "Unable to Export Students, An Internal Error Occurred");
         }
         ArrayList<Student> stews;
-        for (Meeting m : meats) {
-            stews=m.getAttendedStudents();
+        for (AttendedMeeting m : attendedMeats) {
+            stews=m.getAttendedStudents(group);
             sheet=newWb.createSheet(m.getName());
             row=sheet.createRow(0);
             row.createCell(0).setCellValue("Student Name");

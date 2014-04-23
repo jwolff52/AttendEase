@@ -32,8 +32,13 @@ public class AttendedMeeting extends Meeting{
     public ArrayList<Student> getAttendedStudents(String group){
         ArrayList<Student> groupStews=FrameController.getInv().getGroup(group).getStudents();
         ArrayList<Student> attendedStews=new ArrayList<>();
-        for (Student student : attendedStews) {
-            
+        for (Student student : groupStews) {
+            for (AttendedMeeting m: student.getMeetingsAttended()) {
+                if(m.getIdentifier().equals(this.getIdentifier())){
+                    attendedStews.add(student);
+                    break;
+                }
+            }
         }
         return attendedStews;
     }
