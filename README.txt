@@ -28,7 +28,4 @@ location as this README, most likely "C:\Users\{YOUR_USER_NAME}\Documents\Attend
 
 **RELEASE NOTES**
 
-Version 0.1-alpha: Initial Release
-
-A more in-depth version of these Release Notes is located in the install 
-directory of this program.
+Version 0.8-alpha: Initial Release
