@@ -364,3 +364,18 @@ Wed May 21 11:11:10 CDT 2014 :
 	attendease.util.Start.initVariables(Start.java:105)
 	attendease.util.Start.main(Start.java:60)
 ----------
+Mon May 26 17:06:03 CDT 2014 :
+	java.sql.SQLException: Column 'groupID' not found.
+	org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.ConnectionChild.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.findColumnName(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.getString(Unknown Source)
+	attendease.util.FrameController.initInventory(FrameController.java:188)
+	attendease.util.FrameController.<init>(FrameController.java:59)
+	attendease.util.Start.initVariables(Start.java:105)
+	attendease.util.Start.main(Start.java:60)
+----------

@@ -163,3 +163,4 @@ Wed May 14 12:32:14 CDT 2014 : Failed to create table ex, GermAttendedMeetings
 Wed May 21 11:11:10 CDT 2014 : An Error occured while retrieving Attended Meetings for student "Wolff, James" in the group "test0"!
 Wed May 21 11:11:10 CDT 2014 : An Error occured while retrieving Attended Meetings for student "Chandler, Timothy" in the group "test0"!
 Wed May 21 11:11:11 CDT 2014 : An Error occured while retrieving Attended Meetings for student "Long, Sterling" in the group "test0"!
+Mon May 26 17:06:03 CDT 2014 : Error retreiving existing Groups!
