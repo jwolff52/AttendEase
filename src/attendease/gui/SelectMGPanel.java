@@ -20,10 +20,14 @@ package attendease.gui;
 
 import attendease.util.APanel;
 import attendease.util.FrameController;
+import attendease.util.Group;
+import attendease.util.Meeting;
 import attendease.util.Start;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -42,11 +46,17 @@ public class SelectMGPanel extends APanel {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (InstantiationException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (IllegalAccessException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
         isGroup=true;
@@ -128,7 +138,9 @@ public class SelectMGPanel extends APanel {
         });
         mainPanel.add(selectButton);
 
+        gmList.setFont(new java.awt.Font("Monospaced", 1, 12)); // NOI18N
         gmList.setModel(groupList);
+        gmList.setValueIsAdjusting(true);
         gmList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 gmListValueChanged(evt);
@@ -176,7 +188,7 @@ public class SelectMGPanel extends APanel {
         if(optionSelected()){
             if(isGroup){
                 FrameController.getGg().putData(FrameController.getGroup(gmList.getSelectedIndex()));
-                FrameController.getGg().toggleMeetingTab();
+//                FrameController.getGg().toggleMeetingTab();
                 FrameController.changeFrameState("gg");
                 FrameController.getGg().setIsEditing(true);
                 FrameController.getGg().setCreateButtonText("Save");
@@ -294,30 +306,29 @@ public class SelectMGPanel extends APanel {
     public void setState(String state){
         gmList.clearSelection();
         toggleButtons(false);
-        switch(state.toLowerCase()){
-            case "group":
-                selectAddLabel.setText(GROUP_TITLE);
-                qeButton.setText("Quit");
-                editButton.setText("Edit Group");
-                addButton.setText("Add Group");
-                deleteButton.setText("Delete Group");
-                selectButton.setText("Select Group");
-                isGroup=true;
-                fillList("Clubs");
-                reInitGList();
-                gmList.repaint();
-                break;
-            case "meeting":
-                selectAddLabel.setText(MEETING_TITLE);
-                qeButton.setText("Back");
-                editButton.setText("Edit Meeting");
-                addButton.setText("Add Meeting");
-                deleteButton.setText("Delete Meeting");
-                selectButton.setText("Start Meeting");
-                isGroup=false;
-                fillList(getCurrentGroupName());
-                reInitMList();
-                gmList.repaint();
+        state=state.toLowerCase();
+        if(state.equals("group")){
+            selectAddLabel.setText(GROUP_TITLE);
+            qeButton.setText("Quit");
+            editButton.setText("Edit Group");
+            addButton.setText("Add Group");
+            deleteButton.setText("Delete Group");
+            selectButton.setText("Select Group");
+            isGroup=true;
+            fillList("Clubs");
+            reInitGList();
+            gmList.repaint();
+        }else if(state.equals("meeting")){
+            selectAddLabel.setText(MEETING_TITLE);
+            qeButton.setText("Back");
+            editButton.setText("Edit Meeting");
+            addButton.setText("Add Meeting");
+            deleteButton.setText("Delete Meeting");
+            selectButton.setText("Start Meeting");
+            isGroup=false;
+            fillList(getCurrentGroupName());
+            reInitMList();
+            gmList.repaint();
         }
     }
     
@@ -397,13 +408,34 @@ public class SelectMGPanel extends APanel {
     private void fillList(String clubName){
         if(isGroup){
             groupList.clear();
-            for(int i=0;i<FrameController.getInv().getGroups().size();i++) {
-                groupList.addElement(FrameController.getInv().getGroup(i).getName());
+            for(Group g:FrameController.getInv().getGroups()) {
+                groupList.addElement(g.getName());
             }
         }else{
             meetingList.clear();
-            for(int i=0;i<FrameController.getInv().getGroup(clubName).getMeetings().size(); i++) {
-                meetingList.addElement(FrameController.getInv().getGroup(clubName).getMeeting(i).getName());
+            ArrayList<Meeting> meats=FrameController.getInv().getGroup(clubName).getMeetings();
+            int longestLength=0;
+            if(meats.size()>0){
+            longestLength=meats.get(0).getName().length();
+                for(int i=1;i<meats.size();i++) {
+                    String name=meats.get(i).getName();
+                    if(name.length()>longestLength){
+                        longestLength=name.length();
+                    }
+                }
+            }
+            for(Meeting m:meats) {
+                if(m.isMeatHeld()){
+                    String name=m.getName();
+                    while(name.length()<=longestLength){
+                        name+=" ";
+                    }
+                    name+="     --HELD";
+                    meetingList.addElement(name);
+                }else{
+                    meetingList.addElement(m.getName());
+                }
+                
             }
         }
     }

@@ -1,156 +1,165 @@
-Sat Feb 08 20:32:44 CST 2014 : An Internal Communication Error Occurred With the Database
-Sat Feb 08 20:32:45 CST 2014 : An Internal Communication Error Occurred With the Database
-Sat Feb 08 20:32:45 CST 2014 : An Internal Communication Error Occurred With the Database
-Sat Feb 08 20:32:45 CST 2014 : An Internal Communication Error Occurred With the Database
-Sat Feb 08 20:32:48 CST 2014 : An Internal Communication Error Occurred With the Database
-Sat Feb 08 20:32:48 CST 2014 : An Internal Communication Error Occurred With the Database
-Sat Feb 08 20:33:00 CST 2014 : An Internal Communication Error Occurred With the Database
-Sat Feb 08 20:33:00 CST 2014 : An Internal Communication Error Occurred With the Database
-Sat Feb 08 23:49:55 CST 2014 : Error retreiving existing Groups!
-Sat Feb 08 23:52:08 CST 2014 : Unable to read from table: test0MeetingsMeetings
-Sat Feb 08 23:52:10 CST 2014 : Unable to read from table: test0MeetingsMeetings
-Sat Feb 08 23:52:12 CST 2014 : Unable to read from table: test0MeetingsMeetings
-Sun Feb 09 00:04:59 CST 2014 : Unable to read from table: test0MeetingsMeetings
-Sun Feb 09 00:05:00 CST 2014 : Unable to read from table: test0MeetingsMeetings
-Sun Feb 09 00:54:50 CST 2014 : A Logic Error Occurred
-Sun Feb 09 01:04:11 CST 2014 : A Logic Error Occurred
-Sun Feb 09 01:05:44 CST 2014 : A Logic Error Occurred
-Sun Feb 09 01:06:42 CST 2014 : A Logic Error Occurred
-Sun Feb 09 01:17:14 CST 2014 : A Logic Error Occurred
-Sun Feb 09 01:19:30 CST 2014 : A Logic Error Occurred
-Sun Feb 09 01:25:38 CST 2014 : A Logic Error Occurred
-Sun Feb 09 01:30:49 CST 2014 : A Logic Error Occurred
-Sun Feb 09 01:59:58 CST 2014 : A Logic Error Occurred
-Sun Feb 09 02:01:09 CST 2014 : A Logic Error Occurred
-Sun Feb 09 02:05:22 CST 2014 : A Logic Error Occurred
-Sun Feb 09 02:07:13 CST 2014 : A Database Error Occurred
-Sun Feb 09 15:20:58 CST 2014 : A Database Error Occurred
-Sun Feb 09 15:21:02 CST 2014 : Error retreiving existing Groups!
-Sun Feb 09 15:21:17 CST 2014 : A Database Error Occurred
-Sun Feb 09 15:21:29 CST 2014 : A Database Error Occurred
-Sun Feb 09 15:21:30 CST 2014 : Error retreiving existing Groups!
-Sun Feb 09 15:31:47 CST 2014 : A Database Error Occurred
-Sun Feb 09 15:31:48 CST 2014 : Error retreiving existing Groups!
-Sun Feb 09 15:35:15 CST 2014 : A Database Error Occurred
-Sun Feb 09 15:35:16 CST 2014 : Error retreiving existing Groups!
-Sun Feb 09 15:41:47 CST 2014 : Error retreiving existing Groups!
-Sun Feb 09 15:43:03 CST 2014 : Error retreiving existing Groups!
-Sun Feb 09 15:50:04 CST 2014 : A Database Error Occurred
-Sun Feb 09 15:50:05 CST 2014 : Error retreiving existing Groups!
-Sun Feb 09 16:37:41 CST 2014 : A Database Error Occurred
-Sun Feb 09 17:48:27 CST 2014 : A Database Error Occurred
-Sun Feb 09 17:50:06 CST 2014 : A Database Error Occurred
-Sun Feb 09 18:33:50 CST 2014 : A Database Error Occurred
-Sun Feb 09 22:26:58 CST 2014 : A Database Error Occurred
-Sun Feb 09 22:32:03 CST 2014 : A Database Error Occurred
-Wed Feb 12 12:26:10 CST 2014 : A Database Error Occurred
-Wed Feb 19 12:02:12 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:09:44 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:11:48 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:12:25 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:40:16 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:40:17 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:40:58 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:40:58 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:42:38 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:42:38 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:43:01 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:43:01 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:47:09 CST 2014 : A Database Error Occurred
-Thu Feb 27 12:47:09 CST 2014 : A Database Error Occurred
-Fri Feb 28 09:59:05 CST 2014 : A Database Error Occurred
-Fri Feb 28 09:59:05 CST 2014 : A Database Error Occurred
-Fri Feb 28 09:59:18 CST 2014 : A Database Error Occurred
-Fri Feb 28 09:59:18 CST 2014 : A Database Error Occurred
-Fri Feb 28 10:00:30 CST 2014 : A Database Error Occurred
-Fri Feb 28 10:00:30 CST 2014 : A Database Error Occurred
-Fri Feb 28 10:01:45 CST 2014 : A Database Error Occurred
-Fri Feb 28 10:08:23 CST 2014 : A Database Error Occurred
-Fri Feb 28 10:09:40 CST 2014 : A Database Error Occurred
-Thu Mar 06 10:32:20 CST 2014 : Error retreiving existing Groups!
-Sun Mar 16 23:36:04 CDT 2014 : A Database Error Occurred.
-Sun Mar 16 23:38:34 CDT 2014 : A Database Error Occurred.
-Sun Mar 16 23:39:27 CDT 2014 : Failed to create table test0Meetings
-Sun Mar 16 23:42:04 CDT 2014 : Unable to read from table: test0Meetings
-Sun Mar 16 23:42:54 CDT 2014 : A Database Error Occurred.
-Sun Mar 16 23:46:40 CDT 2014 : A Database Error Occurred.
-Sun Mar 16 23:48:13 CDT 2014 : A Database Error Occurred.
-Mon Mar 17 00:19:07 CDT 2014 : A Database Error Occurred
-Mon Mar 17 00:20:20 CDT 2014 : Error retreiving existing Groups!
-Mon Mar 17 00:20:37 CDT 2014 : Error retreiving existing Groups!
-Mon Mar 17 15:50:51 CDT 2014 : A Database Error Occurred.
-Mon Mar 17 17:08:49 CDT 2014 : A Database Error Occurred
-Mon Mar 17 17:11:53 CDT 2014 : A Database Error Occurred
-Mon Mar 17 17:14:11 CDT 2014 : A Database Error Occurred
-Mon Mar 17 17:19:07 CDT 2014 : A Database Error Occurred
-Mon Mar 17 17:20:20 CDT 2014 : A Database Error Occurred
-Mon Mar 17 17:22:36 CDT 2014 : A Database Error Occurred
-Mon Mar 17 20:44:31 CDT 2014 : A Database Error Occurred
-Mon Mar 17 20:46:06 CDT 2014 : A Database Error Occurred
-Mon Mar 17 20:47:23 CDT 2014 : A Database Error Occurred
-Mon Mar 17 20:52:19 CDT 2014 : A Database Error Occurred
-Mon Mar 17 20:54:15 CDT 2014 : A Database Error Occurred
-Mon Mar 17 20:55:03 CDT 2014 : A Database Error Occurred
-Mon Mar 17 20:57:38 CDT 2014 : A Database Error Occurred
-Mon Mar 17 21:00:25 CDT 2014 : A Database Error Occurred
-Mon Mar 17 21:03:36 CDT 2014 : A Database Error Occurred
-Mon Mar 17 21:04:59 CDT 2014 : A Database Error Occurred
-Mon Mar 17 21:26:30 CDT 2014 : A Database Error Occurred
-Mon Mar 17 21:28:42 CDT 2014 : A Database Error Occurred
-Tue Mar 18 09:21:49 CDT 2014 : A Database Error Occurred
-Tue Mar 18 09:35:27 CDT 2014 : A Database Error Occurred
-Tue Mar 18 09:35:58 CDT 2014 : A Database Error Occurred
-Tue Mar 18 09:36:07 CDT 2014 : A Database Error Occurred
-Tue Mar 18 09:36:15 CDT 2014 : A Database Error Occurred
-Tue Mar 18 19:20:07 CDT 2014 : A Database Error Occurred
-Tue Mar 18 19:21:03 CDT 2014 : A Database Error Occurred
-Tue Mar 18 19:24:56 CDT 2014 : A Database Error Occurred
-Tue Mar 18 19:25:39 CDT 2014 : A Database Error Occurred
-Tue Mar 18 19:26:44 CDT 2014 : A Database Error Occurred
-Tue Mar 18 19:53:11 CDT 2014 : A Database Error Occurred.
-Tue Mar 18 19:56:04 CDT 2014 : A Database Error Occurred.
-Tue Mar 18 19:59:46 CDT 2014 : A Database Error Occurred
-Tue Mar 18 20:00:00 CDT 2014 : A Database Error Occurred
-Tue Mar 18 20:00:15 CDT 2014 : A Database Error Occurred
-Tue Mar 18 20:22:05 CDT 2014 : A Database Error Occurred
-Tue Mar 18 20:56:51 CDT 2014 : Error editing Club!
-Tue Mar 18 20:56:51 CDT 2014 : Error editing Club!
-Tue Mar 18 20:56:51 CDT 2014 : Error editing Club!
-Tue Mar 18 21:02:17 CDT 2014 : Error editing Club!
-Tue Mar 18 21:02:17 CDT 2014 : Error editing Club!
-Tue Mar 18 21:02:23 CDT 2014 : Unable to read from table: test1Meetings
-Tue Mar 18 21:03:47 CDT 2014 : Unable to read from table: test1Meetings
-Tue Mar 18 21:05:01 CDT 2014 : Error editing Club!
-Tue Mar 18 21:05:01 CDT 2014 : Error editing Club!
-Tue Mar 18 21:05:06 CDT 2014 : Unable to read from table: test1Meetings
-Tue Mar 18 21:06:43 CDT 2014 : Unable to read from table: test1Meetings
-Wed Apr 02 11:26:47 CDT 2014 : Unable to find excel file: C:\Users\James\Downloads\AttendEase\test.xlsx
-Wed Apr 02 11:27:02 CDT 2014 : Unable to find excel file: C:\Users\James\Downloads\AttendEase\test.xlsx
-Wed Apr 02 11:27:31 CDT 2014 : Unable to find excel file: C:\Users\James\Downloads\AttendEase\test.xlsx
-Wed Apr 02 11:30:36 CDT 2014 : Unable to find excel file: C:\Users\James\Downloads\AttendEase\test.xlsx
-Wed Apr 02 11:30:47 CDT 2014 : Error editing Club!
-Wed Apr 02 11:30:47 CDT 2014 : Error editing Club!
-Wed Apr 02 11:32:13 CDT 2014 : Error editing Club!
-Wed Apr 02 11:32:13 CDT 2014 : Error editing Club!
-Wed Apr 02 11:32:22 CDT 2014 : Error editing Club!
-Wed Apr 02 11:32:23 CDT 2014 : Error editing Club!
-Wed Apr 02 11:32:58 CDT 2014 : Error editing Club!
-Wed Apr 02 11:32:59 CDT 2014 : Error editing Club!
-Wed Apr 02 11:33:12 CDT 2014 : Error editing Club!
-Wed Apr 02 11:33:12 CDT 2014 : Error editing Club!
-Wed Apr 02 11:36:33 CDT 2014 : Error editing Club!
-Wed Apr 02 11:36:33 CDT 2014 : Error editing Club!
-Wed Apr 02 11:38:59 CDT 2014 : Error editing Club!
-Wed Apr 02 11:38:59 CDT 2014 : Error editing Club!
-Wed Apr 02 11:39:05 CDT 2014 : Error editing Club!
-Wed Apr 02 11:39:05 CDT 2014 : Error editing Club!
-Wed Apr 02 12:25:21 CDT 2014 : A Database Error Occurred
-Wed Apr 02 12:26:17 CDT 2014 : A Database Error Occurred
-Wed Apr 02 12:28:06 CDT 2014 : A Database Error Occurred
-Tue Apr 22 18:42:07 CDT 2014 : Failed to create table Test GroupMeetings
-Tue Apr 22 18:42:07 CDT 2014 : Failed to create table Test GroupStudents
-Tue Apr 22 18:43:37 CDT 2014 : Unable to read from table: Test GroupMeetings
-Tue Apr 22 18:43:37 CDT 2014 : Error retreiving existing Groups!
-Tue Apr 22 18:45:25 CDT 2014 : Unable to read from table: Test GroupMeetings
-Tue Apr 22 18:45:25 CDT 2014 : Error retreiving existing Groups!
-Tue Apr 22 18:54:22 CDT 2014 : Could not find file: C:\Users\James\Documents\AttendEase\Examples\test.xlsx
+Fri May 09 10:08:20 CDT 2014 : An Internal Communication Error Occurred With the Database
+Fri May 09 10:08:58 CDT 2014 : A Database Error Occurred
+Fri May 09 10:10:52 CDT 2014 : An Internal Communication Error Occurred With the Database
+Fri May 09 10:12:23 CDT 2014 : Failed to create table 5, JohnnyAttendedMeetings
+Fri May 09 10:12:24 CDT 2014 : Failed to create table Wolff, JamesAttendedMeetings
+Fri May 09 10:13:15 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:15 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:15 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:15 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:15 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:16 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:16 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:16 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:16 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:16 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:16 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:16 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:16 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:16 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:16 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:17 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:17 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:17 CDT 2014 : A Database Error Occurred
+Fri May 09 10:13:17 CDT 2014 : A Database Error Occurred
+Fri May 09 10:23:29 CDT 2014 : Unable to read from table: 5JohnnyAttendedMeetings
+Fri May 09 10:23:29 CDT 2014 : Error retreiving existing Groups!
+Fri May 09 10:23:54 CDT 2014 : Unable to delete table: 5, JohnnyAttendedMeetings
+Fri May 09 10:28:54 CDT 2014 : Failed to create table Wolff, JamesAttendedMeetings
+Fri May 09 10:28:54 CDT 2014 : Failed to create table Chandler, TimothyAttendedMeetings
+Fri May 09 10:28:54 CDT 2014 : Failed to create table Long, SterlingAttendedMeetings
+Fri May 09 10:28:54 CDT 2014 : Failed to create table Hotson, MitchellAttendedMeetings
+Fri May 09 10:28:54 CDT 2014 : Failed to create table Serrano, OctavioAttendedMeetings
+Fri May 09 10:28:55 CDT 2014 : Failed to create table Fett, BobaAttendedMeetings
+Fri May 09 10:28:55 CDT 2014 : Failed to create table Solo, HanAttendedMeetings
+Fri May 09 10:28:55 CDT 2014 : Failed to create table Skywalker, LukeAttendedMeetings
+Fri May 09 10:28:55 CDT 2014 : Failed to create table Kenobi, Obi WanAttendedMeetings
+Fri May 09 10:28:55 CDT 2014 : Failed to create table Who, DoctorAttendedMeetings
+Fri May 09 10:28:56 CDT 2014 : Failed to create table man, SuperAttendedMeetings
+Fri May 09 10:28:56 CDT 2014 : Failed to create table Hulk, The IncredibleAttendedMeetings
+Fri May 09 10:28:56 CDT 2014 : Failed to create table Reynolds, MalcomAttendedMeetings
+Fri May 09 10:28:56 CDT 2014 : Failed to create table pool, DeadAttendedMeetings
+Fri May 09 10:28:56 CDT 2014 : Failed to create table Rahl, RichardAttendedMeetings
+Fri May 09 10:28:57 CDT 2014 : Failed to create table ZeroAttendedMeetings
+Fri May 09 10:28:57 CDT 2014 : Failed to create table McCraken, RexAttendedMeetings
+Fri May 09 10:28:57 CDT 2014 : Failed to create table Wolff, JamesAttendedMeetings
+Fri May 09 10:28:57 CDT 2014 : Failed to create table Chandler, TimothyAttendedMeetings
+Fri May 09 10:28:58 CDT 2014 : Failed to create table Long, SterlingAttendedMeetings
+Fri May 09 10:28:58 CDT 2014 : Failed to create table Hotson, MitchellAttendedMeetings
+Fri May 09 10:28:58 CDT 2014 : Failed to create table Serrano, OctavioAttendedMeetings
+Fri May 09 10:28:58 CDT 2014 : Failed to create table Fett, BobaAttendedMeetings
+Fri May 09 10:29:00 CDT 2014 : Failed to create table Solo, HanAttendedMeetings
+Fri May 09 10:29:00 CDT 2014 : Failed to create table Skywalker, LukeAttendedMeetings
+Fri May 09 10:29:00 CDT 2014 : Failed to create table Kenobi, Obi WanAttendedMeetings
+Fri May 09 10:29:01 CDT 2014 : Failed to create table Who, DoctorAttendedMeetings
+Fri May 09 10:29:01 CDT 2014 : Failed to create table man, SuperAttendedMeetings
+Fri May 09 10:29:01 CDT 2014 : Failed to create table Hulk, The IncredibleAttendedMeetings
+Fri May 09 10:29:02 CDT 2014 : Failed to create table Reynolds, MalcomAttendedMeetings
+Fri May 09 10:29:02 CDT 2014 : Failed to create table pool, DeadAttendedMeetings
+Fri May 09 10:29:02 CDT 2014 : Failed to create table Rahl, RichardAttendedMeetings
+Fri May 09 10:29:03 CDT 2014 : Failed to create table ZeroAttendedMeetings
+Fri May 09 10:29:03 CDT 2014 : Failed to create table McCraken, RexAttendedMeetings
+Fri May 09 10:29:35 CDT 2014 : Error retreiving existing Groups!
+Tue May 13 10:03:19 CDT 2014 : Failed to create table Chandler, TimothyAttendedMeetings
+Tue May 13 10:03:19 CDT 2014 : Failed to create table Fett, BobaAttendedMeetings
+Tue May 13 10:03:19 CDT 2014 : Failed to create table Hotson, MitchellAttendedMeetings
+Tue May 13 10:03:19 CDT 2014 : Failed to create table Hulk, The IncredibleAttendedMeetings
+Tue May 13 10:03:19 CDT 2014 : Failed to create table Kenobi, Obi WanAttendedMeetings
+Tue May 13 10:03:20 CDT 2014 : Failed to create table Long, SterlingAttendedMeetings
+Tue May 13 10:03:20 CDT 2014 : Failed to create table McCraken, RexAttendedMeetings
+Tue May 13 10:03:20 CDT 2014 : Failed to create table Rahl, RichardAttendedMeetings
+Tue May 13 10:03:20 CDT 2014 : Failed to create table Reynolds, MalcomAttendedMeetings
+Tue May 13 10:03:20 CDT 2014 : Failed to create table Serrano, OctavioAttendedMeetings
+Tue May 13 10:03:20 CDT 2014 : Failed to create table Skywalker, LukeAttendedMeetings
+Tue May 13 10:03:20 CDT 2014 : Failed to create table Solo, HanAttendedMeetings
+Tue May 13 10:03:20 CDT 2014 : Failed to create table Who, DoctorAttendedMeetings
+Tue May 13 10:03:20 CDT 2014 : Failed to create table Wolff, JamesAttendedMeetings
+Tue May 13 10:03:20 CDT 2014 : Failed to create table ZeroAttendedMeetings
+Tue May 13 10:03:21 CDT 2014 : Failed to create table ex, GermAttendedMeetings
+Tue May 13 10:03:21 CDT 2014 : Failed to create table man, SuperAttendedMeetings
+Tue May 13 10:03:21 CDT 2014 : Failed to create table pool, DeadAttendedMeetings
+Tue May 13 10:03:58 CDT 2014 : Failed to add the Meeting with the identifier "0" to WolffJamesAttendedMeetings
+Tue May 13 10:04:00 CDT 2014 : Failed to add the Meeting with the identifier "0" to ChandlerTimothyAttendedMeetings
+Tue May 13 10:04:03 CDT 2014 : Failed to add the Meeting with the identifier "0" to WhoDoctorAttendedMeetings
+Tue May 13 10:04:03 CDT 2014 : Failed to add the Meeting with the identifier "0" to HulkTheIncredibleAttendedMeetings
+Tue May 13 10:04:03 CDT 2014 : Failed to add the Meeting with the identifier "0" to poolDeadAttendedMeetings
+Tue May 13 10:04:04 CDT 2014 : Failed to add the Meeting with the identifier "0" to RahlRichardAttendedMeetings
+Tue May 13 10:07:50 CDT 2014 : Unable to read from table: ChandlerTimothyAttendedMeetings
+Tue May 13 10:07:50 CDT 2014 : Error retreiving existing Groups!
+Tue May 13 10:08:38 CDT 2014 : Failed to create table Chandler, TimothyAttendedMeetings
+Tue May 13 10:08:38 CDT 2014 : Failed to create table Fett, BobaAttendedMeetings
+Tue May 13 10:08:38 CDT 2014 : Failed to create table Hotson, MitchellAttendedMeetings
+Tue May 13 10:08:38 CDT 2014 : Failed to create table Hulk, The IncredibleAttendedMeetings
+Tue May 13 10:08:38 CDT 2014 : Failed to create table Kenobi, Obi WanAttendedMeetings
+Tue May 13 10:08:38 CDT 2014 : Failed to create table Long, SterlingAttendedMeetings
+Tue May 13 10:08:38 CDT 2014 : Failed to create table McCraken, RexAttendedMeetings
+Tue May 13 10:08:38 CDT 2014 : Failed to create table Rahl, RichardAttendedMeetings
+Tue May 13 10:08:38 CDT 2014 : Failed to create table Reynolds, MalcomAttendedMeetings
+Tue May 13 10:08:38 CDT 2014 : Failed to create table Serrano, OctavioAttendedMeetings
+Tue May 13 10:08:38 CDT 2014 : Failed to create table Skywalker, LukeAttendedMeetings
+Tue May 13 10:08:38 CDT 2014 : Failed to create table Solo, HanAttendedMeetings
+Tue May 13 10:08:39 CDT 2014 : Failed to create table Who, DoctorAttendedMeetings
+Tue May 13 10:08:39 CDT 2014 : Failed to create table Wolff, JamesAttendedMeetings
+Tue May 13 10:08:39 CDT 2014 : Failed to create table ZeroAttendedMeetings
+Tue May 13 10:08:39 CDT 2014 : Failed to create table ex, GermAttendedMeetings
+Tue May 13 10:08:39 CDT 2014 : Failed to create table man, SuperAttendedMeetings
+Tue May 13 10:08:39 CDT 2014 : Failed to create table pool, DeadAttendedMeetings
+Tue May 13 10:11:59 CDT 2014 : Failed to create table Chandler, TimothyAttendedMeetings
+Tue May 13 10:11:59 CDT 2014 : Failed to create table Fett, BobaAttendedMeetings
+Tue May 13 10:11:59 CDT 2014 : Failed to create table Hotson, MitchellAttendedMeetings
+Tue May 13 10:12:00 CDT 2014 : Failed to create table Hulk, The IncredibleAttendedMeetings
+Tue May 13 10:12:00 CDT 2014 : Failed to create table Kenobi, Obi WanAttendedMeetings
+Tue May 13 10:12:00 CDT 2014 : Failed to create table Long, SterlingAttendedMeetings
+Tue May 13 10:12:01 CDT 2014 : Failed to create table McCraken, RexAttendedMeetings
+Tue May 13 10:12:01 CDT 2014 : Failed to create table Rahl, RichardAttendedMeetings
+Tue May 13 10:12:01 CDT 2014 : Failed to create table Reynolds, MalcomAttendedMeetings
+Tue May 13 10:12:01 CDT 2014 : Failed to create table Serrano, OctavioAttendedMeetings
+Tue May 13 10:12:02 CDT 2014 : Failed to create table Skywalker, LukeAttendedMeetings
+Tue May 13 10:12:02 CDT 2014 : Failed to create table Solo, HanAttendedMeetings
+Tue May 13 10:12:02 CDT 2014 : Failed to create table Who, DoctorAttendedMeetings
+Tue May 13 10:12:03 CDT 2014 : Failed to create table Wolff, JamesAttendedMeetings
+Tue May 13 10:12:03 CDT 2014 : Failed to create table ZeroAttendedMeetings
+Tue May 13 10:12:03 CDT 2014 : Failed to create table ex, GermAttendedMeetings
+Tue May 13 10:12:03 CDT 2014 : Failed to create table man, SuperAttendedMeetings
+Tue May 13 10:12:04 CDT 2014 : Failed to create table pool, DeadAttendedMeetings
+Wed May 14 11:19:09 CDT 2014 : Failed to create table Wolff, JamesAttendedMeetings
+Wed May 14 11:19:10 CDT 2014 : Failed to create table Chandler, TimothyAttendedMeetings
+Wed May 14 11:19:10 CDT 2014 : Failed to create table Long, SterlingAttendedMeetings
+Wed May 14 11:19:10 CDT 2014 : Failed to create table Hotson, MitchellAttendedMeetings
+Wed May 14 11:19:10 CDT 2014 : Failed to create table Serrano, OctavioAttendedMeetings
+Wed May 14 11:19:11 CDT 2014 : Failed to create table Fett, BobaAttendedMeetings
+Wed May 14 11:19:11 CDT 2014 : Failed to create table Solo, HanAttendedMeetings
+Wed May 14 11:19:11 CDT 2014 : Failed to create table Skywalker, LukeAttendedMeetings
+Wed May 14 11:19:11 CDT 2014 : Failed to create table Kenobi, Obi WanAttendedMeetings
+Wed May 14 11:19:11 CDT 2014 : Failed to create table Who, DoctorAttendedMeetings
+Wed May 14 11:19:12 CDT 2014 : Failed to create table man, SuperAttendedMeetings
+Wed May 14 11:19:12 CDT 2014 : Failed to create table Hulk, The IncredibleAttendedMeetings
+Wed May 14 11:19:12 CDT 2014 : Failed to create table Reynolds, MalcomAttendedMeetings
+Wed May 14 11:19:12 CDT 2014 : Failed to create table pool, DeadAttendedMeetings
+Wed May 14 11:19:13 CDT 2014 : Failed to create table Rahl, RichardAttendedMeetings
+Wed May 14 11:19:13 CDT 2014 : Failed to create table ZeroAttendedMeetings
+Wed May 14 11:19:13 CDT 2014 : Failed to create table McCraken, RexAttendedMeetings
+Wed May 14 11:19:13 CDT 2014 : Failed to create table ex, GermAttendedMeetings
+Wed May 14 12:17:10 CDT 2014 : Error retreiving existing Groups!
+Wed May 14 12:17:57 CDT 2014 : Error retreiving existing Groups!
+Wed May 14 12:32:09 CDT 2014 : Failed to create table Wolff, JamesAttendedMeetings
+Wed May 14 12:32:10 CDT 2014 : Failed to create table Chandler, TimothyAttendedMeetings
+Wed May 14 12:32:10 CDT 2014 : Failed to create table Long, SterlingAttendedMeetings
+Wed May 14 12:32:10 CDT 2014 : Failed to create table Hotson, MitchellAttendedMeetings
+Wed May 14 12:32:10 CDT 2014 : Failed to create table Serrano, OctavioAttendedMeetings
+Wed May 14 12:32:11 CDT 2014 : Failed to create table Fett, BobaAttendedMeetings
+Wed May 14 12:32:11 CDT 2014 : Failed to create table Solo, HanAttendedMeetings
+Wed May 14 12:32:11 CDT 2014 : Failed to create table Skywalker, LukeAttendedMeetings
+Wed May 14 12:32:11 CDT 2014 : Failed to create table Kenobi, Obi WanAttendedMeetings
+Wed May 14 12:32:12 CDT 2014 : Failed to create table Who, DoctorAttendedMeetings
+Wed May 14 12:32:12 CDT 2014 : Failed to create table man, SuperAttendedMeetings
+Wed May 14 12:32:12 CDT 2014 : Failed to create table Hulk, The IncredibleAttendedMeetings
+Wed May 14 12:32:12 CDT 2014 : Failed to create table Reynolds, MalcomAttendedMeetings
+Wed May 14 12:32:13 CDT 2014 : Failed to create table pool, DeadAttendedMeetings
+Wed May 14 12:32:13 CDT 2014 : Failed to create table Rahl, RichardAttendedMeetings
+Wed May 14 12:32:13 CDT 2014 : Failed to create table ZeroAttendedMeetings
+Wed May 14 12:32:13 CDT 2014 : Failed to create table McCraken, RexAttendedMeetings
+Wed May 14 12:32:14 CDT 2014 : Failed to create table ex, GermAttendedMeetings
+Wed May 21 11:11:10 CDT 2014 : An Error occured while retrieving Attended Meetings for student "Wolff, James" in the group "test0"!
+Wed May 21 11:11:10 CDT 2014 : An Error occured while retrieving Attended Meetings for student "Chandler, Timothy" in the group "test0"!
+Wed May 21 11:11:11 CDT 2014 : An Error occured while retrieving Attended Meetings for student "Long, Sterling" in the group "test0"!

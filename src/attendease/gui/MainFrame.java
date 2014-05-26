@@ -21,6 +21,7 @@ package attendease.gui;
 import attendease.util.AFrame;
 import attendease.util.FrameController;
 import attendease.util.Start;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -37,11 +38,17 @@ public class MainFrame extends AFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (InstantiationException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (IllegalAccessException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
     }

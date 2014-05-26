@@ -23,6 +23,7 @@ import attendease.util.FrameController;
 import attendease.util.Meeting;
 import attendease.util.Start;
 import attendease.util.MiscUtils;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -40,11 +41,17 @@ public class MeetingGUI extends AFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (InstantiationException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (IllegalAccessException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
         isEditing=false;
@@ -141,7 +148,6 @@ public class MeetingGUI extends AFrame {
         if(isEditing){
             if(MiscUtils.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&MiscUtils.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
                 String[] values=FrameController.getMep().getValues();
-                values[0]=FrameController.getInv().getIdentifier(FrameController.getMep().getOldName(), 0);
                 String[] localValues=values;
                 try{
                     if(localValues[1].substring(0, localValues[2].length()).equals(localValues[2])){
@@ -164,13 +170,16 @@ public class MeetingGUI extends AFrame {
         }else{
             if(MiscUtils.isValidTime(mep.getStartHour(),mep.getStartMinute(), true, mep.is24Hour())&&MiscUtils.isValidTime(mep.getEndHour(), mep.getEndMinute(), false, mep.is24Hour())){
                 String[] values=FrameController.getMep().getValues();
-                values[0]=MiscUtils.getNextMeetingIdentifier();
                 String[] localValues=values;
                 try{
                     if(localValues[1].substring(0, localValues[2].length()).equals(localValues[2])){
                         localValues[1]=localValues[2]+localValues[1].substring(localValues[2].length(), localValues[1].length()-6)+":"+localValues[1].substring(localValues[1].length()-5);
                     }
                 }catch(StringIndexOutOfBoundsException e){
+                }
+                if(FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeeting(values[1])!=null){
+                    javax.swing.JOptionPane.showMessageDialog(this, "A meeting with this name already exists", "Name Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
                 FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroupName()).addMeeting(new Meeting(localValues));
                 FrameController.getSmgp().setState("meeting");

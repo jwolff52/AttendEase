@@ -18,6 +18,9 @@
 
 package attendease.database;
 
+import attendease.util.FrameController;
+import attendease.util.Group;
+import attendease.util.MiscUtils;
 import attendease.util.Start;
 import attendease.util.Student;
 import java.sql.Connection;
@@ -38,8 +41,10 @@ public class Database {
     
     public Database() throws InstantiationException, ClassNotFoundException, IllegalAccessException{
         Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
+//        Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
         try{
             conn=DriverManager.getConnection("jdbc:derby:"+System.getenv("ATTENDEASE_HOME")+"/Database/AttendEase;");
+//            conn=DriverManager.getConnection("jdbc:derby://localhost:1527/AttendEase;");
         }catch(SQLException e){
             if(e instanceof SQLException){
                 SQLException f=(SQLException) e;
@@ -51,8 +56,10 @@ public class Database {
                     javax.swing.JOptionPane.showMessageDialog(null, "The Program is already running in another instance!");
                     System.exit(0);
                 }
+                Start.updateSplashString("Creating new Database");
                 try {
                     conn=DriverManager.getConnection("jdbc:derby:"+System.getenv("ATTENDEASE_HOME")+"/Database/AttendEase;create=true;");
+//                    conn=DriverManager.getConnection("jdbc:derby://localhost:1527/AttendEase;");
                 } catch (SQLException ex) {
                     Start.createLog(ex, "An Internal Communication Error Occurred With the Database");
                 }
@@ -83,7 +90,7 @@ public class Database {
             try{
                 stmt2=conn.createStatement();
                 stmt2.closeOnCompletion();
-                stmt2.executeUpdate("CREATE TABLE "+DEFAULT_SCHEMA+".Clubs(clubName varchar(25), ePath varchar(255), points BOOLEAN, PRIMARY KEY (clubName))");
+                stmt2.executeUpdate("CREATE TABLE "+DEFAULT_SCHEMA+".Clubs(groupID varchar(3), clubName varchar(25), ePath varchar(255), points BOOLEAN, PRIMARY KEY (clubName))");
             }catch(SQLException ex){
                 Start.createLog(ex, "Unable to create table Clubs!");
             }
@@ -93,7 +100,7 @@ public class Database {
     /*
      * returns false if club exsists, true otherwise
      */
-    public boolean addGroup(String clubName, String ePath, boolean points){
+    public boolean addGroup(Group g, String ePath, boolean points){
         Statement stmt;
         Statement stmt1;
         Statement stmt2;
@@ -101,7 +108,7 @@ public class Database {
         try {
             stmt=conn.createStatement();
             stmt.closeOnCompletion();
-            stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+".CLUBS VALUES (\'"+clubName+"\',\'"+ePath+"\',"+points+")");
+            stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+".CLUBS VALUES (\'"+g.getIdentifier()+"\',\'"+MiscUtils.replaceSpacesForDatabase(g.getName())+"\',\'"+ePath+"\',"+points+")");
             stmt.close();
         } catch (SQLException ex) {
             Start.createLog(ex, "Error creating Club!");
@@ -109,31 +116,31 @@ public class Database {
         try{
             stmt1=conn.createStatement();
             stmt1.closeOnCompletion();
-            stmt1.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+clubName+"Meetings");
+            stmt1.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+MiscUtils.replaceSpacesForDatabase(g.getName())+"Meetings");
             return false;
         }catch(SQLException e){
-            String ss="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Students(ID INTEGER, name varchar(50), meetings varchar(225), points INTEGER, PRIMARY KEY(ID))";
-            String ms="CREATE TABLE "+DEFAULT_SCHEMA+"."+clubName+"Meetings(identifier varchar(3), name varchar(255), date varchar(25), startTime varchar(10), endTime varchar(10), attendance INTEGER, pointsGiven INTEGER, pointsRequired INTEGER, latePoints INTEGER, meetingHeld BOOLEAN, PRIMARY KEY(name))";
+            String ss="CREATE TABLE "+DEFAULT_SCHEMA+"."+MiscUtils.replaceSpacesForDatabase(g.getName())+"Students(ID INTEGER, name varchar(50), points INTEGER, PRIMARY KEY(ID))";
+            String ms="CREATE TABLE "+DEFAULT_SCHEMA+"."+MiscUtils.replaceSpacesForDatabase(g.getName())+"Meetings(identifier varchar(3), name varchar(255), date varchar(25), startTime varchar(10), endTime varchar(10), attendance INTEGER, pointsGiven INTEGER, pointsRequired INTEGER, latePoints INTEGER, meetingHeld BOOLEAN, PRIMARY KEY(name))";
             try {
                 stmt2=conn.createStatement();
                 stmt2.closeOnCompletion();
                 stmt2.executeUpdate(ms);
             } catch (SQLException ex) {
-                Start.createLog(ex, "Failed to create table "+clubName+"Meetings");
+                Start.createLog(ex, "Failed to create table "+g.getName()+"Meetings");
             }
             try {
                 stmt3=conn.createStatement();
                 stmt3.closeOnCompletion();
                 stmt3.executeUpdate(ss);
             } catch (SQLException ex) {
-                Start.createLog(ex, "Failed to create table "+clubName+"Students");
+                Start.createLog(ex, "Failed to create table "+g.getName()+"Students");
             }
         }
         return true;
     }
     
     public void addMeeting(String clubName, String[] values){
-        clubName+="Meetings";
+        clubName=MiscUtils.replaceSpacesForDatabase(clubName)+"Meetings";
         Statement stmt;
         try {
             stmt=conn.createStatement();
@@ -146,25 +153,52 @@ public class Database {
         }
     }
     
-    public void addStudents(String clubName, ArrayList<Student> addedStudents){
+    public boolean addStudents(String clubName, ArrayList<Student> addedStudents){
+        boolean successful=true;
         for(Student newStudent:addedStudents){
-            addStudent(clubName,newStudent);
+            boolean temp=addStudent(clubName,newStudent);
+            if(successful){
+                successful=temp;
+            }
         }
+        return successful;
     }
     
-    public void addStudent(String clubName, Student s){
-        clubName+="Students";
+    public boolean addStudent(String clubName, Student s){
+        clubName=MiscUtils.replaceSpacesForDatabase(clubName)+"Students";
         Statement stmt;
         try {
             stmt=conn.createStatement();
             stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+"."+clubName+
-                    " VALUES ("+s.getID()+",\'"+s.getName()+"\',\'"+s.getMeetingsAttended()+"\',"+s.getPoints()+")");
+                    " VALUES ("+s.getID()+",\'"+s.getName()+"\',"+s.getPoints()+")");
         } catch (SQLException ex) {
-            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            Start.createLog(ex, "Failed to add "+s.getName()+" to "+s.getGroup());
+            return false;
+        }
+        Statement stmt1;
+        try {
+            stmt1=conn.createStatement();
+            stmt1.executeUpdate("CREATE TABLE "+DEFAULT_SCHEMA+"."+MiscUtils.replaceCommas(MiscUtils.replaceSpacesForDatabase(s.getName()))+"AttendedMeetings(groupID varchar(3), meetingIdentifier varchar(3), arrivalTime varchar(10), PRIMARY KEY(meetingIdentifier))");
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Failed to create table "+s.getName()+"AttendedMeetings");
+            return false;
+        }
+        return true;
+    }
+    
+    public void addAttendedMeeting(String student, String groupIdentifier, String meetingIdentifier, String arrivalTime){
+        student=MiscUtils.replaceCommas(MiscUtils.replaceSpacesForDatabase(student))+"AttendedMeetings";
+        Statement stmt;
+        try {
+            stmt=conn.createStatement();
+            stmt.executeUpdate("INSERT INTO "+DEFAULT_SCHEMA+"."+student+
+                    " VALUES (\'"+groupIdentifier+"\',\'"+meetingIdentifier+"\',\'"+arrivalTime+"\')");
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Failed to add the Meeting with the identifier \""+meetingIdentifier+"\" to "+student);
         }
     }
     
-    public void editGroup(String oldName, String clubName, String ePath, boolean points){
+    public void editGroup(String oldName, Group g, String ePath, boolean points, ArrayList<Student> stews){
         Statement stmt;
         Statement stmt1;
         Statement stmt2;
@@ -172,7 +206,8 @@ public class Database {
             stmt=conn.createStatement();
             stmt.closeOnCompletion();
             stmt.executeUpdate("UPDATE "+DEFAULT_SCHEMA+".Clubs"+
-                    " SET clubName=\'"+clubName+"\',"
+                    " SET groupID=\'"+g.getIdentifier()+"\',"
+                    + "clubName=\'"+g.getName()+"\',"
                     + "ePath=\'"+ePath+"\',"
                     + "points="+points
                     + " WHERE clubName=\'"+oldName+"\'");
@@ -182,21 +217,21 @@ public class Database {
         try {
             stmt1=conn.createStatement();
             stmt1.closeOnCompletion();
-            stmt1.executeUpdate("RENAME TABLE "+DEFAULT_SCHEMA+"."+(oldName+"Students")+" TO "+(clubName+"Students"));
+            stmt1.executeUpdate("RENAME TABLE "+DEFAULT_SCHEMA+"."+(oldName+"Students")+" TO "+(g.getName()+"Students"));
         } catch (SQLException ex) {
             Start.createLog(ex, "Error editing Club!");
         }
         try {
             stmt2=conn.createStatement();
             stmt2.closeOnCompletion();
-            stmt2.executeUpdate("RENAME TABLE "+DEFAULT_SCHEMA+"."+(oldName+"Meetings")+" TO "+(clubName+"Meetings"));
+            stmt2.executeUpdate("RENAME TABLE "+DEFAULT_SCHEMA+"."+(oldName+"Meetings")+" TO "+(g.getName()+"Meetings"));
         } catch (SQLException ex) {
             Start.createLog(ex, "Error editing Club!");
         }
     }
     
     public void editMeeting(String clubName, String[] values){
-        clubName+="Meetings";
+        clubName=MiscUtils.replaceSpacesForDatabase(clubName)+"Meetings";
         Statement stmt;
         try {
             stmt=conn.createStatement();
@@ -218,25 +253,73 @@ public class Database {
         }
     }
     
+    public void editStudents(String clubName, ArrayList<Student> stews){
+        for (Student student : stews) {
+            editStudent(clubName, student);
+        }
+    }
+    
     public void editStudent(String clubName, String[] values){
-        clubName+="Students";
+        clubName=MiscUtils.replaceSpacesForDatabase(clubName)+"Students";
         Statement stmt;
         try {
             stmt=conn.createStatement();
             stmt.executeUpdate("UPDATE "+DEFAULT_SCHEMA+"."+clubName+
                     " SET ID="+values[0]+","
                     + "name=\'"+values[1]+"\',"
-                    + "meetings=\'"+values[2]+"\',"
-                    + "POINTS="+values[3]
-                    + " WHERE ID=\'"+values[0]+"\'");
+                    + "POINTS="+values[2]
+                    + " WHERE ID="+values[0]);
             stmt.close();
         } catch(SQLException ex) {
             Start.createLog(ex, "A Database Error Occurred");
         }
     }
     
+    public void editStudent(String clubName, Student s){
+        clubName=MiscUtils.replaceSpacesForDatabase(clubName)+"Students";
+        Statement stmt;
+        try {
+            stmt=conn.createStatement();
+            stmt.executeUpdate("UPDATE "+DEFAULT_SCHEMA+"."+clubName+
+                    " SET ID="+s.getID()+","
+                    + "name=\'"+s.getName()+"\',"
+                    + "POINTS="+s.getPoints()
+                    + " WHERE ID=\'"+s.getID()+"\'");
+            stmt.close();
+        } catch(SQLException ex) {
+            Start.createLog(ex, "A Database Error Occurred");
+        }
+    }
+    
+    public void editAttendedMeeting(String student, String groupIdentifier, String meetingIdentifier, String arrivalTime){
+        student=MiscUtils.replaceCommas(MiscUtils.replaceSpacesForDatabase(student))+"AttendedMeetings";
+        Statement stmt;
+        try {
+            stmt=conn.createStatement();
+            stmt.executeUpdate("UPDATE "+DEFAULT_SCHEMA+"."+student+
+                    " SET groupIdentifier=\'"+groupIdentifier+"\',"
+                    + "meetingIdentifier=\'"+meetingIdentifier+"\',"
+                    + "arrivalTime=\'"+arrivalTime+"\'"
+                    + " WHERE meetingIdentifier=\'"+meetingIdentifier+"\' AND \'groupIdentifier="+groupIdentifier+"\'");
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Failed to edit meeting with identifier \""+meetingIdentifier+"\" in "+student);
+        }
+    }
+    
     public void deleteGroup(String clubName){
         Statement stmt;
+        Statement stmt1;
+        if(!(FrameController.getInv().getGroups().size()<=1)){
+            try {
+                stmt1=conn.createStatement();
+                ResultSet rs=stmt1.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+clubName+"Students");
+                while(rs.next()){
+                    deleteTable(MiscUtils.replaceCommas(MiscUtils.replaceSpacesForDatabase(rs.getString("NAME")))+"AttendedMeetings");
+                }
+            } catch (SQLException ex) {
+                Start.createLog(ex, "Unable to delete some database tables");
+            }
+        }
         try {
             stmt=conn.createStatement();
             stmt.closeOnCompletion();
@@ -250,13 +333,19 @@ public class Database {
     
     public void deleteMeeting(String clubName, String meetingName) {
         Statement stmt;
-        clubName+="Meetings";
+        clubName=MiscUtils.replaceSpacesForDatabase(clubName)+"Meetings";
         try {
             stmt=conn.createStatement();
             stmt.closeOnCompletion();
             stmt.executeUpdate("DELETE FROM "+DEFAULT_SCHEMA+"."+clubName+" WHERE name=\'"+meetingName+"\'");
         } catch (SQLException ex) {
             Start.createLog(ex, "Unable to delete \""+meetingName+"\"");
+        }
+    }
+    
+    public void deleteStudents(String clubName, ArrayList<Student> students){
+        for (Student student : students) {
+            deleteStudent(clubName, student);
         }
     }
     
@@ -267,14 +356,21 @@ public class Database {
             stmt=conn.createStatement();
             stmt.closeOnCompletion();
             stmt.executeUpdate("DELETE FROM "+DEFAULT_SCHEMA+"."+tableName+" WHERE ID="+s.getID()+"");
+            deleteTable(MiscUtils.replaceCommas(MiscUtils.replaceSpacesForDatabase(s.getName()))+"AttendedMeetings");
         } catch (SQLException ex) {
             Start.createLog(ex, "Unable to delete \""+s.getName()+"\" from \""+clubName+"\"");
         }
     }
     
-    public void deleteStudents(String clubName, ArrayList<Student> students){
-        for (Student student : students) {
-            deleteStudent(clubName, student);
+    public void deleteStudentMeetingAttended(String student, String identifier){
+        Statement stmt;
+        String tableName=student+"AttendedMeetings";
+        try {
+            stmt=conn.createStatement();
+            stmt.closeOnCompletion();
+            stmt.executeUpdate("DELETE FROM "+DEFAULT_SCHEMA+"."+tableName+" WHERE identifier="+identifier);
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Unable to delete the meeting with identifier \""+identifier+"\" from \""+tableName+"\"");
         }
     }
     
@@ -304,7 +400,7 @@ public class Database {
     }
     
     public ResultSet readMeetingsTable(String clubName){
-        clubName+="Meetings";
+        clubName=MiscUtils.replaceSpacesForDatabase(clubName)+"Meetings";
         ResultSet rs=null;
         Statement stmt;
         try {
@@ -318,7 +414,7 @@ public class Database {
     }
     
     public ResultSet readStudentsTable(String clubName){
-        clubName+="Students";
+        clubName=MiscUtils.replaceSpacesForDatabase(clubName)+"Students";
         ResultSet rs=null;
         Statement stmt;
         try {
@@ -327,6 +423,20 @@ public class Database {
             rs=stmt.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+clubName);
         } catch (SQLException ex) {
             Start.createLog(ex, "Unable to read from table: "+clubName);
+        }
+        return rs;
+    }
+    
+    public ResultSet readMeetingsAttendedTable(String student){
+        student=MiscUtils.replaceCommas(MiscUtils.replaceSpacesForDatabase(student))+"AttendedMeetings";
+        ResultSet rs=null;
+        Statement stmt;
+        try {
+            stmt=conn.createStatement();
+            stmt.closeOnCompletion();
+            rs=stmt.executeQuery("SELECT * FROM "+DEFAULT_SCHEMA+"."+student);
+        } catch (SQLException ex) {
+            Start.createLog(ex, "Unable to read from table: "+student);
         }
         return rs;
     }

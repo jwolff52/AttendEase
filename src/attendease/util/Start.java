@@ -35,17 +35,16 @@ public class Start {
     private static ArrayList<Object>[] errors;
     private static File[] logs;
     private static Splash s;
-    private static String nextString;
     private static ProcessBuilder p;
     
-    private static final String VERSION="Version: v0.05-alpha";
+    private static final String VERSION="Version: v0.08-alpha";
     
     
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public static void main(String[]args){
         errors=new ArrayList[2];
-        errors[0]=new ArrayList<>();
-        errors[1]=new ArrayList<>();
+        errors[0]=new ArrayList<Object>();
+        errors[1]=new ArrayList<Object>();
         s=new Splash("Starting up");
         new Thread(new Runnable(){
             @Override
@@ -69,7 +68,8 @@ public class Start {
         FrameController.changeFrameState("mf");
         try{
             p.start();
-        }catch(NullPointerException | IOException ex){}
+        }catch(NullPointerException ex){
+        }catch(IOException ex){}
     }
     
     public static void removeSplash(){
@@ -102,7 +102,6 @@ public class Start {
         } catch (InterruptedException ex) {
             createLog(ex, "Error in Loading");
         }
-        s.updateString("Loading Interface");
         new FrameController();
         s.updateString("Finishing up");
         try {
@@ -113,22 +112,26 @@ public class Start {
     }
 
     private static void initDatabase() {
-        try{
+        try {
             d=new Database();
-        }catch(ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            createLog(ex, "A Database Error occurred!");
+        } catch (InstantiationException ex) {
+            Start.createLog(ex, "A Database Error Occurred");
+        } catch (ClassNotFoundException ex) {
+            Start.createLog(ex, "A Database Error Occurred");
+        } catch (IllegalAccessException ex) {
+            Start.createLog(ex, "A Database Error Occurred");
         }
         d.getDb();
     }
     
     public static void createLog(Exception e, String laymansTerm){
         if(!e.getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")){
-            String s=new Date().toString()+" :\n\t"+e.toString()+"\n";
+            String s1=new Date().toString()+" :\n\t"+e.toString()+"\n";
             for(StackTraceElement ste:e.getStackTrace()){
-                s+="\t"+ste.toString()+"\n";
+                s1+="\t"+ste.toString()+"\n";
             }
-            s+="----------";
-            InputOutput.writeFile(logs[0], s, false);
+            s1+="----------";
+            InputOutput.writeFile(logs[0], s1, false);
             InputOutput.writeFile(logs[1], new Date().toString()+" : "+laymansTerm, false);
         }
     }
@@ -145,13 +148,7 @@ public class Start {
     }
     
     public static void updateSplashString(String s1){
-        nextString=s1;
-        new Thread(new Runnable(){
-            @Override
-            public void run() {
-                s.updateString(nextString);
-            }
-        }).start();
+        s.updateString(s1);
     }
     
     public static String getVersion(){

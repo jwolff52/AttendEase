@@ -25,6 +25,7 @@ import attendease.util.Student;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.DefaultListModel;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -45,11 +46,17 @@ public class AddRemoveMembersWarningGUI extends AFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (InstantiationException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (IllegalAccessException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
         aListModel=new DefaultListModel();

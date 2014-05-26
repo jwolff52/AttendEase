@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/James/Dropbox/AttendEase/AttendEase_Java/src/attendease/database/Database.java</file>
-            <file>file:/C:/Users/James/Dropbox/AttendEase/AttendEase_Java/src/attendease/util/Start.java</file>
-            <file>file:/C:/Users/James/Dropbox/AttendEase/AttendEase_Java/src/attendease/util/driver.java</file>
+            <file>file:/C:/Users/James/Dropbox/AttendEase/AttendEase_Java/src/attendease/util/MiscUtils.java</file>
+            <file>file:/C:/Users/James/Dropbox/AttendEase/AttendEase_Java/src/attendease/gui/MeetingPanel.java</file>
+            <file>file:/C:/Users/James/Dropbox/AttendEase/AttendEase_Java/src/attendease/util/ColorRenderer.java</file>
+            <file>file:/C:/Users/James/Dropbox/AttendEase/AttendEase_Java/src/attendease/gui/StudentPanel.java</file>
         </group>
     </open-files>
 </project-private>

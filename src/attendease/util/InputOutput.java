@@ -32,21 +32,18 @@ public class InputOutput {
     private static String logLoc;
     private static TFileReader tfr;
     private static TFileWriter tfw;
-    private static EFileReader xfr;
     
     public InputOutput(){
         tfr=new TFileReader();
         tfw=new TFileWriter();
-        xfr=new EFileReader();
-        logLoc="./.log";
     }
     public static ArrayList<String> readFile(File f){
         try {
-            return tfr.readFile(f);
+            return TFileReader.readFile(f);
         } catch (FileNotFoundException ex) {
             Start.createLog(ex, "Could not find file: "+f.getPath());
         }
-        return new ArrayList<>();
+        return new ArrayList<String>();
     }
 
     public static void writeFile(File f, String output, boolean overwrite){
@@ -79,21 +76,5 @@ public class InputOutput {
                 Start.createLog(ex, "Could not find file: "+f.getPath());
             }
         }
-    }
-
-    public static void getInfo(EFile e){
-        try {
-            xfr.readFile(e);
-        } catch (IOException ex) {
-            Start.createLog(ex, "Could not find file: "+e.getPath());
-        }
-    }
-    
-    public static ArrayList<String> getNames(){
-        return xfr.getNames();
-    }
-    
-    public static ArrayList<Double> getIdNums(){
-        return xfr.getIdNums();
     }
 }

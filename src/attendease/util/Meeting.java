@@ -18,8 +18,6 @@
 
 package attendease.util;
 
-import java.util.ArrayList;
-
 /**
  * 
  *@author timothy.chandler
@@ -48,6 +46,7 @@ public class Meeting {
         rPoints=r;
         lPoints=l;
         meatHeld=m;
+        FrameController.getInv().addMeetingIdentifier(name, identifier);
     }
     
     public Meeting(String i, String n, String d, String sTime, String eTime, int a, int g, int r, int l, boolean m){
@@ -61,6 +60,7 @@ public class Meeting {
         rPoints=r;
         lPoints=l;
         meatHeld=m;
+        FrameController.getInv().addMeetingIdentifier(name, identifier);
     }
     
     public Meeting(String[] v){
@@ -74,6 +74,7 @@ public class Meeting {
         rPoints=new Integer(v[7]);
         lPoints=new Integer(v[8]);
         meatHeld=Boolean.valueOf(v[9]);
+        FrameController.getInv().addMeetingIdentifier(name, identifier);
     }
     
     public Meeting(Meeting m){
@@ -87,6 +88,7 @@ public class Meeting {
         rPoints=m.getrPoints();
         lPoints=m.getlPoints();
         meatHeld=m.isMeatHeld();
+        FrameController.getInv().addMeetingIdentifier(name, identifier);
     }
 
     public String getName() {
@@ -153,7 +155,7 @@ public class Meeting {
         this.meatHeld = meatHeld;
     }
 
-    public String[] getVaules() {
+    public String[] getValues() {
         return new String[]{identifier,name,date,startTime,endTime,attendance+"",gPoints+"",rPoints+"",lPoints+"",meatHeld+""};
     }
 

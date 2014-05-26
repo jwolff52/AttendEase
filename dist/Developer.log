@@ -1,0 +1,128 @@
+Wed May 21 12:34:20 CDT 2014 :
+	java.sql.SQLException: Column 'identifier' not found.
+	org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.ConnectionChild.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.findColumnName(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.getString(Unknown Source)
+	attendease.util.Student.fillMeetingsAttended(Student.java:70)
+	attendease.util.FrameController.initInventory(FrameController.java:193)
+	attendease.util.FrameController.<init>(FrameController.java:59)
+	attendease.util.Start.initVariables(Start.java:105)
+	attendease.util.Start.main(Start.java:60)
+----------
+Wed May 21 12:34:20 CDT 2014 :
+	java.sql.SQLException: Column 'identifier' not found.
+	org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.ConnectionChild.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.findColumnName(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.getString(Unknown Source)
+	attendease.util.Student.fillMeetingsAttended(Student.java:70)
+	attendease.util.FrameController.initInventory(FrameController.java:193)
+	attendease.util.FrameController.<init>(FrameController.java:59)
+	attendease.util.Start.initVariables(Start.java:105)
+	attendease.util.Start.main(Start.java:60)
+----------
+Wed May 21 12:34:20 CDT 2014 :
+	java.sql.SQLException: Column 'identifier' not found.
+	org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.ConnectionChild.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.findColumnName(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.getString(Unknown Source)
+	attendease.util.Student.fillMeetingsAttended(Student.java:70)
+	attendease.util.FrameController.initInventory(FrameController.java:193)
+	attendease.util.FrameController.<init>(FrameController.java:59)
+	attendease.util.Start.initVariables(Start.java:105)
+	attendease.util.Start.main(Start.java:60)
+----------
+Wed May 21 12:34:20 CDT 2014 :
+	java.sql.SQLException: Column 'identifier' not found.
+	org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.ConnectionChild.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.findColumnName(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.getString(Unknown Source)
+	attendease.util.Student.fillMeetingsAttended(Student.java:70)
+	attendease.util.FrameController.initInventory(FrameController.java:193)
+	attendease.util.FrameController.<init>(FrameController.java:59)
+	attendease.util.Start.initVariables(Start.java:105)
+	attendease.util.Start.main(Start.java:60)
+----------
+Wed May 21 12:34:21 CDT 2014 :
+	java.sql.SQLException: Column 'identifier' not found.
+	org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.ConnectionChild.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.findColumnName(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.getString(Unknown Source)
+	attendease.util.Student.fillMeetingsAttended(Student.java:70)
+	attendease.util.FrameController.initInventory(FrameController.java:193)
+	attendease.util.FrameController.<init>(FrameController.java:59)
+	attendease.util.Start.initVariables(Start.java:105)
+	attendease.util.Start.main(Start.java:60)
+----------
+Wed May 21 12:34:21 CDT 2014 :
+	java.sql.SQLException: Column 'identifier' not found.
+	org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.ConnectionChild.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.findColumnName(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.getString(Unknown Source)
+	attendease.util.Student.fillMeetingsAttended(Student.java:70)
+	attendease.util.FrameController.initInventory(FrameController.java:193)
+	attendease.util.FrameController.<init>(FrameController.java:59)
+	attendease.util.Start.initVariables(Start.java:105)
+	attendease.util.Start.main(Start.java:60)
+----------
+Wed May 21 12:34:21 CDT 2014 :
+	java.sql.SQLException: Column 'identifier' not found.
+	org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.ConnectionChild.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.findColumnName(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.getString(Unknown Source)
+	attendease.util.Student.fillMeetingsAttended(Student.java:70)
+	attendease.util.FrameController.initInventory(FrameController.java:193)
+	attendease.util.FrameController.<init>(FrameController.java:59)
+	attendease.util.Start.initVariables(Start.java:105)
+	attendease.util.Start.main(Start.java:60)
+----------
+Wed May 21 12:34:21 CDT 2014 :
+	java.sql.SQLException: Column 'identifier' not found.
+	org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.ConnectionChild.newSQLException(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.findColumnName(Unknown Source)
+	org.apache.derby.impl.jdbc.EmbedResultSet.getString(Unknown Source)
+	attendease.util.Student.fillMeetingsAttended(Student.java:70)
+	attendease.util.FrameController.initInventory(FrameController.java:193)
+	attendease.util.FrameController.<init>(FrameController.java:59)
+	attendease.util.Start.initVariables(Start.java:105)
+	attendease.util.Start.main(Start.java:60)
+----------

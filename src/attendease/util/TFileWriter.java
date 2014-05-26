@@ -38,27 +38,35 @@ public class TFileWriter {
         }else{
             strings.addAll(0,TFileReader.readFile(f));
         }
-        try (BufferedWriter writer = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8)){
+        try{
+            BufferedWriter writer = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8);
             for(String s : strings){
                 writer.write(s);
                 writer.newLine();
             }
+            writer.close();
+        }catch(IOException e){
+            Start.createLog(e, "Error writing the file at location: "+f.getName());
         }
     }
 
     public static void writeFile(File f, String output) throws FileNotFoundException, IOException{;
-        ArrayList<String> strings=new ArrayList<>();
+        ArrayList<String> strings=new ArrayList<String>();
         if(!f.exists()){
             f.createNewFile();
         }else{
             strings=TFileReader.readFile(f);
         }
         strings.add(output);
-        try (BufferedWriter writer = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8)){
+        try{
+            BufferedWriter writer = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8);
             for(String s : strings){
                 writer.write(s);
                 writer.newLine();
             }
+            writer.close();
+        }catch(IOException e){
+            Start.createLog(e, "Error writing the file at location: "+f.getName());
         }
     }
     

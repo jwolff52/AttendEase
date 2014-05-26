@@ -21,6 +21,7 @@ package attendease.gui;
 import attendease.util.APanel;
 import attendease.util.FrameController;
 import attendease.util.Start;
+import javax.swing.UnsupportedLookAndFeelException;
 
 
 public class GroupOptionsPanel extends APanel {
@@ -34,11 +35,17 @@ public class GroupOptionsPanel extends APanel {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (InstantiationException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (IllegalAccessException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
     }
@@ -73,7 +80,7 @@ public class GroupOptionsPanel extends APanel {
             }
         });
 
-        viewMembersButton.setText("View Students");
+        viewMembersButton.setText("View Attendance");
         viewMembersButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 viewMembersButtonMouseReleased(evt);

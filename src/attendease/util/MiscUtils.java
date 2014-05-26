@@ -26,6 +26,11 @@ import java.util.ArrayList;
  * @author james.wolff
  */
 public class MiscUtils {
+      
+    public final int AM_FORMAT=0;
+    public final int PM_FORMAT=1;
+    public final int M_FORMAT=2;
+    
     public static boolean isValidName(String name) {
         if(!name.equals("")){
             char[] c=name.toCharArray();
@@ -137,6 +142,14 @@ public class MiscUtils {
         return time;
     }
     
+    public static String replaceCommas(String s){
+        return s.replaceAll(",", "");
+    }
+    
+    public static String replaceSpacesForDatabase(String s){
+        return s.replaceAll(" ", "");
+    }
+    
     public static int timeToInt(String time){
         char[] c=time.toCharArray();
         time="";
@@ -213,33 +226,33 @@ public class MiscUtils {
     }
     
     public static int getMonthNumber(String month){
-        switch(month.toLowerCase()){
-            case "january":
-                return 1;
-            case "february":
-                return 2;
-            case "march":
-                return 3;
-            case "april":
-                return 4;
-            case "may":
-                return 5;
-            case "june":
-                return 6;
-            case "july":
-                return 7;
-            case "august":
-                return 8;
-            case "september":
-                return 9;
-            case "october":
-                return 10;
-            case "november":
-                return 11;
-            case "december":
-                return 12;
-            default:
-                return 13;
+        month=month.toLowerCase();
+        if(month.equals("january")){
+            return 1;
+        }else if(month.equals("february")){
+            return 2;
+        }else if(month.equals("march")){
+            return 3;
+        }else if(month.equals("april")){
+            return 4;
+        }else if(month.equals("may")){
+            return 5;
+        }else if(month.equals("june")){
+            return 6;
+        }else if(month.equals("july")){
+            return 7;
+        }else if(month.equals("august")){
+            return 8;
+        }else if(month.equals("september")){
+            return 9;
+        }else if(month.equals("october")){
+            return 10;
+        }else if(month.equals("november")){
+            return 11;
+        }else if(month.equals("december")){
+            return 12;
+        }else{
+            return 13;
         }
     }
     
@@ -295,21 +308,25 @@ public class MiscUtils {
         }
     }
     
-    public static String getNextMeetingIdentifier(){
+    public static String getNextMeetingIdentifier(String name){
         int i=0;
         int limit=(int)Math.pow(37, 3)-1;
-        while(FrameController.getInv().identifierExisits(tenTo36(i))&&i<limit){
+        while(FrameController.getInv().meetingIdentifierExisits(tenTo36(i))&&i<limit){
             i++;
         }
-        return tenTo36(i);
+        String id=tenTo36(i);
+        FrameController.getInv().addMeetingIdentifier(name, id);
+        return id;
     }
     
-    public static String getNextStudentIdentifier(Group g){
+    public static String getNextGroupIdentifier(String g){
         int i=0;
         int limit=(int)Math.pow(37, 3)-1;
-        while(FrameController.getInv().getGroup(g).identifierExisits(tenTo36(i))&&i<limit){
+        while(FrameController.getInv().groupIdentifierExisits(tenTo36(i))&&i<limit){
             i++;
         }
+        String id=tenTo36(i);
+        FrameController.getInv().addGroupIdentifier(g, id);
         return tenTo36(i);
     }
     
@@ -329,7 +346,7 @@ public class MiscUtils {
     }
     
     public static int[] getDelineatorIndicies(String string, char delineator){
-        ArrayList<Integer> ia=new ArrayList<>();
+        ArrayList<Integer> ia=new ArrayList<Integer>();
         char[] ca=string.toCharArray();
         int i=0;
         for (char c : ca) {
@@ -347,16 +364,21 @@ public class MiscUtils {
         return indicies;
     }
     
-    public static String getArrivalTime(String startTime, String timeDiff){
-        return intToTime(timeToInt(startTime)+Integer.valueOf(timeDiff));
-    }
-    
-    public static String getTimeDiff(String startTime, String arrivalTime){
-        int temp=timeToInt(startTime)-timeToInt(arrivalTime);
-        int timeDiff=(temp/100)*60+temp%100;
-        if(timeDiff<0){
-            return "+"+Math.abs(timeDiff);
+    public String changeTimeFormat(String h, String m, int currentFormat, int newFormat){
+        String hour=""; 
+        if(currentFormat==M_FORMAT){
+            int i=new Integer(h);
+            if(i>12){
+                hour=i-12+"";
+            }else if(i==0){
+                hour=12+"";
+            }
+        }else if(newFormat==M_FORMAT){
+            if(currentFormat==1){
+                int i=new Integer(h);
+                hour=i+12+"";
+            }
         }
-        return "-"+timeDiff;
+        return hour+":"+m;
     }
 }

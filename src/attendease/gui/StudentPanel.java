@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -48,14 +49,20 @@ public class StudentPanel extends APanel {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (InstantiationException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (IllegalAccessException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
-        currentList=new ArrayList<>();
+        currentList=new ArrayList<Student>();
     }
     
     private void initTable(){
@@ -178,7 +185,7 @@ public class StudentPanel extends APanel {
         if(searchTextField.getText()==null||searchTextField.getText().equals("")){
             fillStudentTable();
         }else{
-            ArrayList<Student> newList=new ArrayList<>();
+            ArrayList<Student> newList=new ArrayList<Student>();
             fillStudentTable();
             for(Student s:currentList){
                 if(s.getName().toLowerCase().contains(searchTextField.getText().toLowerCase())||(s.getID()+"").contains(searchTextField.getText())){
@@ -208,6 +215,7 @@ public class StudentPanel extends APanel {
     
     public void fillStudentTable(){
         initTable();
+        ArrayList<Meeting> meats=initMeetingColumns(FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeetings());
         currentList=FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getStudents();
         Collections.sort(currentList, new Comparator<Student>(){
                 @Override
@@ -217,15 +225,56 @@ public class StudentPanel extends APanel {
                     return i1.compareTo(i2);
                 }
             });
-        for(Student s:currentList){
-            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints(),s.getMeetingsAttended()});
+        Student s;
+        for(int i=0;i<currentList.size();i++){
+            s=currentList.get(i);
+            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints()});
+            int j=3;
+            for(Meeting m:meats) {
+                String arrivalTime;
+                try{
+                    arrivalTime=s.getAttendedMeeting(m).getArrivalTime();
+                }catch(NullPointerException e){
+                    arrivalTime="ABSENT";
+                }
+                if(arrivalTime.matches("[0-9: APM]")){
+                    char[] temp=arrivalTime.substring(0, arrivalTime.indexOf(":")).toCharArray();
+                    int[] ia=new int[2];
+                    int k=0;
+                    if(temp.length>1){
+                        ia[0]=Integer.valueOf(temp[0]);
+                        ia[1]=Integer.valueOf(temp[1]);
+                        if(ia[0]>0){
+                            if(ia[1]>2){
+                                k=Integer.valueOf(temp[0]+""+temp[1])-12;
+                            }
+                        }
+                    }
+                    arrivalTime=arrivalTime.replaceFirst(temp[0]+"", "");
+                    arrivalTime=arrivalTime.replaceFirst(temp[1]+"", k+"");
+                }
+                sTableModel.setValueAt(arrivalTime, i, j);
+                j++;
+            }
         }
         studentTable.setModel(sTableModel);
+    }
+    
+    private ArrayList<Meeting> initMeetingColumns(ArrayList<Meeting> meats){
+        ArrayList<Meeting> temp=new ArrayList<Meeting>();
+        for(Meeting m: meats){
+            if(m.isMeatHeld()){
+                sTableModel.addColumn(m.getName());
+                temp.add(m);
+            }
+        }
+        return temp;
     }
     
     public void fillStudentTable(ArrayList<Student> newStudents){
         initTable();
         currentList=newStudents;
+        ArrayList<Meeting> attendedMeats=initMeetingColumns(FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeetings());
         Collections.sort(currentList, new Comparator<Student>(){
                 @Override
                 public int compare(Student s1, Student s2){
@@ -234,26 +283,23 @@ public class StudentPanel extends APanel {
                     return i1.compareTo(i2);
                 }
             });
-        for(Student s:currentList){
-            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints(),s.getMeetingsAttended()});
+        Student s;
+        for(int i=0;i<currentList.size();i++){
+            s=currentList.get(i);
+            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints()});
+            int j=3;
+            for(Meeting m:attendedMeats) {
+                String arrivalTime;
+                try{
+                    arrivalTime=s.getAttendedMeeting(m).getArrivalTime();
+                }catch(NullPointerException e){
+                    arrivalTime="ABSENT";
+                }
+                sTableModel.setValueAt(arrivalTime, i, j);
+                j++;
+            }
         }
         studentTable.setModel(sTableModel);
-    }
-    
-    private ArrayList<String> getMeetingNames(){
-        ArrayList<String> mNames=new ArrayList<>();
-        for(Meeting m:FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeetings()){
-            mNames.add(m.getName());
-        }
-        return mNames;
-    }
-    
-    private ArrayList<Integer> getMeetingAttendance(){
-        ArrayList<Integer> mAttendance=new ArrayList<>();
-        for(Meeting m:FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeetings()){
-            mAttendance.add(m.getAttendance());
-        }
-        return mAttendance;
     }
     
     private ATableModel sTableModel;

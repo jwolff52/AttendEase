@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTabbedPane;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -46,11 +47,17 @@ public class MeetingEditPanel extends APanel {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (InstantiationException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (IllegalAccessException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
         c=Calendar.getInstance(TimeZone.getTimeZone("CST"));
@@ -147,6 +154,7 @@ public class MeetingEditPanel extends APanel {
         sTAMRadioButtonBasic = new javax.swing.JRadioButton();
         sTPMRadioButtonBasic = new javax.swing.JRadioButton();
         sT24RadioButtonBasic = new javax.swing.JRadioButton();
+        jLabel1 = new javax.swing.JLabel();
         advancedTab = new javax.swing.JPanel();
         sTLabelAdv = new javax.swing.JLabel();
         endTimeLabelAdv = new javax.swing.JLabel();
@@ -180,6 +188,13 @@ public class MeetingEditPanel extends APanel {
         basicTab.setPreferredSize(new java.awt.Dimension(256, 260));
         basicTab.setRequestFocusEnabled(false);
         basicTab.setLayout(new java.awt.GridBagLayout());
+
+        titleTextBox.setBackground(java.awt.Color.green);
+        titleTextBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                titleTextBoxKeyReleased(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -388,6 +403,15 @@ public class MeetingEditPanel extends APanel {
         gridBagConstraints.gridy = 5;
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 0, 0);
         basicTab.add(sT24RadioButtonBasic, gridBagConstraints);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel1.setText("Alphanumeric and spaces only (0-9 a-z A-Z)");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 6;
+        gridBagConstraints.insets = new java.awt.Insets(11, 6, 0, 0);
+        basicTab.add(jLabel1, gridBagConstraints);
 
         meetingTabPane.addTab("Basic", basicTab);
 
@@ -766,6 +790,14 @@ public class MeetingEditPanel extends APanel {
     private void eMTextBoxAdvKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_eMTextBoxAdvKeyReleased
         colorTimes("end");
     }//GEN-LAST:event_eMTextBoxAdvKeyReleased
+
+    private void titleTextBoxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_titleTextBoxKeyReleased
+        if(titleTextBox.getText().matches("(\\S[0-9a-zA-Z ]*)")||titleTextBox.getText().matches("^*$")){
+            titleTextBox.setBackground(Color.green);
+        }else{
+            titleTextBox.setBackground(Color.red);
+        }
+    }//GEN-LAST:event_titleTextBoxKeyReleased
     
     public String getCreateButton(){
         return CREATE_BUTTON;
@@ -795,6 +827,7 @@ public class MeetingEditPanel extends APanel {
         initModels();
         sHTextBoxBasic.setText("");
         titleTextBox.setText("");
+        titleTextBox.setBackground(Color.green);
         sTAMRadioButtonBasic.setSelected(true);
         sTAMRadioButtonBasic.setSelected(false);
         sTAMRadioButtonAdv.setSelected(true);
@@ -807,6 +840,7 @@ public class MeetingEditPanel extends APanel {
     }
     
     public void putData(Meeting m) {
+        oldMeat=m;
         ArrayList<Object> p=parseMeetingData(m);
         titleTextBox.setText((String)p.get(0));
         oldName=(String)p.get(0);
@@ -817,28 +851,21 @@ public class MeetingEditPanel extends APanel {
         sDDay.setSelectedItem(Integer.parseInt((String)p.get(3)));
         sHTextBoxBasic.setText((String)p.get(4));
         sMTextBoxBasic.setText((String)p.get(5));
-        String sampm=(String)p.get(6);
-        switch(sampm.toLowerCase()){
-            case "pm":
-                sTPMRadioButtonBasic.setSelected(true);
-                sTPMRadioButtonAdv.setSelected(true);
-                break;
-            case "":
-                sT24RadioButtonAdv.setSelected(true);
-                iET24RadioButtonAdv.setSelected(true);
-                eTAMRadioButtonAdv.setFocusable(false);
-                eTPMRadioButtonAdv.setFocusable(false);
-                break;
+        String sampm=((String)p.get(6)).toLowerCase();
+        if(sampm.equals("pm")){
+            sTPMRadioButtonBasic.setSelected(true);
+            sTPMRadioButtonAdv.setSelected(true);
+        }else if(sampm.equals("")){
+            sT24RadioButtonAdv.setSelected(true);
+            iET24RadioButtonAdv.setSelected(true);
+            eTAMRadioButtonAdv.setFocusable(false);
+            eTPMRadioButtonAdv.setFocusable(false);
         }
         eHTextBoxAdv.setText((String)p.get(7));
         eMTextBoxAdv.setText((String)p.get(8));
         if(!sT24RadioButtonBasic.isSelected()){
-            String eampm=(String)p.get(9);
-            switch(eampm.toLowerCase()){
-                case "pm":
-                    eTPMRadioButtonAdv.setSelected(true);
-                    break;
-            }
+            String eampm=((String)p.get(9)).toLowerCase();
+            eTPMRadioButtonAdv.setSelected(eampm.equals("pm"));
         }
         colorTimes("startBasic");
         colorTimes("startAdvanced");
@@ -851,7 +878,7 @@ public class MeetingEditPanel extends APanel {
     }
     
     private ArrayList<Object> parseMeetingData(Meeting meat){
-        ArrayList<Object> p=new ArrayList<>();
+        ArrayList<Object> p=new ArrayList<Object>();
         p.add(meat.getName());
         p.addAll(parseDateData(meat));
         p.addAll(parseTimeData(meat));
@@ -862,7 +889,7 @@ public class MeetingEditPanel extends APanel {
     }
     
     private ArrayList<Object> parseDateData(Meeting meat){
-        ArrayList<Object> p=new ArrayList<>();
+        ArrayList<Object> p=new ArrayList<Object>();
         String date=meat.getDate();
         String y="";
         String d="";
@@ -908,7 +935,7 @@ public class MeetingEditPanel extends APanel {
     }
     
     private ArrayList<Object> parseTimeData(Meeting meat){
-        ArrayList<Object> p=new ArrayList<>();
+        ArrayList<Object> p=new ArrayList<Object>();
         //Parse Start Time
         String s;
         String sp;
@@ -1011,7 +1038,9 @@ public class MeetingEditPanel extends APanel {
     public String[] getValues() {
         String[] values=new String[10];
         if(FrameController.getMg().getIsEditing()){
-            values[0]=FrameController.getInv().getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeeting(titleTextBox.getText()).getIdentifier();
+            values[0]=oldMeat.getIdentifier();
+        }else{
+            values[0]=MiscUtils.getNextMeetingIdentifier(titleTextBox.getText());
         }
         if(MiscUtils.isValidName(titleTextBox.getText())){
             values[1]=titleTextBox.getText();
@@ -1031,7 +1060,11 @@ public class MeetingEditPanel extends APanel {
             values[7]=requiredTextBoxBasic.getText();
             values[8]=lateTextBoxPoints.getText();
         }
-        values[9]="false";
+        try{
+            values[9]=oldMeat.isMeatHeld()+"";
+        }catch(NullPointerException ex){
+            values[9]="false";
+        }
         return values;
     }
     
@@ -1041,39 +1074,34 @@ public class MeetingEditPanel extends APanel {
     
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private boolean areValidPoints(String type){
-        switch(type.toLowerCase()){
-            case "given":
-                if(!MiscUtils.isValidPoints(givenTextBoxBasic.getText())){
-                    givenTextBoxBasic.setBackground(Color.RED);
-                    givenTextBoxPoints.setBackground(Color.RED);
-                    return false;
-                }else{
-                    givenTextBoxBasic.setBackground(Color.GREEN);
-                    givenTextBoxPoints.setBackground(Color.GREEN);
-                }
-                break;
-            case "late":
-                if(!MiscUtils.isValidPoints(lateTextBoxPoints.getText())){
-                    lateTextBoxPoints.setBackground(Color.RED);
-                    return false;
-                }else{
-                    lateTextBoxPoints.setBackground(Color.GREEN);
-                }
-                break;
-            case "required":
-                if(!MiscUtils.isValidPoints(requiredTextBoxBasic.getText())){
-                    requiredTextBoxBasic.setBackground(Color.RED);
-                    requiredTextBoxPoints.setBackground(Color.RED);
-                    return false;
-                }else{
-                    requiredTextBoxBasic.setBackground(Color.GREEN);
-                    requiredTextBoxPoints.setBackground(Color.GREEN);
-                }
-                break;
-            default:
-                areValidPoints("given");
-                areValidPoints("late");
-                areValidPoints("required");
+        type=type.toLowerCase();
+        if(type.equals("given")){
+            if(!MiscUtils.isValidPoints(givenTextBoxBasic.getText())){
+                givenTextBoxBasic.setBackground(Color.RED);
+                givenTextBoxPoints.setBackground(Color.RED);
+                return false;
+            }else{
+                givenTextBoxBasic.setBackground(Color.GREEN);
+                givenTextBoxPoints.setBackground(Color.GREEN);
+            }
+        }else if(type.equals("late")){
+            if(!MiscUtils.isValidPoints(lateTextBoxPoints.getText())){
+                lateTextBoxPoints.setBackground(Color.RED);
+                return false;
+            }else{
+                lateTextBoxPoints.setBackground(Color.GREEN);
+            }
+        }else if(type.equals("required")){
+            if(!MiscUtils.isValidPoints(requiredTextBoxBasic.getText())){
+                requiredTextBoxBasic.setBackground(Color.RED);
+                requiredTextBoxPoints.setBackground(Color.RED);
+                return false;
+            }else{
+                requiredTextBoxBasic.setBackground(Color.GREEN);
+                requiredTextBoxPoints.setBackground(Color.GREEN);
+            }
+        }else{
+            return areValidPoints("given") && areValidPoints("late") && areValidPoints("required");
         }
         return true;
     }
@@ -1132,46 +1160,47 @@ public class MeetingEditPanel extends APanel {
     }
     
     private void colorTimes(String timePeriod){
-        switch(timePeriod.toLowerCase()){
-            case "startbasic":
-                sHTextBoxAdv.setText(sHTextBoxBasic.getText());
-                sMTextBoxAdv.setText(sMTextBoxBasic.getText());
-                if(MiscUtils.isValidTime(sHTextBoxBasic.getText(), sMTextBoxBasic.getText(), true, is24Hour())){
-                    sMTextBoxBasic.setBackground(Color.GREEN);
-                    sMTextBoxAdv.setBackground(Color.GREEN);
-                    sHTextBoxBasic.setBackground(Color.GREEN);
-                    sHTextBoxAdv.setBackground(Color.GREEN);
-                }else{
-                    sHTextBoxBasic.setBackground(Color.RED);
-                    sHTextBoxAdv.setBackground(Color.RED);
-                    sMTextBoxBasic.setBackground(Color.RED);
-                    sMTextBoxAdv.setBackground(Color.RED);
-                }
-                break;
-            case "startadvanced":
-                sHTextBoxBasic.setText(sHTextBoxAdv.getText());
-                sMTextBoxBasic.setText(sMTextBoxAdv.getText());
-                if(MiscUtils.isValidTime(sHTextBoxBasic.getText(), sMTextBoxBasic.getText(), true, is24Hour())){
-                    sMTextBoxBasic.setBackground(Color.GREEN);
-                    sMTextBoxAdv.setBackground(Color.GREEN);
-                    sHTextBoxBasic.setBackground(Color.GREEN);
-                    sHTextBoxAdv.setBackground(Color.GREEN);
-                }else{
-                    sHTextBoxBasic.setBackground(Color.RED);
-                    sHTextBoxAdv.setBackground(Color.RED);
-                    sMTextBoxBasic.setBackground(Color.RED);
-                    sMTextBoxAdv.setBackground(Color.RED);
-                }
-                break;
-            case "end":
-                if(MiscUtils.isValidTime(eHTextBoxAdv.getText(), eMTextBoxAdv.getText(), false, is24Hour())){
-                    eMTextBoxAdv.setBackground(Color.GREEN);
-                    eHTextBoxAdv.setBackground(Color.GREEN);
-                }else{
-                    eHTextBoxAdv.setBackground(Color.RED);
-                    eMTextBoxAdv.setBackground(Color.RED);
-                }
-                break;
+        String t=timePeriod.toLowerCase();
+        if(t.equals("startbasic")){
+            sHTextBoxAdv.setText(sHTextBoxBasic.getText());
+            sMTextBoxAdv.setText(sMTextBoxBasic.getText());
+            if(MiscUtils.isValidTime(sHTextBoxBasic.getText(), sMTextBoxBasic.getText(), true, is24Hour())){
+                sMTextBoxBasic.setBackground(Color.GREEN);
+                sMTextBoxAdv.setBackground(Color.GREEN);
+                sHTextBoxBasic.setBackground(Color.GREEN);
+                sHTextBoxAdv.setBackground(Color.GREEN);
+            }else{
+                sHTextBoxBasic.setBackground(Color.RED);
+                sHTextBoxAdv.setBackground(Color.RED);
+                sMTextBoxBasic.setBackground(Color.RED);
+                sMTextBoxAdv.setBackground(Color.RED);
+            }
+        }else if(t.equals("startadvanced")){
+            sHTextBoxBasic.setText(sHTextBoxAdv.getText());
+            sMTextBoxBasic.setText(sMTextBoxAdv.getText());
+            if(MiscUtils.isValidTime(sHTextBoxBasic.getText(), sMTextBoxBasic.getText(), true, is24Hour())){
+                sMTextBoxBasic.setBackground(Color.GREEN);
+                sMTextBoxAdv.setBackground(Color.GREEN);
+                sHTextBoxBasic.setBackground(Color.GREEN);
+                sHTextBoxAdv.setBackground(Color.GREEN);
+            }else{
+                sHTextBoxBasic.setBackground(Color.RED);
+                sHTextBoxAdv.setBackground(Color.RED);
+                sMTextBoxBasic.setBackground(Color.RED);
+                sMTextBoxAdv.setBackground(Color.RED);
+            }
+        }else if(t.equals("end")){
+            if(MiscUtils.isValidTime(eHTextBoxAdv.getText(), eMTextBoxAdv.getText(), false, is24Hour())){
+                eMTextBoxAdv.setBackground(Color.GREEN);
+                eHTextBoxAdv.setBackground(Color.GREEN);
+            }else{
+                eHTextBoxAdv.setBackground(Color.RED);
+                eMTextBoxAdv.setBackground(Color.RED);
+            }
+        }else{
+            colorTimes("startbasic");
+            colorTimes("startadvanced");
+            colorTimes("end");
         }
     }
     
@@ -1188,6 +1217,7 @@ public class MeetingEditPanel extends APanel {
     private final String CREATE_BUTTON="Create";
     private final String FINISH_BUTTON="Finish";
     private String oldName;
+    private Meeting oldMeat;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel advancedTab;
     private javax.swing.JPanel basicTab;
@@ -1204,6 +1234,7 @@ public class MeetingEditPanel extends APanel {
     private javax.swing.JTextField givenTextBoxPoints;
     private javax.swing.JRadioButton iET24RadioButtonAdv;
     private javax.swing.JLabel invisibleHelper;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lateLabelPoints;
     private javax.swing.JTextField lateTextBoxPoints;
     private javax.swing.JTabbedPane meetingTabPane;

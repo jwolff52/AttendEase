@@ -28,26 +28,26 @@ import java.util.ArrayList;
 public class Group {
     private final ArrayList<Meeting> meats;
     private final ArrayList<Student> stews;
-    private final ArrayList<String[]> studentIdentifiers;
     
     private final String name;
+    private final String groupID;
     private EFile excel;
     private EFileUtilities f;
     
     private final boolean usePoints;
     
     public Group(String n){
-        studentIdentifiers=new ArrayList<>();
         name=n;
-        meats=new ArrayList<>();
-        stews=new ArrayList<>();
+        groupID=MiscUtils.getNextGroupIdentifier(n);
+        meats=new ArrayList<Meeting>();
+        stews=new ArrayList<Student>();
         excel=new EFile("");
         usePoints=false;
     }
     
-    public Group(String n, ArrayList<Meeting> m, ArrayList<Student>s, String path, boolean p){
-        studentIdentifiers=new ArrayList<>();
+    public Group(String gID, String n, ArrayList<Meeting> m, ArrayList<Student>s, String path, boolean p){
         name=n;
+        groupID=gID;
         meats=m;
         stews=s;
         if(!(path==null||path.equals(""))){
@@ -63,24 +63,27 @@ public class Group {
             f = EFileReader.readFile(excel);
         } catch (IOException ex) {
             Start.createLog(ex, "Error reading Students File located at: "+excel.getPath());
+        } catch (NullPointerException ex){
+            return;
         }
         for (int i=0;i<f.getNames().size();i++) {
-            stews.add(new Student(MiscUtils.getNextStudentIdentifier(this),f.getNames().get(i),name,f.getIdNums().get(i).intValue()));
+            stews.add(new Student(f.getNames().get(i),name,f.getIdNums().get(i).intValue()));
         }
     }
     
     public void populateStudents(EFileUtilities f){
         Student temp;
         for (int i=0;i<f.getNames().size();i++) {
-            temp=new Student(MiscUtils.getNextStudentIdentifier(this),f.getNames().get(i),name,f.getIdNums().get(i).intValue());
+            temp=new Student(f.getNames().get(i),name,f.getIdNums().get(i).intValue());
             if(!isMember(temp)){
                 stews.add(temp);
             }
         }
     }
     
-    public void fillStudentIdentifiers(){
-        
+    @Override
+    public String toString(){
+        return "Name: "+name+"\nGroup ID: "+groupID+"\nExcel File: "+excel+"\nUses Points: "+usePoints;
     }
     
     public void addMeeting(Meeting m){
@@ -111,6 +114,15 @@ public class Group {
         for(int x=0;x<meats.size();x++){
             if(m.equalsIgnoreCase(meats.get(x).getName())){
                 return meats.get(x);
+            }
+        }
+        return null;
+    }
+    
+    public Meeting getMeetingByIdentifier(String i){
+        for (Meeting meeting : meats) {
+            if(meeting.getIdentifier().equals(i)){
+                return meeting;
             }
         }
         return null;
@@ -150,7 +162,7 @@ public class Group {
     }
     
     public ArrayList<Student> getNonMembers(ArrayList<Student> ss){
-        ArrayList<Student> temp=new ArrayList<>();
+        ArrayList<Student> temp=new ArrayList<Student>();
         for(Student s : ss){
             if(!isMember(s)){
                 temp.add(s);
@@ -176,7 +188,7 @@ public class Group {
     }
     
     public ArrayList<Student> getStudentsFromName(ArrayList<String> names){
-        ArrayList<Student> temp=new ArrayList<>();
+        ArrayList<Student> temp=new ArrayList<Student>();
         for (String name : names) {
             for (Student student : stews) {
                 if(student.getName().equals(name)){
@@ -189,5 +201,19 @@ public class Group {
     
     public int getNumberOfMeetings(){
         return meats.size();
+    }
+    
+    public String getIdentifier(){
+        return groupID;
+    }
+    
+    public ArrayList<Meeting> getHeldMeetings(){
+        ArrayList<Meeting> temp=new ArrayList<Meeting>();
+        for (Meeting meeting : meats) {
+            if(meeting.isMeatHeld()){
+                temp.add(meeting);
+            }
+        }
+        return temp;
     }
 }

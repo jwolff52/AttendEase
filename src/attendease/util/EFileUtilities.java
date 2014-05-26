@@ -28,13 +28,11 @@ public class EFileUtilities {
     private ArrayList<String> names;
     private ArrayList<Double> idNums;
     private ArrayList<Double> points;
-    private boolean sameSize;
 
     public EFileUtilities(){
-        names=new ArrayList<>();
-        idNums=new ArrayList<>();
-        points=new ArrayList<>();
-        sameSize=false;
+        names=new ArrayList<String>();
+        idNums=new ArrayList<Double>();
+        points=new ArrayList<Double>();
     }
     
     public ArrayList<String> getNames() {
@@ -54,10 +52,10 @@ public class EFileUtilities {
     }
     
     public ArrayList<Double> getPoints() {
-        return idNums;
+        return points;
     }
 
-    public void setPoints(ArrayList<Double> idNums) {
-        this.idNums = idNums;
+    public void setPoints(ArrayList<Double> points) {
+        this.points = points;
     }
 }

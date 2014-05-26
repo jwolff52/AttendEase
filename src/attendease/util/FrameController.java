@@ -54,8 +54,10 @@ public class FrameController {
     private static JFileChooser folderc;
     private static Inventory inv;
     
-    public FrameController(){   
+    public FrameController(){
+        Start.updateSplashString("Retrieving Groups from Database");
         initInventory(); 
+        Start.updateSplashString("Loading Interface");
         initPanelsAndFrames();
         initArrayLists();
         initFileChoosers();
@@ -63,19 +65,31 @@ public class FrameController {
     }
     
     private static void initPanelsAndFrames(){
+        Start.updateSplashString("Initializing GroupOptionsPanel");
         gop=new GroupOptionsPanel();
+        Start.updateSplashString("Initializing MeetingEditPanel");
         mep=new MeetingEditPanel();
+        Start.updateSplashString("Initializing MeetingPanel");
         mp=new MeetingPanel();
+        Start.updateSplashString("Initializing SelectMGPanel");
         smgp=new SelectMGPanel();
+        Start.updateSplashString("Initializing StudentPanel");
         sp=new StudentPanel();
         
+        Start.updateSplashString("Initializing MainFrame");
         mf=new MainFrame();
+        Start.updateSplashString("Initializing ARMWGUI");
         armwg=new AddRemoveMembersWarningGUI();
+        Start.updateSplashString("Initializing DMWGUI");
         dmwg=new DeleteMeetingWarningGUI();
+        Start.updateSplashString("InitializingGroupGUI");
         gg=new GroupGUI();
+        Start.updateSplashString("Initializing MeetingGUI");
         mg=new MeetingGUI();
+        Start.updateSplashString("Initializing UpdateMembersGUI");
         umg=new UpdateMembersGUI();
         
+        Start.updateSplashString("Hiding unwanted GUIs");
         armwg.setVisible(false);
         dmwg.setVisible(false);
         gg.setVisible(false);
@@ -85,7 +99,8 @@ public class FrameController {
     }
     
     private static void initArrayLists(){
-        guis=new ArrayList<>();
+        Start.updateSplashString("Adding GUIs to list");
+        guis=new ArrayList<Component>();
         guis.add(armwg);
         guis.add(dmwg);
         guis.add(gg);
@@ -98,7 +113,8 @@ public class FrameController {
         guis.add(sp);
         guis.add(umg);
         
-        frames=new ArrayList<>();
+        Start.updateSplashString("Adding panels to list");
+        frames=new ArrayList<JFrame>();
         frames.add(armwg);
         frames.add(dmwg);
         frames.add(gg);
@@ -108,6 +124,7 @@ public class FrameController {
     }
     
     private static void initFileChoosers(){
+        Start.updateSplashString("Initializing File Chooser");
         filec=new JFileChooser();
         filec.setFileSelectionMode(JFileChooser.FILES_ONLY);
         filec.setFileFilter(new FileFilter(){
@@ -123,6 +140,7 @@ public class FrameController {
             }
         });
         
+        Start.updateSplashString("Initializing Folder Chooser");
         folderc=new JFileChooser();
         folderc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         folderc.setFileFilter(new FileFilter(){
@@ -147,7 +165,7 @@ public class FrameController {
             while(crs.next()){
                 club=crs.getString("CLUBNAME");
                 ResultSet mrs=Start.d.readMeetingsTable(club);
-                ArrayList<Meeting> meats=new ArrayList<>();
+                ArrayList<Meeting> meats=new ArrayList<Meeting>();
                 while(mrs.next()){
                     String name=mrs.getString("NAME");
                     String date=mrs.getString("DATE");
@@ -160,28 +178,24 @@ public class FrameController {
                     meats.add(new Meeting(mrs.getString("IDENTIFIER"),name, date, MiscUtils.replaceSpaces(mrs.getString("STARTTIME")), MiscUtils.replaceSpaces(mrs.getString("ENDTIME")), mrs.getInt("ATTENDANCE"), mrs.getInt("POINTSGIVEN"), mrs.getInt("POINTSREQUIRED"), mrs.getInt("LATEPOINTS"), mrs.getBoolean("MEETINGHELD")));
                 }
                 ResultSet srs=Start.d.readStudentsTable(club);
-                ArrayList<Student> stews=new ArrayList<>();
+                ArrayList<Student> stews=new ArrayList<Student>();
                 while(srs.next()){
-                    stews.add(new Student(srs.getString("NAME"), club, srs.getInt("ID"), srs.getInt("POINTS"), srs.getString("MEETINGS")));
+                    stews.add(new Student(srs.getString("NAME"), club, srs.getInt("ID"), srs.getInt("POINTS")));
                 }
-                String eFile=crs.getString(2);
-                boolean usePoints=crs.getBoolean(3);
-                if(usePoints){
-                    if(!(eFile==null||eFile.equals(""))){
-                        inv.add(new Group(club, meats, stews, eFile, true));
-                    }else{
-                        inv.add(new Group(club, meats, stews, null, true));
-                    }
+                String eFile=crs.getString("EPATH");
+                boolean usePoints=crs.getBoolean("POINTS");
+                if(!(eFile==null||eFile.equals(""))){
+                    inv.addGroup(new Group(crs.getString("groupID"), club, meats, stews, eFile, usePoints));
                 }else{
-                    if(!(eFile==null||eFile.equals(""))){
-                        inv.add(new Group(club, meats, stews, eFile, false));
-                    }else{
-                        inv.add(new Group(club, meats, stews, null, false));
-                    }
+                    inv.addGroup(new Group(crs.getString("groupID"), club, meats, stews, null, usePoints));
                 }
-                
+                for (Student student : stews) {
+                    student.fillMeetingsAttended();
+                }
             }
-        } catch (NullPointerException | SQLException ex) {
+        } catch (NullPointerException ex) {
+            Start.createLog(ex, "Error retreiving existing Groups!");
+        } catch (SQLException ex){
             Start.createLog(ex, "Error retreiving existing Groups!");
         }
     }
@@ -199,86 +213,75 @@ public class FrameController {
     public static void setCurrentPanel(String p){
         GroupLayout layout;
         mf.getContentPane().removeAll();
-        switch(p.toLowerCase()){
-            case "gop":
-                layout=new GroupLayout(mf.getContentPane());
-                layout.setHorizontalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(gop)
-                );
-                layout.setVerticalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(gop)
-                );
-                mf.setLayout(layout);
-                mf.setBounds(new Rectangle(808,636));
-                gop.setCurrentGroup(smgp.getCurrentGroupName());
-                break;
-            case "mep":
-                layout=new GroupLayout(mf.getContentPane());
-                layout.setHorizontalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(mep)
-                );
-                layout.setVerticalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(mep)
-                );
-                mf.setLayout(layout);
-                mf.setBounds(new Rectangle(808,636));
-                break;
-            case "mp":
-                layout=new GroupLayout(mf.getContentPane());
-                layout.setHorizontalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(getMp())
-                );
-                layout.setVerticalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(getMp())
-                );
-                mf.setLayout(layout);
-                mf.setBounds(new Rectangle(402,625));
-                mp.initMeeting(inv.getGroup(smgp.getCurrentGroupName()).getMeeting(smgp.getCurrentMeetingName()),inv.getGroup(smgp.getCurrentGroupName()).getStudents());
-                break;
-            case "smgp":
-                layout=new GroupLayout(mf.getContentPane());
-                layout.setHorizontalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(smgp)
-                );
-                layout.setVerticalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(smgp)
-                );
-                mf.setLayout(layout);
-                mf.setBounds(new Rectangle(808,636));
-                break;
-            case "sp":
-                layout=new javax.swing.GroupLayout(mf.getContentPane());
-                layout.setHorizontalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(sp)
-                );
-                layout.setVerticalGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(sp)
-                );
-                mf.setLayout(layout);
-                break;
+        p=p.toLowerCase();
+        if(p.equals("gop")){
+            layout=new GroupLayout(mf.getContentPane());
+            layout.setHorizontalGroup(
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(gop)
+            );
+            layout.setVerticalGroup(
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(gop)
+            );
+            mf.setLayout(layout);
+            mf.setBounds(new Rectangle(808,636));
+            gop.setCurrentGroup(smgp.getCurrentGroupName());
+        }else if(p.equals("gop")){
+            layout=new GroupLayout(mf.getContentPane());
+            layout.setHorizontalGroup(
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(mep)
+            );
+            layout.setVerticalGroup(
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(mep)
+            );
+            mf.setLayout(layout);
+            mf.setBounds(new Rectangle(808,636));
+        }else if(p.equals("mp")){
+            layout=new GroupLayout(mf.getContentPane());
+            layout.setHorizontalGroup(
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(getMp())
+            );
+            layout.setVerticalGroup(
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(getMp())
+            );
+            mf.setLayout(layout);
+            mf.setBounds(new Rectangle(402,625));
+            mp.initMeeting(inv.getGroup(smgp.getCurrentGroupName()).getMeeting(smgp.getCurrentMeetingName()),inv.getGroup(smgp.getCurrentGroupName()).getStudents());
+        }else if(p.equals("smgp")){
+            layout=new GroupLayout(mf.getContentPane());
+            layout.setHorizontalGroup(
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(smgp)
+            );
+            layout.setVerticalGroup(
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(smgp)
+            );
+            mf.setLayout(layout);
+            mf.setBounds(new Rectangle(808,636));
+        }else if(p.equals("sp")){
+            layout=new javax.swing.GroupLayout(mf.getContentPane());
+            layout.setHorizontalGroup(
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(sp)
+            );
+            layout.setVerticalGroup(
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(sp)
+            );
+            mf.setLayout(layout);
         }
     }
     
     public static void changeFrameState(String g){
-        switch(g){
-            case "armwg":
-                armwg.setVisible(!armwg.isVisible());
-                break;
-            case "dmwg":
-                dmwg.setVisible(!dmwg.isVisible());
-                break;
-            case "gg":
-                gg.setVisible(!gg.isVisible());
-                break;
-            case "mf":
-                mf.setVisible(!mf.isVisible());
-                break;
-            case "mg":
-                mg.setVisible(!mg.isVisible());
-                break;
-            case "umg":
-                umg.setVisible(!umg.isVisible());
-                break;
+        g=g.toLowerCase();
+        if(g.equals("armwg")){
+            armwg.setVisible(!armwg.isVisible());
+        }else if(g.equals("dmwg")){
+            dmwg.setVisible(!dmwg.isVisible());
+        }else if(g.equals("gg")){
+            gg.setVisible(!gg.isVisible());
+        }else if(g.equals("mf")){
+            mf.setVisible(!mf.isVisible());
+        }else if(g.equals("mg")){
+            mg.setVisible(!mg.isVisible());
+        }else if(g.equals("umg")){
+            umg.setVisible(!umg.isVisible());
         }
     }
     
@@ -293,9 +296,7 @@ public class FrameController {
     }
     
     public static String chooseFile(){
-        int returnVal;
-        returnVal = filec.showOpenDialog(mf);
-        if(returnVal==JFileChooser.APPROVE_OPTION){
+        if(filec.showOpenDialog(mf)==JFileChooser.APPROVE_OPTION){
             InputOutput.readFile(filec.getSelectedFile());
             return filec.getSelectedFile().getPath();
         }
@@ -303,16 +304,14 @@ public class FrameController {
     }
     
     public static String chooseFolder(){
-        int returnVal;
-        returnVal=folderc.showSaveDialog(mf);
-        if(returnVal==JFileChooser.APPROVE_OPTION){
+        if(folderc.showSaveDialog(mf)==JFileChooser.APPROVE_OPTION){
             return folderc.getSelectedFile().getPath();
         }
         return null;
     }
     
     public static void addGroup(Group g){
-        inv.add(g);
+        inv.addGroup(g);
     }
     
     public static Group getGroup(int i){
@@ -323,12 +322,12 @@ public class FrameController {
         return inv.getGroup(s);
     }
     
-    public static void removeGroup(String s){
-        inv.delete(inv.getGroup(s));
+    public static Group removeGroup(String s){
+        return inv.deleteGroup(inv.getGroup(s));
     }
     
-    public static void removeGroup(int i){
-        inv.delete(inv.getGroup(i));
+    public static Group removeGroup(int i){
+        return inv.deleteGroup(inv.getGroup(i));
     }
     
     public static void dispose(){

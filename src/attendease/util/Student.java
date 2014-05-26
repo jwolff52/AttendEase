@@ -18,6 +18,8 @@
 
 package attendease.util;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -25,34 +27,34 @@ import java.util.ArrayList;
  * @author timothy.chandler
  */
 public class Student implements Comparable{
-    private final String groupID;
+    private final ArrayList<String> groupIDS;
     private final String name;
     private final String group;
     private final int ID;
     private int points;
-    private ArrayList<AttendedMeeting> meetingsAttended;
+    private final ArrayList<AttendedMeeting> meetingsAttended;
     
-    public Student(String gID, String n,String g,int id){
-        groupID=gID;
+    public Student(String n,String g,int id){
+        groupIDS=new ArrayList<String>();
         name=n;
         group=g;
         ID=id;
         points=0;
-        meetingsAttended=null;
+        meetingsAttended=new ArrayList<AttendedMeeting>();
     }
     
-    public Student(String gID, String n, String g, int id, int p, String ma){
-        groupID=gID;
+    public Student(String n, String g, int id, int p){
+        groupIDS=new ArrayList<String>();
         name=n;
         group=g;
         ID=id;
         points=p;
-        fillMeetingsAttended(ma);
+        meetingsAttended=new ArrayList<AttendedMeeting>();
     }
     
     public Student(Object s){
         Student temp=(Student)s;
-        groupID=temp.getGroupID();
+        groupIDS=temp.getGroupIDS();
         name=temp.getName();
         group=temp.getGroup();
         ID=temp.getID();
@@ -60,27 +62,16 @@ public class Student implements Comparable{
         meetingsAttended=temp.getMeetingsAttended();
     }
     
-    private void fillMeetingsAttended(String ma){
-        String temp;
-        String identifier;
-        String timeDiff;
-        int[] delineators=MiscUtils.getDelineatorIndicies(ma, '~');
-        int prev=0;
-        for(int i=0;i<delineators.length; i++) {
-            temp=ma.substring(prev, delineators[i]);
-            try{
-                timeDiff=temp.substring(temp.lastIndexOf('+'));
-                identifier=temp.substring(0,temp.lastIndexOf('+'));
-            }catch(StringIndexOutOfBoundsException e){
-                timeDiff=temp.substring(temp.lastIndexOf('-'));
-                identifier=temp.substring(0,temp.lastIndexOf('-'));
+    public void fillMeetingsAttended(){
+        ResultSet amrs=Start.d.readMeetingsAttendedTable(name);
+        Meeting m;
+        try {
+            while(amrs.next()){
+                m=FrameController.getInv().getGroup(group).getMeetingByIdentifier(amrs.getString("identifier"));
+                meetingsAttended.add(new AttendedMeeting(m, amrs.getString("arrivalTime")));
             }
-            for (Meeting m : FrameController.getInv().getGroup(group).getMeetings()) {
-                if(identifier.equals(m.getIdentifier())){
-                    meetingsAttended.add(new AttendedMeeting(m, timeDiff));
-                    break;
-                }
-            }
+        } catch (SQLException ex) {
+            Start.createLog(ex, "An Error occured while retrieving Attended Meetings for student \""+name+"\" in the group \""+group+"\"!");
         }
     }
     
@@ -100,6 +91,14 @@ public class Student implements Comparable{
         return meetingsAttended;
     }
     
+    public String getMeetingsAttendedAsString(){
+        String ma="";
+        for (AttendedMeeting attendedMeeting : meetingsAttended) {
+            ma+=attendedMeeting.getIdentifier()+"~";
+        }
+        return ma;
+    }
+    
     public AttendedMeeting getAttendedMeeting(Meeting m){
         for (AttendedMeeting attendedMeeting : meetingsAttended) {
             if(m.getIdentifier().equals(attendedMeeting.getIdentifier())){
@@ -110,7 +109,8 @@ public class Student implements Comparable{
     }
     
     public void addAttendedMeeting(AttendedMeeting am){
-        meetingsAttended.add(am);
+            meetingsAttended.add(am);
+            Start.d.addAttendedMeeting(name, FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getIdentifier(), am.getIdentifier(), am.getArrivalTime());
     }
     
     public void addPoints(int p){
@@ -118,7 +118,7 @@ public class Student implements Comparable{
     }
 
     public String[] getValues() {
-        return new String[]{ID+"",name,"",points+""};
+        return new String[]{ID+"",name,points+""};
     }
     
     @Override
@@ -143,11 +143,8 @@ public class Student implements Comparable{
     public String getGroup() {
         return group;
     }
-<<<<<<< HEAD
-=======
     
-    public String getGroupID(){
-        return groupID;
+    public ArrayList<String> getGroupIDS(){
+        return groupIDS;
     }
->>>>>>> Mid-Week Update
 }

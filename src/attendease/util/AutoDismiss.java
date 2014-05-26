@@ -44,11 +44,11 @@ public class AutoDismiss implements ActionListener{
         dialog.dispose();
     }
     
-    public static void showMessageDialog(Component parent, Object message) {
+    public static void showMessageDialog(int time, Component parent, Object message) {
         final JOptionPane optionPane = new JOptionPane(message);
         String title = UIManager.getString("OptionPane.messageDialogTitle");
         final JDialog dialog = optionPane.createDialog(parent, title);
-        Timer timer = new Timer(3000, new AutoDismiss(dialog));
+        Timer timer = new Timer(time, new AutoDismiss(dialog));
         timer.setRepeats(false);
         timer.start();
         if (dialog.isDisplayable()){

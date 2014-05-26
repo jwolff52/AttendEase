@@ -24,12 +24,14 @@ import attendease.util.EFile;
 import attendease.util.EFileReader;
 import attendease.util.FrameController;
 import attendease.util.Group;
+import attendease.util.Meeting;
 import attendease.util.Start;
 import attendease.util.Student;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -46,14 +48,20 @@ public class UpdateMembersGUI extends AFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (InstantiationException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (IllegalAccessException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
-        updateStews=new ArrayList<>();
+        updateStews=new ArrayList<Student>();
         initTable();
     }
     
@@ -62,7 +70,6 @@ public class UpdateMembersGUI extends AFrame {
         sTableModel.addColumn("ID Number");
         sTableModel.addColumn("Name");
         sTableModel.addColumn("Points");
-        sTableModel.addColumn("Meetings Attended");
     }
 
     /**
@@ -100,11 +107,12 @@ public class UpdateMembersGUI extends AFrame {
         studentTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("AttendEase");
         setName("umg"); // NOI18N
 
         mainPanel.setPreferredSize(new java.awt.Dimension(800, 600));
 
-        cancelButton.setText("Cancel");
+        cancelButton.setText("Back");
         cancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 cancelButtonMouseReleased(evt);
@@ -120,6 +128,7 @@ public class UpdateMembersGUI extends AFrame {
 
         tabbedPane.setName("Update Group"); // NOI18N
         tabbedPane.setPreferredSize(new java.awt.Dimension(800, 500));
+        tabbedPane.setRequestFocusEnabled(false);
         tabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 tabbedPaneStateChanged(evt);
@@ -129,6 +138,10 @@ public class UpdateMembersGUI extends AFrame {
         importMembersPanel.setPreferredSize(new java.awt.Dimension(735, 535));
 
         importLabel.setText("Import Students as Excel File");
+
+        importTextBox.setEditable(false);
+        importTextBox.setFocusable(false);
+        importTextBox.setRequestFocusEnabled(false);
 
         browseButton.setText("Browse...");
         browseButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -168,13 +181,19 @@ public class UpdateMembersGUI extends AFrame {
         tabbedPane.addTab("Import Members", importMembersPanel);
 
         addMemberPanel.setPreferredSize(new java.awt.Dimension(735, 535));
+        addMemberPanel.setRequestFocusEnabled(false);
 
         studentNameLabel.setText("Student Name");
 
         asteriskLabel1.setForeground(new java.awt.Color(255, 0, 0));
         asteriskLabel1.setText("*");
 
-        studentNameTextBox.setText("John Doe");
+        studentNameTextBox.setText("Doe, John");
+        studentNameTextBox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                studentNameTextBoxFocusGained(evt);
+            }
+        });
 
         idNumberLabel.setText("ID Number");
 
@@ -363,6 +382,8 @@ public class UpdateMembersGUI extends AFrame {
     private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
         FrameController.changeFrameState("umg");
         FrameController.changeFrameState("mf");
+        tabbedPane.setSelectedIndex(0);
+        clear();
     }//GEN-LAST:event_cancelButtonMouseReleased
 
     private void updateButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateButtonMouseReleased
@@ -377,6 +398,7 @@ public class UpdateMembersGUI extends AFrame {
             updateStews=FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getNonMembers(tempGroup.getStudents());
             FrameController.getArmwg().fillNameList(updateStews);
             FrameController.changeFrameState("armwg");
+            fillStudentTable();
             new Thread(new Runnable(){
                 @SuppressWarnings("empty-statement")
                 @Override
@@ -390,16 +412,23 @@ public class UpdateMembersGUI extends AFrame {
                 }
             }).start();
         }else if(tabbedPane.getSelectedIndex()==1){
-            Student tempStudent=new Student(studentNameTextBox.getText(), FrameController.getSmgp().getCurrentGroupName(), Integer.valueOf(idNumberTextBox.getText()), Integer.valueOf(pointsTextBox.getText()), "");
+            Student tempStudent=new Student(studentNameTextBox.getText(), FrameController.getSmgp().getCurrentGroupName(), Integer.valueOf(idNumberTextBox.getText()), Integer.valueOf(pointsTextBox.getText()));
             if(!FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).isMember(tempStudent)){
-                FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).updateStudents(tempStudent, true);
-                Start.d.addStudent(FrameController.getSmgp().getCurrentGroupName(), tempStudent);
-                clear();
+                if(Start.d.addStudent(FrameController.getSmgp().getCurrentGroupName(), tempStudent)){
+                    FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).updateStudents(tempStudent, true);
+                    javax.swing.JOptionPane.showMessageDialog(this, tempStudent.getName()+" was successfully added to the group!", "AttendEase", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                    clear();
+                }else{
+                    javax.swing.JOptionPane.showMessageDialog(this, "There was an error adding "+tempStudent.getName()+" to the group!", "AttendEase", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+                fillStudentTable();
+            }else{
+                javax.swing.JOptionPane.showMessageDialog(this, tempStudent.getName()+" is already a member of this group!", "AttendEase", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
         }else if(tabbedPane.getSelectedIndex()==2){
             FrameController.getArmwg().setWarningString(false);
             int[] selected=studentTable.getSelectedRows();
-            ArrayList<String> temp=new ArrayList<>();
+            ArrayList<String> temp=new ArrayList<String>();
             for(int x:selected){
                 temp.add((String)studentTable.getValueAt(x, 1));
             }
@@ -431,16 +460,16 @@ public class UpdateMembersGUI extends AFrame {
     private void tabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPaneStateChanged
         switch(tabbedPane.getSelectedIndex()){
             case 0:
-            updateButton.setText("Import");
+                updateButton.setText("Import");
             break;
             case 1:
-            updateButton.setText("Add");
+                updateButton.setText("Add");
             break;
             case 2:
-            updateButton.setText("Remove");
+                updateButton.setText("Remove");
             break;
             default:
-            updateButton.setText("Update");
+                updateButton.setText("Update");
         }
     }//GEN-LAST:event_tabbedPaneStateChanged
 
@@ -448,7 +477,7 @@ public class UpdateMembersGUI extends AFrame {
         if(searchTextField.getText()==null||searchTextField.getText().equals("")){
             fillStudentTable();
         }else{
-            ArrayList<Student> newList=new ArrayList<>();
+            ArrayList<Student> newList=new ArrayList<Student>();
             fillStudentTable();
             for(Student s:currentList){
                 if(s.getName().toLowerCase().contains(searchTextField.getText().toLowerCase())||(s.getID()+"").contains(searchTextField.getText())){
@@ -459,12 +488,18 @@ public class UpdateMembersGUI extends AFrame {
         }
     }//GEN-LAST:event_searchTextFieldKeyReleased
 
+    private void studentNameTextBoxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_studentNameTextBoxFocusGained
+        studentNameTextBox.setSelectionStart(0);
+        studentNameTextBox.setSelectionEnd(studentNameTextBox.getText().length());
+    }//GEN-LAST:event_studentNameTextBoxFocusGained
+
     public static ArrayList<Student> getUpdateStudents(){
         return updateStews;
     }
     
     public void fillStudentTable(){
         initTable();
+        ArrayList<Meeting> meats=initMeetingColumns(FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeetings());
         currentList=FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getStudents();
         Collections.sort(currentList, new Comparator<Student>(){
                 @Override
@@ -474,15 +509,40 @@ public class UpdateMembersGUI extends AFrame {
                     return i1.compareTo(i2);
                 }
             });
-        for(Student s:currentList){
-            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints(),s.getMeetingsAttended()});
+        Student s;
+        for(int i=0;i<currentList.size();i++){
+            s=currentList.get(i);
+            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints()});
+            int j=3;
+            for(Meeting m:meats) {
+                String arrivalTime;
+                try{
+                    arrivalTime=s.getAttendedMeeting(m).getArrivalTime();
+                }catch(NullPointerException e){
+                    arrivalTime="ABSENT";
+                }
+                sTableModel.setValueAt(arrivalTime, i, j);
+                j++;
+            }
         }
         studentTable.setModel(sTableModel);
+    }
+    
+    private ArrayList<Meeting> initMeetingColumns(ArrayList<Meeting> meats){
+        ArrayList<Meeting> temp=new ArrayList<Meeting>();
+        for(Meeting m: meats){
+            if(m.isMeatHeld()){
+                sTableModel.addColumn(m.getName());
+                temp.add(m);
+            }
+        }
+        return temp;
     }
     
     public void fillStudentTable(ArrayList<Student> newStudents){
         initTable();
         currentList=newStudents;
+        ArrayList<Meeting> meats=initMeetingColumns(FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeetings());
         Collections.sort(currentList, new Comparator<Student>(){
                 @Override
                 public int compare(Student s1, Student s2){
@@ -491,12 +551,26 @@ public class UpdateMembersGUI extends AFrame {
                     return i1.compareTo(i2);
                 }
             });
-        for(Student s:currentList){
-            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints(),s.getMeetingsAttended()});
+        Student s;
+        for(int i=0;i<currentList.size();i++){
+            s=currentList.get(i);
+            sTableModel.addRow(new Object[]{s.getID(),s.getName(),s.getPoints()});
+            int j=3;
+            for(Meeting m:meats) {
+                String arrivalTime;
+                try{
+                    arrivalTime=s.getAttendedMeeting(m).getArrivalTime();
+                }catch(NullPointerException e){
+                    arrivalTime="ABSENT";
+                }
+                sTableModel.setValueAt(arrivalTime, i, j);
+                j++;
+            }
         }
         studentTable.setModel(sTableModel);
     }
     
+    @Override
     public void clear(){
         importTextBox.setText("");
         studentNameTextBox.setText("Doe, John");

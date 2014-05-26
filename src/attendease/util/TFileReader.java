@@ -31,11 +31,10 @@ import java.util.Scanner;
 public class TFileReader {
     public static ArrayList readFile(File f) throws FileNotFoundException{
         FileInputStream fis=new FileInputStream(f);
-        ArrayList<String> buffer=new ArrayList<>();
-        try(Scanner scanner = new Scanner(fis)) {
-            while(scanner.hasNext()){
-                buffer.add(scanner.nextLine());
-            }
+        ArrayList<String> buffer=new ArrayList<String>();
+        Scanner scanner = new Scanner(fis);
+        while(scanner.hasNext()){
+            buffer.add(scanner.nextLine());
         }
         return buffer;
     }

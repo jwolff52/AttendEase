@@ -34,6 +34,9 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.TimeZone;
+import javax.swing.JDialog;
+import javax.swing.Timer;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -51,11 +54,17 @@ public class MeetingPanel extends APanel {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (InstantiationException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (IllegalAccessException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
         initTable();
@@ -140,7 +149,7 @@ public class MeetingPanel extends APanel {
             new Thread(new Runnable(){
                 @Override
                 public void run(){
-                    Start.d.editMeeting(FrameController.getSmgp().getCurrentGroupName(), currentMeeting.getVaules());
+                    Start.d.editMeeting(FrameController.getSmgp().getCurrentGroupName(), currentMeeting.getValues());
                     saveStudents(FrameController.getSmgp().getCurrentGroupName());
                 }
             }).start();
@@ -162,37 +171,86 @@ public class MeetingPanel extends APanel {
             });
             int id=-1;
             try{
-                id=new Integer(idTextField.getText());
+                char[] ca=idTextField.getText().toCharArray();
+                double idTemp=-1;
+                boolean zero=false;
+                for(int i=1;i<=ca.length; i++) {
+                    switch(ca[i-1]){
+                        case '0':
+                            if(idTemp==-1){
+                                zero=true;
+                                idTemp++;
+                            }else{
+                                zero=false;
+                                idTemp+=0;
+                            }
+                            break;
+                        case '1':
+                            idTemp+=1*Math.pow(10, ca.length-i);
+                            break;
+                        case '2':
+                            idTemp+=2*Math.pow(10, ca.length-i);
+                            break;
+                        case '3':
+                            idTemp+=3*Math.pow(10, ca.length-i);
+                            break;
+                        case '4':
+                            idTemp+=4*Math.pow(10, ca.length-i);
+                            break;
+                        case '5':
+                            idTemp+=5*Math.pow(10, ca.length-i);
+                            break;
+                        case '6':
+                            idTemp+=6*Math.pow(10, ca.length-i);
+                            break;
+                        case '7':
+                            idTemp+=7*Math.pow(10, ca.length-i);
+                            break;
+                        case '8':
+                            idTemp+=8*Math.pow(10, ca.length-i);
+                            break;
+                        case '9':
+                            idTemp+=9*Math.pow(10, ca.length-i);
+                            break;
+                    }
+                    if(i==ca.length&&idTemp!=-1&&!zero){
+                        idTemp++;
+                    }
+                }
+                id=(int)idTemp;
                 int loc=0;
                 boolean found=false;
-                for(int i=0;i<stews.size();i++) {
-                    if(stews.get(i).getID()==id){
+                for(;loc<stews.size();loc++) {
+                    if(stews.get(loc).getID()==id){
                         found=true;
-                        loc=i;
                         break;
                     }
                 }
                 if(!found){
-                    AutoDismiss.showMessageDialog(this, "You are not in this Group! Please check that you typed your ID number correctly.");
+                    AutoDismiss.showMessageDialog(3000, this, "You are not in this Group! Please check that you typed your ID number correctly.");
+                    idTextField.setFocusable(false);
+                    Timer timer = new Timer(3000, new AutoDismiss(new JDialog()));
+                    timer.setRepeats(false);
+                    timer.start();
                 }else{
                     if(isHere(stews.get(loc).getName())){
-                        AutoDismiss.showMessageDialog(this, "You have already signed in for this Meeting!");
+                        AutoDismiss.showMessageDialog(3000, this, "You have already signed in for this Meeting!");
                     }else{
                         if(currentMeeting.getrPoints()>0){
                             if(stews.get(loc).getPoints()<currentMeeting.getrPoints()){
-                                AutoDismiss.showMessageDialog(this, "You do not have enough points to attend this meeting!");
+                                AutoDismiss.showMessageDialog(3000, this, "You do not have enough points to attend this meeting!");
                             }else{
-                                scanInStudent(stews.get(loc));
+                                stews.set(loc,scanInStudent(stews.get(loc)));
                                 idNums.add(stews.get(loc).getID());
                             }
                         }else{
-                            scanInStudent(stews.get(loc));
+                            stews.set(loc,scanInStudent(stews.get(loc)));
                             idNums.add(stews.get(loc).getID());
                         }
                     }
                 }
             }catch(NumberFormatException e){
-                AutoDismiss.showMessageDialog(this, "That ID Number is Invalid!");
+                AutoDismiss.showMessageDialog(3000, this, "That ID Number is Invalid!");
             }
             idTextField.setText("");
             idTextField.setFocusable(true);
@@ -200,12 +258,14 @@ public class MeetingPanel extends APanel {
         }
     }//GEN-LAST:event_idTextFieldKeyReleased
 
-    private void scanInStudent(Student s){
-        String[] time=getScanInTime();
-        s.addPoints(getPointsAdded(time[0]));
-        s.addAttendedMeeting(new AttendedMeeting(currentMeeting, time[0]));
+    private Student scanInStudent(Student s){
+        String time=getScanInTime();
+        s.addPoints(getPointsAdded(time));
+        AttendedMeeting am=new AttendedMeeting(currentMeeting, time);
+        s.addAttendedMeeting(am);
         Integer points=s.getPoints();
-        aTableModel.addRow(new Object[]{s.getName(), time[0], points});
+        aTableModel.addRow(new Object[]{s.getName(), time, points});
+        return s;
     }
     
     public void initMeeting(Meeting m, ArrayList<Student> ss){
@@ -215,7 +275,7 @@ public class MeetingPanel extends APanel {
         setEndTime(m.getEndTime());
         currentMeeting=m;
         stews=ss;
-        idNums=new ArrayList<>();
+        idNums=new ArrayList<Integer>();
         idTextField.requestFocus();
     }
     
@@ -228,7 +288,7 @@ public class MeetingPanel extends APanel {
     }
     
     private void setStartTime(String time){
-        tLabel.setText(time);
+        tLabel.setText(MiscUtils.replaceSpaces(time));
     }
     
     private void setEndTime(String time) {
@@ -244,22 +304,17 @@ public class MeetingPanel extends APanel {
         return currentMeeting.getgPoints();
     }
 
-    private String[] getScanInTime() {
+    private String getScanInTime() {
         Calendar c=Calendar.getInstance(TimeZone.getTimeZone("CST"));
-        String[] time=new String[2];
-        time[0]="";
-        time[1]="y";
+        String time;
         String period=" PM";
         if(c.get(Calendar.AM_PM)==0){
             period=" AM";
         }
         if(c.get(Calendar.MINUTE)<10){
-            time[0]=c.get(Calendar.HOUR_OF_DAY)+":0"+c.get(Calendar.MINUTE)+period;
+            time=c.get(Calendar.HOUR_OF_DAY)+":0"+c.get(Calendar.MINUTE)+period;
         }else{
-            time[0]=c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+period;
-        }
-        if(MiscUtils.isLate(MiscUtils.timeToInt(FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeeting(FrameController.getSmgp().getCurrentMeetingName()).getStartTime()), MiscUtils.timeToInt(time[0]), FrameController.getGroup(FrameController.getSmgp().getCurrentGroupName()).getMeeting(FrameController.getSmgp().getCurrentMeetingName()).getDate(), new SimpleDateFormat("MMMM/dd/yyyy").format(Calendar.getInstance().getTime()))){
-            time[1]="n";
+            time=c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+period;
         }
         return time;
     }
@@ -281,10 +336,13 @@ public class MeetingPanel extends APanel {
     }
     
     private void saveStudents(String clubName){
-        for(Student s:stews){
-            if(attended(s.getID())){
-                Start.d.editStudent(clubName, s.getValues());
+        for(int i=0;i<stews.size();i++){
+            if(attended(stews.get(i).getID())){
+                FrameController.getInv().getGroup(clubName).getStudents().set(i, stews.get(i));
             }
+        }
+        for (Student student : FrameController.getInv().getGroup(clubName).getStudents()) {
+            Start.d.editStudent(clubName, student.getValues());
         }
     }
     

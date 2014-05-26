@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.JFrame;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -37,12 +38,15 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class EFileWriter {
     
-    public static void writeAttendanceFiles(String group, EFile folder, ArrayList<Student> stews, ArrayList<Meeting> meats, ArrayList<AttendedMeeting> attendedMeats){
-        writeStudentAttendanceFile(folder, stews, meats);
-        writeMeetingAttendanceFile(group, folder, meats, attendedMeats);
+    public static void writeAttendanceFiles(String group, EFile folder, ArrayList<Student> stews, ArrayList<Meeting> meats){
+        if(writeStudentAttendanceFile(folder, stews)&&writeMeetingAttendanceFile(group, folder, stews, meats)){
+            javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "Attendance files succesfully created in the folder:\n"+folder.getPath(), "AttendEase", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "Unable to create one or more of the attendance files in the folder:\n"+folder.getPath(), "AttendEase", javax.swing.JOptionPane.WARNING_MESSAGE);
+        }
     }
     
-    private static void writeStudentAttendanceFile(EFile folder, ArrayList<Student> stews, ArrayList<Meeting> meats){
+    private static boolean writeStudentAttendanceFile(EFile folder, ArrayList<Student> stews){
         EFile sFile=new EFile(folder.getPath()+"/Student Attendance.xlsx");
         Workbook newWb=new XSSFWorkbook();
         Sheet sheet=newWb.createSheet("Student Attendance");
@@ -66,8 +70,8 @@ public class EFileWriter {
             sheet=newWb.createSheet(s.getName());
             nameRow=sheet.createRow(0);
             timeRow=sheet.createRow(1);
-            for(int i=0;i<meats.size();i++) {
-                nameRow.createCell(cellcount).setCellValue(meats.get(i).getName());
+            for(int i=0;i<s.getMeetingsAttended().size();i++) {
+                nameRow.createCell(cellcount).setCellValue(s.getMeetingsAttended().get(i).getName());
                 timeRow.createCell(cellcount).setCellValue(s.getMeetingsAttended().get(i).getArrivalTime());
                 cellcount++;
             }
@@ -77,50 +81,72 @@ public class EFileWriter {
             for(int i=0;i<cellcount;i++){
                 sheet.setColumnWidth(i, 7500);
             }
+            cellcount=2;
         }
-        try (FileOutputStream fos = new FileOutputStream(sFile.getPath())) {
+        try {
+                FileOutputStream fos = new FileOutputStream(sFile.getPath());
                 newWb.write(fos);
         } catch (IOException ex) {
             Start.createLog(ex, "Unable to create attendance file: "+sFile.getPath().substring(sFile.getPath().lastIndexOf(File.separatorChar)+1));
+            return false;
         }
+        return true;
     }
     
-    public static void writeMeetingAttendanceFile(String group, EFile folder, ArrayList<Meeting> meats, ArrayList<AttendedMeeting> attendedMeats){
+    public static boolean writeMeetingAttendanceFile(String group, EFile folder, ArrayList<Student> stews, ArrayList<Meeting> meats){
         EFile mFile=new EFile(folder.getPath()+"/Meeting Attendance.xlsx");
         Workbook newWb=new XSSFWorkbook();
         Sheet sheet=newWb.createSheet("Meetings Attendance");
-        Row row=sheet.createRow(0);
-        row.createCell(0).setCellValue("Meeting Name");
-        row.createCell(1).setCellValue("Number of Students");
-        try{
-            for(int i=1;i<meats.size();i++) {
-                row=sheet.createRow(i);
-                row.createCell(0).setCellValue(meats.get(i-1).getName());
-                row.createCell(1).setCellValue(meats.get(i-1).getAttendance());
-            }
-        }catch(ArrayIndexOutOfBoundsException ex){
-            Start.createLog(ex, "Unable to Export Students, An Internal Error Occurred");
-        }
-        ArrayList<Student> stews;
-        for (AttendedMeeting m : attendedMeats) {
-            stews=m.getAttendedStudents(group);
-            sheet=newWb.createSheet(m.getName());
-            row=sheet.createRow(0);
+        Row mainRow=sheet.createRow(0);
+        mainRow.createCell(0).setCellValue("Meeting Name");
+        mainRow.createCell(1).setCellValue("Number of Students");
+        sheet.setColumnWidth(0, 7500);
+        sheet.setColumnWidth(1, 4700);
+        
+        Sheet sheet1;
+        String meetingID;
+        int meetingCounter=1;
+        Row row;
+        for (Meeting m : FrameController.getInv().getGroup(group).getHeldMeetings()) {
+            mainRow=sheet.createRow(meetingCounter);
+            mainRow.createCell(0).setCellValue(m.getName());
+            int attendanceCounter=0;
+            sheet1=newWb.createSheet(m.getName());
+            meetingID=m.getIdentifier();
+            row=sheet1.createRow(0);
             row.createCell(0).setCellValue("Student Name");
             row.createCell(1).setCellValue("Arrival Time");
             row.createCell(2).setCellValue("Student Points");
-            for(int i=1;i<stews.size();i++){
-                row=sheet.createRow(i);
-                row.createCell(0).setCellValue(stews.get(i).getName());
-                row.createCell(1).setCellValue(stews.get(i).getAttendedMeeting(m).getArrivalTime());
-                row.createCell(2).setCellValue(stews.get(i).getPoints());
+            int i=1;
+            for (Student s: stews) {
+                for (AttendedMeeting am: s.getMeetingsAttended()) {
+                    if(meetingID.equals(am.getIdentifier())){
+                        attendanceCounter++;
+                        row=sheet1.createRow(i);
+                        row.createCell(0).setCellValue(s.getName());
+                        row.createCell(1).setCellValue(s.getAttendedMeeting(m).getArrivalTime());
+                        row.createCell(2).setCellValue(s.getPoints());
+                        i++;
+                        break;
+                    }
+                }
             }
+            mainRow.createCell(1).setCellValue(attendanceCounter);
+            meetingCounter++;
+            for(int j=0;j<2;j++){
+                sheet1.setColumnWidth(j, 7500);
+            }
+            sheet1.setColumnWidth(2, 3475);
         }
-        try (FileOutputStream fos = new FileOutputStream(mFile.getPath())) {
+        
+        try {
+                FileOutputStream fos = new FileOutputStream(mFile.getPath());
                 newWb.write(fos);
         } catch (IOException ex) {
             Start.createLog(ex, "Unable to create attendance file: "+mFile.getPath().substring(mFile.getPath().lastIndexOf(File.separatorChar)+1));
+            return false;
         }
+        return true;
     }
     
     public static void writeFile(EFile n, EFileUtilities f){

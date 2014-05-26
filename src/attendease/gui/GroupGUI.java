@@ -22,9 +22,12 @@ import attendease.util.AFrame;
 import attendease.util.FrameController;
 import attendease.util.Group;
 import attendease.util.Meeting;
+import attendease.util.MiscUtils;
 import attendease.util.Start;
 import attendease.util.Student;
+import java.awt.Color;
 import java.util.ArrayList;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -38,18 +41,24 @@ public class GroupGUI extends AFrame {
     public GroupGUI() {
         preInit();
         initComponents();
-        postInit();
+//        postInit();
     }
     
     private void preInit(){
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (InstantiationException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (IllegalAccessException ex) {
+            Start.createLog(ex, "Unable to set proper look and feel");
+        } catch (UnsupportedLookAndFeelException ex) {
             Start.createLog(ex, "Unable to set proper look and feel");
         }
         isEditing=false;
@@ -57,28 +66,28 @@ public class GroupGUI extends AFrame {
     }
     
     
-    private void postInit(){
-        meetingIsHidden=false;
-        meetingTabPanel=new javax.swing.JPanel();
-        mep=new MeetingEditPanel();
-        meetingTab=mep.getMeetingTabbedPane();
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(meetingTabPanel);
-        meetingTabPanel.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(meetingTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 55, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(meetingTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        mainTabbedPane.addTab("Meeting", meetingTabPanel);
-    }
+//    private void postInit(){
+//        meetingIsHidden=false;
+//        meetingTabPanel=new javax.swing.JPanel();
+//        mep=new MeetingEditPanel();
+//        meetingTab=mep.getMeetingTabbedPane();
+//        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(meetingTabPanel);
+//        meetingTabPanel.setLayout(layout);
+//        layout.setHorizontalGroup(
+//            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGroup(layout.createSequentialGroup()
+//                .addComponent(meetingTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addGap(0, 55, Short.MAX_VALUE))
+//        );
+//        layout.setVerticalGroup(
+//            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGroup(layout.createSequentialGroup()
+//                .addGap(0, 0, 0)
+//                .addComponent(meetingTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addContainerGap())
+//        );
+//        mainTabbedPane.addTab("Meeting", meetingTabPanel);
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -97,7 +106,7 @@ public class GroupGUI extends AFrame {
         importLabel = new javax.swing.JLabel();
         locationTextField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
-        pointsCheckBox = new javax.swing.JCheckBox();
+        infoLabel = new javax.swing.JLabel();
         cancelButton = new javax.swing.JButton();
         createButton = new javax.swing.JButton();
 
@@ -109,12 +118,23 @@ public class GroupGUI extends AFrame {
         mainPanel.setPreferredSize(new java.awt.Dimension(261, 384));
 
         mainTabbedPane.setPreferredSize(new java.awt.Dimension(261, 267));
+        mainTabbedPane.setRequestFocusEnabled(false);
 
         groupTab.setPreferredSize(new java.awt.Dimension(260, 267));
 
         groupNameLabel.setText("Group Name:");
 
+        groupNameTextField.setBackground(java.awt.Color.red);
+        groupNameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                groupNameTextFieldKeyReleased(evt);
+            }
+        });
+
         importLabel.setText("Import Students as Excel File");
+
+        locationTextField.setEditable(false);
+        locationTextField.setFocusable(false);
 
         browseButton.setText("Browse...");
         browseButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -123,7 +143,8 @@ public class GroupGUI extends AFrame {
             }
         });
 
-        pointsCheckBox.setText("Points?");
+        infoLabel.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        infoLabel.setText("Alphanumeric only (0-9a-zA-Z)");
 
         javax.swing.GroupLayout groupTabLayout = new javax.swing.GroupLayout(groupTab);
         groupTab.setLayout(groupTabLayout);
@@ -139,17 +160,21 @@ public class GroupGUI extends AFrame {
                         .addComponent(browseButton))
                     .addGroup(groupTabLayout.createSequentialGroup()
                         .addGroup(groupTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pointsCheckBox)
-                            .addComponent(groupNameLabel)
+                            .addGroup(groupTabLayout.createSequentialGroup()
+                                .addComponent(groupNameLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(infoLabel))
                             .addComponent(importLabel))
-                        .addGap(0, 97, Short.MAX_VALUE)))
+                        .addGap(0, 27, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         groupTabLayout.setVerticalGroup(
             groupTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(groupTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(groupNameLabel)
+                .addGroup(groupTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(groupNameLabel)
+                    .addComponent(infoLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(groupNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -158,9 +183,7 @@ public class GroupGUI extends AFrame {
                 .addGroup(groupTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(locationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pointsCheckBox)
-                .addContainerGap(227, Short.MAX_VALUE))
+                .addContainerGap(252, Short.MAX_VALUE))
         );
 
         mainTabbedPane.addTab("Group", groupTab);
@@ -203,7 +226,7 @@ public class GroupGUI extends AFrame {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(createButton))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 21, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -225,99 +248,110 @@ public class GroupGUI extends AFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createButtonMouseReleased
-        if(isEditing){
-            if(groupNameTextField.getText()!=null&&!groupNameTextField.getText().equals("")){
-                if(groupNameTextField.getText().toUpperCase().charAt(0)==groupNameTextField.getText().toLowerCase().charAt(0)){
-                    javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "The first character of the Group Name must be a letter. (A-Z, a-z)");
-                    return;
-                }
-                FrameController.removeGroup(oldName);
-                FrameController.addGroup(new Group(groupNameTextField.getText(),new ArrayList<Meeting>(),new ArrayList<Student>(), locationTextField.getText(), pointsCheckBox.isSelected()));
-                FrameController.getGroup(groupNameTextField.getText()).populateStudents();
-                FrameController.getSmgp().setState("Group");
-                FrameController.changeFrameState("gg");
-                clear();
-                Start.d.editGroup(oldName, groupNameTextField.getText(), locationTextField.getText(), pointsCheckBox.isSelected());
-            }else{
-                javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "Group Name cannot be blank!");
-            }
-            if(meetingIsHidden){
-                toggleMeetingTab();
-            }
-        }else{
-            if(groupNameTextField.getText()!=null&&!groupNameTextField.getText().equals("")){
-                if(groupNameTextField.getText().toUpperCase().charAt(0)==groupNameTextField.getText().toLowerCase().charAt(0)){
-                    javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "The first character of the Group Name must be a letter. (A-Z, a-z)");
-                    return;
-                }
-                if(Start.d.addGroup(groupNameTextField.getText(), locationTextField.getText(), pointsCheckBox.isSelected())){
-                    FrameController.addGroup(new Group(groupNameTextField.getText(),new ArrayList<Meeting>(),new ArrayList<Student>(), locationTextField.getText(), pointsCheckBox.isSelected()));
+        if(groupNameTextField.getText()!=null&&!groupNameTextField.getText().equals("")){
+            if(groupNameTextField.getText().matches("[0-9a-zA-Z]+")){
+                if(isEditing){
+                    if(groupNameTextField.getText().toUpperCase().charAt(0)==groupNameTextField.getText().toLowerCase().charAt(0)){
+                        javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "The first character of the Group Name must be a letter. (A-Z, a-z)");
+                        return;
+                    }
+                    Group temp=FrameController.removeGroup(oldName);
+                    temp=new Group(temp.getIdentifier(),groupNameTextField.getText(),new ArrayList<Meeting>(),new ArrayList<Student>(), locationTextField.getText()+"", true);
+                    FrameController.addGroup(temp);
                     FrameController.getGroup(groupNameTextField.getText()).populateStudents();
                     FrameController.getSmgp().setState("Group");
                     FrameController.changeFrameState("gg");
-                    new Thread(new Runnable(){
-                        @Override
-                        public void run(){
-                            String groupName=getGroupName();
-                            clear();
-                            Start.d.addStudents(groupName, FrameController.getGroup(groupName).getStudents());
-                        }
-                    }).start();
-                    if(!(mep.getMeetingName()==null||mep.getMeetingName().equals(""))){
-                        
-                    }
+                    clear();
+                    Start.d.editGroup(oldName, temp, locationTextField.getText(), true, FrameController.getGroup(groupNameTextField.getText()).getStudents());
+    //            if(meetingIsHidden){
+    //                toggleMeetingTab();
+    //            }
                 }else{
-                    javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), groupNameTextField.getText()+" already exists!");
+                    if(groupNameTextField.getText().toUpperCase().charAt(0)==groupNameTextField.getText().toLowerCase().charAt(0)){
+                        javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "The first character of the Group Name must be a letter. (A-Z, a-z)");
+                        return;
+                    }
+                    Group temp=new Group(MiscUtils.getNextGroupIdentifier(groupNameTextField.getText()), groupNameTextField.getText(),new ArrayList<Meeting>(),new ArrayList<Student>(), locationTextField.getText(), true);
+                    if(Start.d.addGroup(temp, locationTextField.getText(), true)){
+                        FrameController.addGroup(temp);
+                        FrameController.getGroup(groupNameTextField.getText()).populateStudents();
+                        FrameController.getSmgp().setState("Group");
+                        FrameController.changeFrameState("gg");
+                        new Thread(new Runnable(){
+                            @Override
+                            public void run(){
+                                String groupName=getGroupName();
+                                clear();
+                                Start.d.addStudents(groupName, FrameController.getGroup(groupName).getStudents());
+                            }
+                        }).start();
+                    }else{
+                        javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), groupNameTextField.getText()+" already exists!");
+                    }
+    //            if(meetingIsHidden){
+    //                toggleMeetingTab();
+    //            }
                 }
             }else{
-                javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "Group Name cannot be blank!");
-            }
-            if(meetingIsHidden){
-                toggleMeetingTab();
-            }
+                javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "Group Name must contain only Alphanumeric Characters! (A-Za-Z0-9) excludes \'-\'");
+            }   
+        }else{
+            javax.swing.JOptionPane.showMessageDialog(FrameController.getMf(), "Group Name cannot be blank!");
         }
     }//GEN-LAST:event_createButtonMouseReleased
 
     private void cancelButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseReleased
         FrameController.changeFrameState("gg");
         clear();
-        if(meetingIsHidden){
-            toggleMeetingTab();
-        }
+//        if(meetingIsHidden){
+//            toggleMeetingTab();
+//        }
     }//GEN-LAST:event_cancelButtonMouseReleased
 
     private void browseButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_browseButtonMouseReleased
         locationTextField.setText(FrameController.chooseFile());
     }//GEN-LAST:event_browseButtonMouseReleased
 
+    private void groupNameTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupNameTextFieldKeyReleased
+        if(!groupNameTextField.getText().matches("[0-9a-zA-Z]+")){
+            groupNameTextField.setBackground(Color.red);
+        }else{
+            groupNameTextField.setBackground(Color.GREEN);
+        }
+    }//GEN-LAST:event_groupNameTextFieldKeyReleased
+
     @Override
     public void clear(){
         groupNameTextField.setText("");
         locationTextField.setText("");
-        pointsCheckBox.setSelected(false);
-        mep.clear();
-        meetingTab.setSelectedIndex(0);
-        if(!meetingIsHidden){
-            mainTabbedPane.getComponent(1).repaint();
-        }
-        mainTabbedPane.setSelectedIndex(0);
+        groupNameTextField.setBackground(Color.RED);
+//        mep.clear();
+//        meetingTab.setSelectedIndex(0);
+//        if(!meetingIsHidden){
+//            mainTabbedPane.getComponent(1).repaint();
+//        }
+//        mainTabbedPane.setSelectedIndex(0);
     }
     
     public void putData(Group g){
         groupNameTextField.setText(g.getName());
         locationTextField.setText(g.getEPath());
-        pointsCheckBox.setSelected(g.usesPoints());
         oldName=g.getName();
+        if(!groupNameTextField.getText().matches("[0-9a-zA-Z]+")){
+            groupNameTextField.setBackground(Color.red);
+        }else{
+            groupNameTextField.setBackground(Color.GREEN);
+        }
     }
 
-    public void toggleMeetingTab(){
-        if(meetingIsHidden){
-            mainTabbedPane.addTab("Meeting", meetingTabPanel);
-        }else{
-            mainTabbedPane.removeTabAt(1);
-        }
-        meetingIsHidden=!meetingIsHidden;
-    }
+//    public void toggleMeetingTab(){
+//        if(meetingIsHidden){
+//            mainTabbedPane.addTab("Meeting", meetingTabPanel);
+//        }else{
+//            mainTabbedPane.removeTabAt(1);
+//        }
+//        meetingIsHidden=!meetingIsHidden;
+//    }
     
     public String getGroupName(){
         return groupNameTextField.getText();
@@ -331,10 +365,10 @@ public class GroupGUI extends AFrame {
         createButton.setText(label);
     }
     
-    private javax.swing.JPanel meetingTabPanel;
-    private javax.swing.JTabbedPane meetingTab;
-    private MeetingEditPanel mep;
-    private boolean meetingIsHidden;
+//    private javax.swing.JPanel meetingTabPanel;
+//    private javax.swing.JTabbedPane meetingTab;
+//    private MeetingEditPanel mep;
+//    private boolean meetingIsHidden;
     private boolean isEditing;
     private String oldName;
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -345,9 +379,9 @@ public class GroupGUI extends AFrame {
     private javax.swing.JTextField groupNameTextField;
     private javax.swing.JPanel groupTab;
     private javax.swing.JLabel importLabel;
+    private javax.swing.JLabel infoLabel;
     private javax.swing.JTextField locationTextField;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTabbedPane mainTabbedPane;
-    private javax.swing.JCheckBox pointsCheckBox;
     // End of variables declaration//GEN-END:variables
 }
